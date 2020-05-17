@@ -2,7 +2,7 @@
 
 Description of all the folders present in the repository
 
-### Code - Contains source code of the application
+### Code - contains source code of the application
 To run application using the source code
 1) Clone the git repository
 2) All the source code is present in the "Code" folder.
@@ -11,7 +11,6 @@ To run application using the source code
 5) You can use your favourite IDE (like PyCharm) with the newly created environment to run code.
 
 ### Config - Contains confiuration files needed to run and buid the executables of application
-
 environment.yml - Conda environment file with list of packages to replicate environment on your machine
 Pyinstaller - Details on how to create executable files of different platforms from the source code
 
