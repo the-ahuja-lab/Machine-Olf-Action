@@ -1,0 +1,638 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="POST" id="ml_job_frm" enctype=multipart/form-data>
+    <!--    id="chkSubmit" -->
+    <div class="sft-form-btns-div">
+        <button type="button" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-secondary"
+                title="Create Job!">
+            <h4><b><i class="material-icons" style="font-size:30px; color:black;">alarm_on</i><em>CREATE JOB</em></b>
+            </h4>
+        </button>
+        <button type="button" class="btn btn-secondary" title="Reset Job" onclick="reset_ml_job_form()">
+            <h4><b><i class="material-icons" style="font-size:30px; color:black;">cached</i><em>RESET JOB</em></b></h4>
+        </button>
+
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <!--                    <div class="modal-header">-->
+                <!--                        <h5 class="modal-title" id="exampleModalCenterTitle">Add Job Description</h5>-->
+                <!--                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                <!--                            <span aria-hidden="true">&times;</span>-->
+                <!--                        </button>-->
+                <!--                    </div>-->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="job_description">Add Job Description</label>
+                        <textarea id="job_description" name="job_description" class="form-control"
+                                  rows="3" placeholder="Upto 100 plain-text chars"
+                                  aria-describedby="jd_help"></textarea>
+                        <small id="jd_help" class="form-text text-muted">It can be used to refer to job later
+                            in-case you forget job-id</small>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" id="chkSubmit" class="btn btn-secondary">Create Job</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sft-form-cntnt-div">
+
+        <div class="row">
+            <div class="card-group">
+                <div class="card border-primary mb-3">
+                    <img src="https://static.thenounproject.com/png/1631012-200.png"
+                         class="card-img-top embed-responsive-item"
+                         alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Step 1: UPLOAD DATASET</h5>
+
+                        <div class="card-text">
+                            <div class="form-group">
+                                <input type="file" class="form-control-file" id="user_file" name="user_file">
+                            </div>
+                            <fieldset>
+                                <legend>Data Split</legend>
+                                <div class="form-group">
+                                    <label for="tts_train_per" class="sr-only">Train Split</label>
+                                    <input id="tts_train_per" name="tts_train_per" class="form-control"
+                                           placeholder="Train Split" value="70">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tts_test_per" class="sr-only">Test Split</label>
+                                    <input id="tts_test_per" name="tts_test_per" class="form-control"
+                                           placeholder="Test Split" value="30">
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-primary mb-3">
+                    <img src="https://cdn-media-1.freecodecamp.org/images/1*1mpE6fsq5LNxH31xeTWi5w.jpeg"
+                         class="card-img-top embed-responsive-item" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Step 2: FEATURE GENERATION</h5>
+                        <div class="card-text">
+                            <button type="button" class="btn btn-dark" title="Generate Descriptors">
+                                <h6><b>I. Generate Chemical Descriptors</b></h6>
+                            </button>
+
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" id="fg_padelpy_flg" name="fg_padelpy_flg"
+                                       class="form-check-input" checked>
+                                <label class="form-check-label" for="fg_padelpy_flg">Padel</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" id="fg_mordered_flg" name="fg_mordered_flg"
+                                       class="form-check-input">
+                                <label class="form-check-label" for="fg_mordered_flg">Mordred</label>
+                            </div>
+
+                            <button type="button" class="btn btn-dark" title="Pre processing Steps">
+                                <h6><b>II. Choose Pre processing Steps</b></h6>
+                            </button>
+
+                            <fieldset>
+                                <legend>Missing Values</legend>
+
+                                <div class="form-row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group form-check">
+                                            <input type="checkbox" name="pp_mv_col_pruning_flg" class="form-check-input"
+                                                   id="pp_mv_col_pruning_flg" checked>
+                                            <label class="form-check-label" for="pp_mv_col_pruning_flg">Prune
+                                                Columns</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div id="prunecolumns" class="form-group"
+                                             style="display: none; max-width: 85px">
+                                            <label for="pp_mv_col_pruning_th" class="sr-only">Prune Column
+                                                Threshold</label>
+                                            <input type="text" id="pp_mv_col_pruning_th" name="pp_mv_col_pruning_th"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Threshold" value="75"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-check">
+                                    <input type="checkbox" class="form-check-input" name="pp_mv_imputation_flg"
+                                           id="pp_mv_imputation_flg" checked>
+                                    <label class="form-check-label" for="pp_mv_imputation_flg">Impute with Mean</label>
+                                </div>
+
+                            </fieldset>
+
+                            <!--                        <hr>-->
+
+                            <div class="form-row">
+                                <div class="col-xs-6">
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" name="pp_vt_flg" id="pp_vt_flg"
+                                               checked>
+                                        <label class="form-check-label" for="pp_vt_flg">Variance Removal</label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div id="dvVariance" class="form-group" style="display: none; max-width: 85px">
+                                        <label for="pp_vt_th" class="sr-only">Variance Threshold</label>
+                                        <input type="text" id="pp_vt_th" name="pp_vt_th"
+                                               class="form-control form-control-sm"
+                                               placeholder="Threshold" value="0"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-xs-6">
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" name="pp_cr_flg" id="pp_cr_flg"
+                                               checked>
+                                        <label class="form-check-label" for="pp_cr_flg">Correlation Check</label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div id="dvCorrelation" class="form-group" style="display: none; max-width: 85px">
+                                        <label for="pp_cr_th" class="sr-only">Correlation Threshold</label>
+                                        <input type="text" id="pp_cr_th" name="pp_cr_th"
+                                               class="form-control form-control-sm"
+                                               placeholder="Threshold" value="0.95"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="pp_normalization_flg"
+                                       id="pp_normalization_flg" checked>
+                                <label class="form-check-label" for="pp_normalization_flg">Normalize</label>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="pp_climb_smote_flg"
+                                       id="pp_climb_smote_flg" checked>
+                                <label class="form-check-label" for="pp_climb_smote_flg">SMOTE</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-primary mb-3">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTrIuHxc-ljrIiLqQBtFg3-Ql75gTzMQomHV25jt5SLPccRs8W1&usqp=CAU"
+                         class="card-img-top embed-responsive-item" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Step 3: FEATURE REDUCTION </h5>
+                        <button type="button" class="btn btn-dark" title="Pre processing Steps">
+                            <h6><b>I. Feature Selection</b></h6>
+                        </button>
+
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" name="fs_boruta_flg" id="fs_boruta_flg"
+                                   checked>
+                            <label class="form-check-label" for="fs_boruta_flg">Boruta</label>
+                        </div>
+
+                        <button type="button" class="btn btn-dark" title="Pre processing Steps">
+                            <h6><b>II. Feature Extraction</b></h6>
+                        </button>
+
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" name="fe_pca_flg" id="fe_pca_flg">
+                            <label class="form-check-label" for="fe_pca_flg">PCA</label>
+                        </div>
+
+                        <div id="pca" class="form-group" style="display: none;">
+                            <label for="fe_pca_energy" class="sr-only">Eigen Energy</label>
+                            <input type="text" id="fe_pca_energy" name="fe_pca_energy"
+                                   class="form-control"
+                                   placeholder="Eigen Energy" value="0.98"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="card-group">
+                <div class="card border-primary mb-3">
+                    <img src="https://cdn-media-1.freecodecamp.org/images/1*1mpE6fsq5LNxH31xeTWi5w.jpeg"
+                         class="card-img-top embed-responsive-item" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Step 5: CLASSIFICATION</h5>
+                        <div class="card-text">
+                            <button type="button" class="btn btn-dark" title="Tuning Method">
+                                <h6><b>Choose the Tuning Method</b></h6>
+                            </button>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="clf_svm_flg" id="clf_svm_flg"
+                                       checked>
+                                <label class="form-check-label" for="clf_svm_flg">SVM</label>
+                            </div>
+
+                            <div id="svm" style="display: none">
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="radio" name="clf_svm_auto" id="clf_svm_auto"-->
+                                <!--                                           checked>-->
+                                <!--                                    <label class="form-check-label" for="clf_svm_auto">Auto-Tune</label>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="checkbox" name="clf_bagging_svm_"-->
+                                <!--                                           id="clf_bagging_svm_">-->
+                                <!--                                    <label class="form-check-label" for="clf_bagging_svm_">Manual Parameters</label>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="checkbox" name="clf_svm_manual"-->
+                                <!--                                           id="clf_svm_manual">-->
+                                <!--                                    <label class="form-check-label" for="clf_svm_manual">Manual Parameters</label>-->
+                                <!--                                </div>-->
+                                <div class="form-row">
+                                    <div class="col-xs-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_bagging_svm"
+                                                   id="clf_bagging_svm">
+                                            <label class="form-check-label" for="clf_bagging_svm">Bagging of
+                                                SVM</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div id="dv_bag_svm_n" class="form-group"
+                                             style="display: none; max-width: 85px">
+                                            <label for="clf_bag_svm_n" class="sr-only">SVM Bagging</label>
+                                            <input type="text" id="clf_bag_svm_n" name="clf_bag_svm_n"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="# of times" value="1000"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="clf_et_flg" id="clf_et_flg">
+                                <label class="form-check-label" for="clf_et_flg">Extra Tree</label>
+                            </div>
+
+                            <div id="extratrees" style="display: none">
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="radio" name="clf_et_auto" id="clf_et_auto"-->
+                                <!--                                           checked>-->
+                                <!--                                    <label class="form-check-label" for="clf_et_auto">Auto-Tune</label>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="radio" name="clf_et_manual"-->
+                                <!--                                           id="clf_et_manual">-->
+                                <!--                                    <label class="form-check-label" for="clf_et_manual">Manually</label>-->
+                                <!--                                </div>-->
+
+                                <div class="form-row">
+                                    <div class="col-xs-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_bagging_et"
+                                                   id="clf_bagging_et">
+                                            <label class="form-check-label" for="clf_bagging_et">Bagging of
+                                                ET</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div id="dv_bag_et_n" class="form-group"
+                                             style="display: none; max-width: 85px">
+                                            <label for="clf_bag_et_n" class="sr-only">ET Bagging</label>
+                                            <input type="text" id="clf_bag_et_n" name="clf_bag_et_n"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="# of times" value="1000"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="clf_lr_flg" id="clf_lr_flg">
+                                <label class="form-check-label" for="clf_lr_flg">Logistic Regression</label>
+                            </div>
+
+                            <div id="LR" style="display: none">
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="radio" name="clf_lr_auto" id="clf_lr_auto"-->
+                                <!--                                           checked>-->
+                                <!--                                    <label class="form-check-label" for="clf_lr_auto">Auto-Tune</label>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="radio" name="clf_lr_manual"-->
+                                <!--                                           id="clf_lr_manual">-->
+                                <!--                                    <label class="form-check-label" for="clf_lr_manual">Manually</label>-->
+
+                                <div class="form-row">
+                                    <div class="col-xs-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_bagging_lr"
+                                                   id="clf_bagging_lr">
+                                            <label class="form-check-label" for="clf_bagging_lr">Bagging of
+                                                LR</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div id="dv_bag_lr_n" class="form-group"
+                                             style="display: none; max-width: 85px">
+                                            <label for="clf_bag_lr_n" class="sr-only">LR Bagging</label>
+                                            <input type="text" id="clf_bag_lr_n" name="clf_bag_lr_n"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="# of times" value="1000"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="clf_gnb_flg" id="clf_gnb_flg">
+                                <label class="form-check-label" for="clf_gnb_flg">Gaussian Naive Bayes</label>
+                            </div>
+
+                            <div id="GNB" style="display: none">
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="radio" name="clf_gnb_auto" id="clf_gnb_auto"-->
+                                <!--                                           checked>-->
+                                <!--                                    <label class="form-check-label" for="clf_gnb_auto">Auto-Tune</label>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="radio" name="clf_gnb_manual"-->
+                                <!--                                           id="clf_gnb_manual">-->
+                                <!--                                    <label class="form-check-label" for="clf_gnb_manual">Manually</label>-->
+
+                                <div class="form-row">
+                                    <div class="col-xs-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_bagging_gnb"
+                                                   id="clf_bagging_gnb">
+                                            <label class="form-check-label" for="clf_bagging_gnb">Bagging of
+                                                GNB</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div id="dv_bag_gnb_n" class="form-group"
+                                             style="display: none; max-width: 85px">
+                                            <label for="clf_bag_gnb_n" class="sr-only">GNB Bagging</label>
+                                            <input type="text" id="clf_bag_gnb_n" name="clf_bag_gnb_n"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="# of times" value="1000"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="clf_gbm_flg" id="clf_gbm_flg">
+                                <label class="form-check-label" for="clf_gbm_flg">Gradient Boosting Machine</label>
+                            </div>
+
+                            <div id="gbm" style="display: none">
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="radio" name="clf_gbm_auto" id="clf_gbm_auto"-->
+                                <!--                                           checked>-->
+                                <!--                                    <label class="form-check-label" for="clf_gbm_auto">Auto-Tune</label>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="form-check">-->
+                                <!--                                    <input class="form-check-input" type="radio" name="clf_gbm_manual"-->
+                                <!--                                           id="clf_gbm_manual">-->
+                                <!--                                    <label class="form-check-label" for="clf_gbm_manual">Manually</label>-->
+                                <!--                                </div>-->
+
+                                <div class="form-row">
+                                    <div class="col-xs-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_bagging_gbm"
+                                                   id="clf_bagging_gbm">
+                                            <label class="form-check-label" for="clf_bagging_gbm">Bagging of
+                                                GBM</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div id="dv_bag_gbm_n" class="form-group"
+                                             style="display: none; max-width: 85px">
+                                            <label for="clf_bag_gbm_n" class="sr-only">GBM Bagging</label>
+                                            <input type="text" id="clf_bag_gbm_n" name="clf_bag_gbm_n"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="# of times" value="1000"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="clf_rf_flg" id="clf_rf_flg"
+                                       checked>
+                                <label class="form-check-label" for="clf_rf_flg">Random Forest</label>
+                            </div>
+
+                            <div id="rforest" style="display: none">
+                                <!--                        <div class="form-check">-->
+                                <!--                            <input class="form-check-input" type="radio" name="clf_rf_auto" id="clf_rf_auto"-->
+                                <!--                                   checked>-->
+                                <!--                            <label class="form-check-label" for="clf_rf_auto">Auto-Tune</label>-->
+                                <!--                        </div>-->
+                                <!--                        <div class="form-check">-->
+                                <!--                            <input class="form-check-input" type="radio" name="clf_rf_manual"-->
+                                <!--                                   id="clf_rf_manual">-->
+                                <!--                            <label class="form-check-label" for="clf_rf_manual">Manually</label>-->
+                                <!--                        </div>-->
+                                <div class="form-row">
+                                    <div class="col-xs-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_bagging_rf"
+                                                   id="clf_bagging_rf">
+                                            <label class="form-check-label" for="clf_bagging_rf">Bagging of
+                                                RF</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div id="dv_bag_rf_n" class="form-group"
+                                             style="display: none; max-width: 85px">
+                                            <label for="clf_bag_rf_n" class="sr-only">RF Bagging</label>
+                                            <input type="text" id="clf_bag_rf_n" name="clf_bag_rf_n"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="# of times" value="1000"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="clf_mlp_flg" id="clf_mlp_flg"
+                                       checked>
+                                <label class="form-check-label" for="clf_mlp_flg">Multi-Layer Perceptron</label>
+                            </div>
+
+                            <div id="mlp" style="display: none">
+                                <!--                        <div class="form-check">-->
+                                <!--                            <input class="form-check-input" type="radio" name="clf_mlp_auto" id="clf_mlp_auto"-->
+                                <!--                                   checked>-->
+                                <!--                            <label class="form-check-label" for="clf_mlp_auto">Auto-Tune</label>-->
+                                <!--                        </div>-->
+                                <!--                        <div class="form-check">-->
+                                <!--                            <input class="form-check-input" type="radio" name="clf_mlp_manual"-->
+                                <!--                                   id="clf_mlp_manual">-->
+                                <!--                            <label class="form-check-label" for="clf_mlp_manual">Manually</label>-->
+                                <!--                        </div>-->
+
+                                <div class="form-row">
+                                    <div class="col-xs-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_bagging_mlp"
+                                                   id="clf_bagging_mlp">
+                                            <label class="form-check-label" for="clf_bagging_mlp">Bagging of
+                                                MLP</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div id="dv_bag_mlp_n" class="form-group"
+                                             style="display: none; max-width: 85px">
+                                            <label for="clf_bag_mlp_n" class="sr-only">MLP Bagging</label>
+                                            <input type="text" id="clf_bag_mlp_n" name="clf_bag_mlp_n"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="# of times" value="1000"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-primary mb-3">
+                    <img src="https://png.pngtree.com/png-vector/20190830/ourlarge/pngtree-validate-line-vector-icon-png-image_1716071.jpg"
+                         class="card-img-top embed-responsive-item" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Step 6: VALIDATION SCHEME</h5>
+                        <div class="card-text">
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="cv_3fold_flg" id="cv_3fold_flg"
+                                       checked>
+                                <label class="form-check-label" for="cv_3fold_flg">3-Fold Cross Validation </label>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="cv_5fold_flg" id="cv_5fold_flg"
+                                       checked>
+                                <label class="form-check-label" for="cv_5fold_flg">5-Fold Cross Validation </label>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="cv_loocv_flg" id="cv_loocv_flg">
+                                <label class="form-check-label" for="cv_loocv_flg">Leave One Out Cross
+                                    Validation </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card border-primary mb-3">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQWSajZzGh2CW9KwQtKrj91DMp2ExzyiD7_UHgAqY-relRuGTGv&usqp=CAU"
+                         class="card-img-top embed-responsive-item">
+                    <br>
+                    <div class="card-body">
+                        <p class="card-text">
+                        <h5 class="card-title">Step 7: TEST SET GENERATION</h5>
+                        <button type="button" class="btn btn-dark" title="Search Database">
+                            <h6><b>Search Database</b></h6>
+                        </button>
+
+                        <div class="form-group">
+
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" id="db_hmdb_flg" name="db_hmdb_flg"
+                                       onclick="show_simililarity_measures()">
+                                <label class="form-check-label" for="db_hmdb_flg">HMDB</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" id="db_foodb_flg" name="db_foodb_flg"
+                                       onclick="show_simililarity_measures()" checked>
+                                <label class="form-check-label" for="db_foodb_flg">FOODB</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" id="db_imppat_flg" name="db_imppat_flg"
+                                       onclick="show_simililarity_measures()" checked>
+                                <label class="form-check-label" for="db_imppat_flg">IMMPAT</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" id="db_chebi_flg" name="db_chebi_flg"
+                                       onclick="show_simililarity_measures()">
+                                <label class="form-check-label" for="db_chebi_flg">CHEBI</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" id="db_pubchem_flg"
+                                       name="db_pubchem_flg"
+                                       onclick="show_simililarity_measures()">
+                                <label class="form-check-label" for="db_pubchem_flg">PubChem</label>
+                            </div>
+
+                        </div>
+
+                        <div id="sim_msrs_div" style="display:none;">
+
+                            <button type="button" class="btn btn-dark" title="Similarity Measure">
+                                <h6><b>Choose Similarity Measure</b></h6>
+                            </button>
+
+                            <div class="form-group">
+
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="sim_tanimoto_flg"
+                                           name="sim_tanimoto_flg">
+                                    <label class="form-check-label" for="sim_tanimoto_flg">Tanimoto</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="sim_dice_flg"
+                                           name="sim_dice_flg">
+                                    <label class="form-check-label" for="sim_dice_flg">Dice</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="sim_cosine_flg"
+                                           name="sim_cosine_flg">
+                                    <label class="form-check-label" for="sim_cosine_flg">Cosine</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="sim_euclidean_flg"
+                                           name="sim_euclidean_flg">
+                                    <label class="form-check-label" for="sim_euclidean_flg">Euclidean</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="sim_manhattan_flg"
+                                           name="sim_manhattan_flg">
+                                    <label class="form-check-label" for="sim_manhattan_flg">Manhattan</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" id="sim_soergel_flg"
+                                           name="sim_soergel_flg">
+                                    <label class="form-check-label" for="sim_soergel_flg">Soergel</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+{% endblock content %}

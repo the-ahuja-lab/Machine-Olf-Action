@@ -1,0 +1,35 @@
+body{
+    background-image: url("../images/smoke-vapour-aroma-incense.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.sft-cnt-header{
+margin-bottom: 25px
+}
+.sft-header{
+    color:#FFFFFF;
+    font-weight: bolder;
+    line-height: 1.2;
+    margin-bottom: .5rem;
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+.sft-nav-menu{
+    text-align:center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.sft-form-btns-div{
+    margin-bottom: 15px;
+    margin-top: 25px;
+    text-align: center;
+}
+
+.sft-form-cntnt-div{
+    width: 900px;
+    margin: 0 auto;
+    color:#212529 !important;
+}
