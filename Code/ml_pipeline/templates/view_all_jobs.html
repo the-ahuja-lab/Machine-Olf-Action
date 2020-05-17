@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<table class="table table-dark" align="center">
+    <thead class="table-dark">
+    <th>Job ID</th>
+    <th>Job Description</th>
+    <th>Job Created Time</th>
+    <th>Job Status</th>
+    <th>Action</th>
+    </thead>
+    <tbody>
+    {% for job in all_jobs %}
+    <tr>
+        <td>{{ job.job_id }}</td>
+        <td>{{ job.job_desc }}</td>
+        <td>{{ job.job_created_time }}</td>
+        <td>{{ job.job_status }}</td>
+        <td>
+            <a href="{{ url_for('view_job_files', path=job.job_id) }}">View Details</a>
+            <a href="{{ url_for('start_or_resume_job', job_id=job.job_id) }}">Start / Stop</a>
+<!--            <a href="{{ url_for('start_or_resume_job', job_id=job.job_id) }}">View Logs</a>-->
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}
