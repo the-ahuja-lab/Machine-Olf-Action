@@ -10,12 +10,12 @@ To run application using the source code
 4) Make sure you have conda available on your system. If not download conda first and then create a new conda environment using command "conda env create -f environment.yml"
 5) You can use your favourite IDE (like PyCharm) with the newly created environment to run code.
 
-### Config - Contains confiuration files needed to run and buid the executables of application
+### Config - contains confiuration files needed to run and buid the executables of application
 environment.yml - Conda environment file with list of packages to replicate environment on your machine
 Pyinstaller - Details on how to create executable files of different platforms from the source code
 
-### Documents - Documentation of the software
+### Documents - documentation of the application
 Documentation related to the application
 
-### Executables
+### Executables - executables of the application
 To directly run the application, go to Executables folder and download executable for the respective platform
