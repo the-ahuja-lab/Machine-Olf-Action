@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5308871d-b1e4-47cf-90d7-70b3581c610f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/css/ml_sft.css" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/css/ml_sft.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -236,10 +231,10 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state width="1288" height="259" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590171872281" />
-    <state x="55" y="24" width="1311" height="744" key="SettingsEditor" timestamp="1590113476524">
+    <state x="55" y="24" width="1311" height="744" key="SettingsEditor" timestamp="1590173539313">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="55" y="24" width="1311" height="744" key="SettingsEditor/55.24.1311.744@55.24.1311.744" timestamp="1590113476524" />
+    <state x="55" y="24" width="1311" height="744" key="SettingsEditor/55.24.1311.744@55.24.1311.744" timestamp="1590173539313" />
     <state width="656" height="386" key="XDebugger.FullValuePopup" timestamp="1588921255989">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
