@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap_4.3.1.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui_1.12.1.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/icon.css') }}">
-<!--    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">-->
+    <!--    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">-->
 
 
     <script src="{{ url_for('static', filename='js/jquery.min_3.3.1.js') }}"></script>
@@ -72,7 +72,7 @@
     <!--    <button type="button" class="btn btn-light" title="View All Databases">-->
     <!--        <h6><b>View All Databases</b></h6>-->
     <!--    </button>-->
-    <a href="#" class="btn btn-light" role="button" title="View All Databases">
+    <a href="{{ url_for('view_all_dbs') }}" class="btn btn-light" role="button" title="View All Databases">
         <h6><b>View All Databases</b></h6>
     </a>
 
@@ -80,6 +80,19 @@
 </div>
 
 <div id="mainContent">
+    <div class="alerts-div">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissable fade show" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">
+                <span aria-hidden="true">&times;</span></a>
+            {{ message|safe }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
     {% block content %}{% endblock %}
 </div>
 

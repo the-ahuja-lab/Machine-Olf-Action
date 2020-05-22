@@ -1,7 +1,4 @@
-import sys
-import os
-
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, send_from_directory
 from werkzeug.utils import secure_filename
 
 from ml_pipeline import app
@@ -9,115 +6,65 @@ from flask_autoindex import AutoIndex
 from AppConfig import app_config
 from ListAllJobs import ListAllJobs
 
-# print("Before sys path ", sys.path)
-#
-# base_path = app.root_path
-#
-# print("Base path ", base_path)
-# sys.path.append(os.path.join(base_path, "model"))
-#
-# print("After sys path ", sys.path)
-
 from ManageJob import create_job as createjob
 from ValidateConfig import check_if_valid_job_config, allowed_file
 from MLPipeline import MLPipeline
 
-
-#
-# @app.route("/")
-# @app.route("/home")
-# def home():
-#     # return render_template(url_for(create_job))
-#     return render_template('landing.html')
+from ml_pipeline.settings import APP_STATIC
+import os
 
 
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 @app.route("/create-job", methods=['GET', 'POST'])
 def create_job():
-    # parse json file and input
-    # if both input valid, show success message, create new job folder, upload files to correct location
-    # otherwise show error message
     if request.method == 'POST':
         user_form = request.form
-        print("@@@@ result", user_form)
-        # print(user_form.to_dict())
-        # print(user_form.to_dict(flat=False))
-        # json_data = request.get_json(force=True)
-        #
-        # print("@@ json_data ", json_data)
         user_form_json = user_form.to_dict()
-        config_user_dict = check_if_valid_job_config(user_form_json)
 
-        if user_form.get("job_type") == "default_job":
-            print("Default Job")
-            if config_user_dict != None:
+        error, config_user_dict = check_if_valid_job_config(user_form_json)
+
+        if not error:
+            if user_form.get("job_type") == "default_job":
+                print("Default Job")
                 job_desc = config_user_dict['job_description']
                 job_id = createjob(job_desc, config_user_dict, app.root_path, None, is_default=False)
+            else:
+                print("User uploaded job")
+                user_file = request.files['user_file']
+                user_filename = None
+                # # TODO handle other extensions error here
+                if user_file and allowed_file(user_file.filename):
+                    user_filename = secure_filename(user_file.filename)
+
+                if user_filename != None:
+                    job_desc = config_user_dict['job_description']
+                    job_id = createjob(job_desc, config_user_dict, app.root_path, user_file, is_default=True)
+
+                else:
+                    error = True
+                    config_user_dict = []
+                    config_user_dict.append("Please upload a valid csv file")
+
+        if error:
+            flash_err_op = ""
+
+            flash_err_op += "<ul>"
+            for e in config_user_dict:
+                flash_err_op += "<li>" + str(e) + "</li>"
+            flash_err_op += "</ul>"
+            flash(flash_err_op, "danger")
+
         else:
-            print("User uploaded job")
-            user_file = request.files['user_file']
-            user_filename = None
-            # # TODO handle other extensions error here
-            if user_file and allowed_file(user_file.filename):
-                user_filename = secure_filename(user_file.filename)
+            succ_msg = "Congratulations! A job has been successfully created with job id " + job_id + "."
+            succ_msg += "<br/>"
+            succ_msg += "The job is not started yet, you can start the job and view status of all jobs on "
+            view_jobs_link = "<a class='alert-link' href='/view-all-jobs'> view all jobs </a>"
+            succ_msg += view_jobs_link
 
-            if config_user_dict != None and user_filename != None:
-                job_desc = config_user_dict['job_description']
-                job_id = createjob(job_desc, config_user_dict, app.root_path, user_file, is_default=True)
+            flash(succ_msg, "success")
 
-        # user_file = request.files['user_file']
-        # user_filename = None
-        # if user_file and allowed_file(user_file.filename):
-        #     user_filename = secure_filename(user_file.filename)
-        # # TODO handle other extensions error here
-        # config_user_dict = check_if_valid_job_config(user_form_json)
-        #
-        # if config_user_dict != None and user_filename != None:
-        #     job_desc = config_user_dict['job_description']
-        #     job_id = createjob(job_desc, config_user_dict, app.root_path, user_file, is_default=True)
-
-        # return redirect(url_for('view_all_jobs'))
-    # else:
     return render_template('create_job.html', title="Create New Job")
-
-
-# @app.route("/create_example_job", methods=['POST'])
-# def create_example_job():
-#     # parse json file and input
-#     # if both input valid, show success message, create new job folder, upload files to correct location
-#     # otherwise show error message
-#     if request.method == 'POST':
-#         user_form = request.form
-#         print("@@@@ result", user_form)
-#         # print(user_form.to_dict())
-#         # print(user_form.to_dict(flat=False))
-#         # json_data = request.get_json(force=True)
-#         #
-#         # print("@@ json_data ", json_data)
-#         user_form_json = user_form.to_dict()
-#
-#         config_user_dict = check_if_valid_job_config(user_form_json)
-#
-#         if config_user_dict != None:
-#             job_desc = config_user_dict['job_description']
-#             job_id = createjob(job_desc, config_user_dict, app.root_path, None, is_default=True)
-#
-#             # return redirect(url_for('view_all_jobs'))
-#     # else:
-#     return render_template('create_job.html', title="Create New Job")
-
-# @app.route("/create_job_service", methods=['GET', 'POST'])
-# def create_job_service():
-#     # parse json file and input
-#     # if both input valid, show success message, create new job folder, upload files to correct location
-#     # otherwise show error message
-#     with app.open_resource("static/ml_ip_config.json") as f:
-#         json_str = f.read()
-#         if check_if_valid_job_config(json_str):
-#             job_id = createjob("Default Job", json_str, app.root_path)
-#             # start_or_resume_job(job_id)
-#     return render_template('create_job_success.html', job_details=job_id)
 
 
 @app.route("/start_job", methods=['GET'])
@@ -148,3 +95,20 @@ def view_all_jobs():
     all_jobs = ListAllJobs()
     all_jobs_lst = all_jobs.get_all_jobs()
     return render_template('view_all_jobs.html', title="View All Jobs", all_jobs=all_jobs_lst)
+
+
+@app.route("/view-all-dbs")
+def view_all_dbs():
+    return render_template('view_all_databases.html', title="View All Databases")
+
+
+@app.route('/download_db/<path:filename>', methods=['GET', 'POST'])
+def download_db(filename):
+    dbs = os.path.join(APP_STATIC, "compound_dbs")
+    fpath = os.path.join(dbs, filename)
+
+    if os.path.exists(fpath):
+        return send_from_directory(directory=dbs, filename=filename)
+    else:
+        flash("404: File you requested for download does not  exists", "danger")
+        return redirect(url_for("create_job"))
