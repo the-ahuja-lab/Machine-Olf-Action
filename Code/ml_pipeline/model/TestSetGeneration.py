@@ -176,6 +176,7 @@ class TestSetGeneration:
         # will this handle all scenarios, padel and mordred, check if no additional dependencies
 
         fg_ml_pipeline.data = df
+        fg_ml_pipeline.status = "read_data"
         fg.FeatureGeneration(fg_ml_pipeline, is_train=False)
 
         # TODO write padel to csv
