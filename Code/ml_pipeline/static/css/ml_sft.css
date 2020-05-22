@@ -37,3 +37,8 @@ margin-bottom: 25px
     margin: 0 auto;
     color:#212529 !important;
 }
+
+.alerts-div{
+    width: 600px;
+    margin: 0 auto;
+}

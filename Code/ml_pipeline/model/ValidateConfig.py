@@ -16,6 +16,8 @@ from collections import namedtuple
 
 ALLOWED_EXTENSIONS = set(['csv'])
 
+ALL_VALID_ERRORS = {}
+
 
 def _json_object_hook(d):
     return namedtuple('x', d.keys())(*d.values())
@@ -41,19 +43,43 @@ def create_job_config_object(str):
 #     # validate_config(config)
 #     return config
 
+def validate_error_form_fields(config_form_dict):
+    ALL_VALID_ERRORS = []
+    config_user_dict = convert_user_dict_format(config_form_dict)
+
+    print("Inside validate_form_fields ", config_user_dict)
+
+    if not config_user_dict.get("fg_padelpy_flg"):
+        # if ALL_VALID_ERRORS["FG"] is None:
+        #     ALL_VALID_ERRORS["FG"] = list()
+        # ALL_VALID_ERRORS["FG"].append("Please select at-least one feature generation method from Padel or Mordered")
+        ALL_VALID_ERRORS.append("Please select at-least one feature generation method from Padel or Mordered")
+
+    if config_user_dict.get("tts_train_per") == 0:
+        ALL_VALID_ERRORS.append("Please enter train split value greater than 0")
+
+    # TODO add all other validations here
+
+    if len(ALL_VALID_ERRORS) != 0:
+        return True, ALL_VALID_ERRORS
+    else:
+        return False, config_user_dict
+
+
 def check_if_valid_job_config(config_user_dict):
     # TODO - Perfrom validations on config like Validate if atleast one feature selection technique present
     # config = json2obj(str)
-    # print("Config ", config_user_dict)
-    config_user_dict = convert_user_dict_format(config_user_dict)
-    return config_user_dict
+    print("Config ", config_user_dict)
+
+    error, config_user_dict = validate_error_form_fields(config_user_dict)
+    return error, config_user_dict
 
 
 def convert_user_dict_format(config_user_dict):
-    print(type(config_user_dict))
+    # print(type(config_user_dict))
 
     for key, value in config_user_dict.items():
-        print(key, value)
+        # print(key, value)
 
         if value == "on":
             config_user_dict[key] = True

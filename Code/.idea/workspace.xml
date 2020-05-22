@@ -3,7 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="5308871d-b1e4-47cf-90d7-70b3581c610f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetGeneration.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetGeneration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/css/ml_sft.css" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/css/ml_sft.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,10 +159,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.run" />
+        <item itemvalue="Python.routes" />
         <item itemvalue="Python.FeatureGeneration" />
         <item itemvalue="Python.CrossValidation" />
         <item itemvalue="Python.MLPipeline" />
-        <item itemvalue="Python.routes" />
       </list>
     </recent_temporary>
   </component>
@@ -199,38 +204,38 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="649" y="286" key="FileChooserDialogImpl/55.24.1311.744@55.24.1311.744" timestamp="1586956485099" />
-    <state width="1288" height="259" key="GridCell.Tab.0.bottom" timestamp="1590143347057">
+    <state width="1288" height="259" key="GridCell.Tab.0.bottom" timestamp="1590171872276">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590143347057" />
-    <state width="1288" height="259" key="GridCell.Tab.0.center" timestamp="1590143347056">
+    <state width="1288" height="259" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590171872276" />
+    <state width="1288" height="259" key="GridCell.Tab.0.center" timestamp="1590171872275">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1590143347056" />
-    <state width="1288" height="259" key="GridCell.Tab.0.left" timestamp="1590143347055">
+    <state width="1288" height="259" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1590171872275" />
+    <state width="1288" height="259" key="GridCell.Tab.0.left" timestamp="1590171872274">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1590143347055" />
-    <state width="1288" height="259" key="GridCell.Tab.0.right" timestamp="1590143347057">
+    <state width="1288" height="259" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1590171872274" />
+    <state width="1288" height="259" key="GridCell.Tab.0.right" timestamp="1590171872275">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1590143347057" />
-    <state width="1288" height="259" key="GridCell.Tab.1.bottom" timestamp="1590143347061">
+    <state width="1288" height="259" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1590171872275" />
+    <state width="1288" height="259" key="GridCell.Tab.1.bottom" timestamp="1590171872286">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590143347061" />
-    <state width="1288" height="259" key="GridCell.Tab.1.center" timestamp="1590143347059">
+    <state width="1288" height="259" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590171872286" />
+    <state width="1288" height="259" key="GridCell.Tab.1.center" timestamp="1590171872279">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1590143347059" />
-    <state width="1288" height="259" key="GridCell.Tab.1.left" timestamp="1590143347058">
+    <state width="1288" height="259" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1590171872279" />
+    <state width="1288" height="259" key="GridCell.Tab.1.left" timestamp="1590171872278">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1590143347058" />
-    <state width="1288" height="259" key="GridCell.Tab.1.right" timestamp="1590143347060">
+    <state width="1288" height="259" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1590171872278" />
+    <state width="1288" height="259" key="GridCell.Tab.1.right" timestamp="1590171872281">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590143347060" />
+    <state width="1288" height="259" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590171872281" />
     <state x="55" y="24" width="1311" height="744" key="SettingsEditor" timestamp="1590113476524">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
@@ -239,18 +244,18 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state width="656" height="386" key="XDebugger.FullValuePopup/55.24.1311.744@55.24.1311.744" timestamp="1588921255989" />
-    <state x="371" y="211" key="com.intellij.ide.util.TipDialog" timestamp="1590128452289">
+    <state x="371" y="211" key="com.intellij.ide.util.TipDialog" timestamp="1590170686673">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="371" y="211" key="com.intellij.ide.util.TipDialog/55.24.1311.744@55.24.1311.744" timestamp="1590128452289" />
+    <state x="371" y="211" key="com.intellij.ide.util.TipDialog/55.24.1311.744@55.24.1311.744" timestamp="1590170686673" />
     <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1587156037513">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/55.24.1311.744@55.24.1311.744" timestamp="1587156037513" />
-    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1590131791909">
+    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1590169957885">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590131791909" />
+    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590169957885" />
     <state x="460" y="26" key="refactoring.ChangeSignatureDialog" timestamp="1589549223098">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
