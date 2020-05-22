@@ -4,6 +4,10 @@ body{
     background-repeat: no-repeat;
 }
 
+.no-data-link{
+font-size:12px;
+}
+
 .sft-cnt-header{
 margin-bottom: 25px
 }

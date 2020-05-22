@@ -21,14 +21,12 @@ class TestSetGeneration:
 
         self.ml_pipeline = ml_pipeline
 
-        if self.ml_pipeline.status == "read_data":  # resuming at step 1
-            if self.ml_pipeline.data is None:  # resuming from stop
-                print(ml_pipeline.job_data)
-                user_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step0", "user_data.csv")
-                data = pd.read_csv(user_data_fp)
-                self.ml_pipeline.data = data
+        if self.ml_pipeline.status == "classification":  # resuming at step 1
+            user_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step0", "user_data.csv")
+            data = pd.read_csv(user_data_fp)
+            self.ml_pipeline.data = data
 
-                self.pos_df = self.extract_pos_samples(data)
+            self.pos_df = self.extract_pos_samples(data)
 
             self.search_similar_in_dbs()
 
@@ -43,6 +41,9 @@ class TestSetGeneration:
         # self.search_foodb()
         # self.search_chebi()
         # self.search_hmdb()
+
+        # TODO check where to update this status
+        self.ml_pipeline.status = "test_set_generation"
 
     def search_imppat(self):
 
@@ -175,7 +176,7 @@ class TestSetGeneration:
         # will this handle all scenarios, padel and mordred, check if no additional dependencies
 
         fg_ml_pipeline.data = df
-        fg.FeatureGeneration(fg_ml_pipeline)
+        fg.FeatureGeneration(fg_ml_pipeline, is_train=False)
 
         # TODO write padel to csv
 
@@ -183,7 +184,10 @@ class TestSetGeneration:
             *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, PADEL_FLD_RAW_NAME])
         padel_file_name = os.path.join(padel_raw_fld_path, padel_file_name)
 
+        # make dir if not exists
+        os.makedirs(padel_raw_fld_path, exist_ok=True)
+
         padel_df = fg_ml_pipeline.data
-        padel_df = padel_df.drop("Activation_Status", axis=1)
+        padel_df = padel_df.drop("Activation Status", axis=1)
 
         padel_df.to_csv(padel_file_name, index=False)

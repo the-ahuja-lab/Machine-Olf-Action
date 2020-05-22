@@ -4,7 +4,7 @@ from AppConfig import app_config
 import os
 from datetime import datetime
 import json
-# from shutil import copy
+from shutil import copy
 
 CONFIG_FLD_NAME = ".config"
 DATA_FLD_NAME = "data"
@@ -16,7 +16,7 @@ STATUS_FILE_NAME = "status.txt"
 LOG_FILE_NAME = "run.log"
 
 
-def create_job(job_desc, job_config_json, user_uploaded_file, user_file):
+def create_job(job_desc, job_config_json, user_uploaded_file, user_file, is_default):
     print("Inside Create Job with application root at ", user_uploaded_file)
     jobs_fld = app_config['jobs_folder']
     print(jobs_fld)
@@ -41,7 +41,11 @@ def create_job(job_desc, job_config_json, user_uploaded_file, user_file):
     #
     # copy(user_data_csv, step0)
 
-    user_file.save(os.path.join(step0, "user_data.csv"))
+    if is_default:
+        user_file.save(os.path.join(step0, "user_data.csv"))
+    else:
+        user_data_csv = os.path.join(user_uploaded_file, *["static", "user_ip", "or1a1", "user_data.csv"])
+        copy(user_data_csv, step0)
 
     step1 = os.path.join(data_fld_path, "step1")
     os.makedirs(step1, exist_ok=True)

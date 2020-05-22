@@ -19,10 +19,11 @@ DATA_FILE_NAME_PRFX = "FG"
 
 class FeatureGeneration:
 
-    def __init__(self, ml_pipeline: MLPipeline):
+    def __init__(self, ml_pipeline: MLPipeline, is_train):
         print("Inside FeatureGeneration initialization")
 
         self.ml_pipeline = ml_pipeline
+        self.is_train = is_train
 
         if self.ml_pipeline.status == "read_data":  # resuming at step 1
             if self.ml_pipeline.data is None:  # resuming from stop
@@ -34,7 +35,10 @@ class FeatureGeneration:
             self.generate_features_from_smiles()
 
     def generate_features_from_smiles(self):
-        self.generate_features_using_padel()
+        padel_df = self.generate_features_using_padel()
+        if self.is_train and padel_df is not None:
+            self.write_padel_to_csv(padel_df)
+
         self.generate_features_using_mordered()
         # TODO - Can run above two methods in different threads
 
@@ -57,7 +61,7 @@ class FeatureGeneration:
             OrderedDict: descriptors/fingerprint labels and values
         '''
 
-        #TODO handle space in path - java is giving issue..as of now hardcoded path C:/all_jobs/
+        # TODO handle space in path - java is giving issue..as of now hardcoded path C:/all_jobs/
         print("old output_csv ", output_csv)
 
         # output_csv = os.path.join(*[APP_STATIC, "compound_dbs", "temp_op_padel.csv"])
@@ -113,9 +117,7 @@ class FeatureGeneration:
 
         if self.ml_pipeline.config.fg_padelpy_flg:
 
-            padel_fld_path = self.ml_pipeline.job_data['job_data_path']
-            padel_fld_path = os.path.join(padel_fld_path, DATA_FLD_NAME)
-
+            #TODO handle harcoded path
             temp_smi_fld_path = os.path.join("C:/all_jobs/", "SMI_Files")
             if os.path.exists(temp_smi_fld_path):
                 shutil.rmtree(temp_smi_fld_path)
@@ -129,7 +131,7 @@ class FeatureGeneration:
 
             temp_op_padel_path = os.path.join(temp_smi_fld_path, "temp_op_padel.csv")
 
-            desc = self.from_smiles_dir(temp_smi_fld_path, output_csv=temp_op_padel_path)
+            desc = self.from_smiles_dir(temp_smi_fld_path, output_csv=temp_op_padel_path, timeout=1800) #30 mins timeout
 
             op_padel_df = pd.DataFrame(desc)
 
@@ -143,18 +145,28 @@ class FeatureGeneration:
             mrg_fin_df = mrg_fin_df.drop(['Ligand'], axis=1)
             mrg_fin_df['Ligand'] = ligands
 
-            self.ml_pipeline.data = mrg_fin_df
+            print(mrg_fin_df.columns)
 
-            padel_file_path = os.path.join(padel_fld_path, DATA_FILE_NAME_PRFX + "_Padel.csv")
-            mrg_fin_df.to_csv(padel_file_path, index=False)
+            self.ml_pipeline.data = mrg_fin_df
 
             # clean up smi files
             if os.path.exists(temp_smi_fld_path):
                 shutil.rmtree(temp_smi_fld_path)
+
+            return mrg_fin_df
+
         else:
             # TODO Log
             pass
+            return None
 
     def generate_features_using_mordered(self):
         # TODO Check Mordered
         pass
+
+    def write_padel_to_csv(self, df):
+        padel_fld_path = self.ml_pipeline.job_data['job_data_path']
+        padel_fld_path = os.path.join(padel_fld_path, DATA_FLD_NAME)
+
+        padel_file_path = os.path.join(padel_fld_path, DATA_FILE_NAME_PRFX + "_Padel.csv")
+        df.to_csv(padel_file_path, index=False)

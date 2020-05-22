@@ -15,6 +15,9 @@ PADEL_FLD_NAME = "fg_padel"
 PADEL_FLD_RAW_NAME = "raw"
 PADEL_FLD_PP_NAME = "preprocessed"
 
+TEST_CMPNDS_FLD_NAME = "test_compounds"
+TEST_CMPNDS_FILE_NAME = "test_compounds.csv"
+
 PP_FLD = "step2"
 PP_FIN_NAME = "PP_train.csv"
 PP_NORM_NAME = "PP_data_normalization.joblib"
@@ -33,8 +36,7 @@ class TestSetPreprocessing:
 
         self.ml_pipeline = ml_pipeline
 
-        #TODO change it to test_set_generation from read_data
-        if self.ml_pipeline.status == "read_data":  # resuming at step 1
+        if self.ml_pipeline.status == "test_set_generation":  # resuming at step 1
             self.preprocess_test_padel()
 
     def preprocess_test_padel(self):
@@ -43,18 +45,32 @@ class TestSetPreprocessing:
 
         padel_pp_fld_path = os.path.join(
             *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, PADEL_FLD_PP_NAME])
+
+        padel_test_cmpnd_fld_path = os.path.join(
+            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, TEST_CMPNDS_FLD_NAME])
+
+        os.makedirs(padel_pp_fld_path, exist_ok=True)
+        os.makedirs(padel_test_cmpnd_fld_path, exist_ok=True)
+
         for file in os.listdir(padel_raw_fld_path):
             print(file)
 
             if file.endswith(".csv"):  # checking only csv files
                 padel_fp = os.path.join(padel_raw_fld_path, file)
-                padel_pp_df = self.preprocess_now(padel_fp)
+                ligands, padel_pp_df = self.preprocess_now(padel_fp)
+
+                ligands_df = pd.DataFrame(ligands, columns=["Ligand"])
+                test_cmpnd_fp = os.path.join(padel_test_cmpnd_fld_path, file)
+                ligands_df.to_csv(test_cmpnd_fp, index=False)
 
                 padel_pp_fp = os.path.join(padel_pp_fld_path, file)
                 padel_pp_df.to_csv(padel_pp_fp, index=False)
 
     def preprocess_now(self, padel_fp):
         df_test = pd.read_csv(padel_fp)
+        print(df_test.columns)
+        ligands = df_test['Ligand']
+
         print("Before shape test ", df_test.shape)
 
         df_init_train, init_features = self.extract_initial_train_features()
@@ -74,7 +90,7 @@ class TestSetPreprocessing:
 
         df_test_final = pd.DataFrame(test_final_np)
 
-        return df_test_final
+        return ligands, df_test_final
 
     def extract_initial_train_features(self):
         # TODO make sure final features files is there (a copy of final features with given naming convention)

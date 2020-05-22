@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+<input type="hidden" id="job_type" name="job_type" value="user_uploaded" form="ml_job_frm">
 <form method="POST" id="ml_job_frm" enctype=multipart/form-data>
     <!--    id="chkSubmit" -->
     <div class="sft-form-btns-div">
@@ -18,12 +19,6 @@
          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <!--                    <div class="modal-header">-->
-                <!--                        <h5 class="modal-title" id="exampleModalCenterTitle">Add Job Description</h5>-->
-                <!--                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-                <!--                            <span aria-hidden="true">&times;</span>-->
-                <!--                        </button>-->
-                <!--                    </div>-->
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="job_description">Add Job Description</label>
@@ -57,6 +52,11 @@
                         <div class="card-text">
                             <div class="form-group">
                                 <input type="file" class="form-control-file" id="user_file" name="user_file">
+
+                                <a class="no-data-link" data-toggle="modal" data-target="#exampleModalCenter" href="#" onclick="set_default_job_params()">
+                                    Don't have data? Try using our example data
+                                </a>
+
                             </div>
                             <fieldset>
                                 <legend>Data Split</legend>
@@ -206,7 +206,7 @@
                         </button>
 
                         <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" name="fe_pca_flg" id="fe_pca_flg">
+                            <input type="checkbox" class="form-check-input" name="fe_pca_flg" id="fe_pca_flg" checked>
                             <label class="form-check-label" for="fe_pca_flg">PCA</label>
                         </div>
 
@@ -235,26 +235,11 @@
 
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="clf_svm_flg" id="clf_svm_flg"
-                                       checked>
+                                >
                                 <label class="form-check-label" for="clf_svm_flg">SVM</label>
                             </div>
 
                             <div id="svm" style="display: none">
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="radio" name="clf_svm_auto" id="clf_svm_auto"-->
-                                <!--                                           checked>-->
-                                <!--                                    <label class="form-check-label" for="clf_svm_auto">Auto-Tune</label>-->
-                                <!--                                </div>-->
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="checkbox" name="clf_bagging_svm_"-->
-                                <!--                                           id="clf_bagging_svm_">-->
-                                <!--                                    <label class="form-check-label" for="clf_bagging_svm_">Manual Parameters</label>-->
-                                <!--                                </div>-->
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="checkbox" name="clf_svm_manual"-->
-                                <!--                                           id="clf_svm_manual">-->
-                                <!--                                    <label class="form-check-label" for="clf_svm_manual">Manual Parameters</label>-->
-                                <!--                                </div>-->
                                 <div class="form-row">
                                     <div class="col-xs-6">
                                         <div class="form-check">
@@ -283,16 +268,6 @@
                             </div>
 
                             <div id="extratrees" style="display: none">
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="radio" name="clf_et_auto" id="clf_et_auto"-->
-                                <!--                                           checked>-->
-                                <!--                                    <label class="form-check-label" for="clf_et_auto">Auto-Tune</label>-->
-                                <!--                                </div>-->
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="radio" name="clf_et_manual"-->
-                                <!--                                           id="clf_et_manual">-->
-                                <!--                                    <label class="form-check-label" for="clf_et_manual">Manually</label>-->
-                                <!--                                </div>-->
 
                                 <div class="form-row">
                                     <div class="col-xs-6">
@@ -317,26 +292,18 @@
 
 
                             <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" name="clf_lr_flg" id="clf_lr_flg">
+                                <input type="checkbox" class="form-check-input" name="clf_lr_flg" id="clf_lr_flg"
+                                       checked>
                                 <label class="form-check-label" for="clf_lr_flg">Logistic Regression</label>
                             </div>
 
                             <div id="LR" style="display: none">
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="radio" name="clf_lr_auto" id="clf_lr_auto"-->
-                                <!--                                           checked>-->
-                                <!--                                    <label class="form-check-label" for="clf_lr_auto">Auto-Tune</label>-->
-                                <!--                                </div>-->
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="radio" name="clf_lr_manual"-->
-                                <!--                                           id="clf_lr_manual">-->
-                                <!--                                    <label class="form-check-label" for="clf_lr_manual">Manually</label>-->
 
                                 <div class="form-row">
                                     <div class="col-xs-6">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_lr"
-                                                   id="clf_bagging_lr">
+                                                   id="clf_bagging_lr" checked>
                                             <label class="form-check-label" for="clf_bagging_lr">Bagging of
                                                 LR</label>
                                         </div>
@@ -354,26 +321,18 @@
                             </div>
 
                             <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" name="clf_gnb_flg" id="clf_gnb_flg">
+                                <input type="checkbox" class="form-check-input" name="clf_gnb_flg" id="clf_gnb_flg"
+                                       checked>
                                 <label class="form-check-label" for="clf_gnb_flg">Gaussian Naive Bayes</label>
                             </div>
 
                             <div id="GNB" style="display: none">
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="radio" name="clf_gnb_auto" id="clf_gnb_auto"-->
-                                <!--                                           checked>-->
-                                <!--                                    <label class="form-check-label" for="clf_gnb_auto">Auto-Tune</label>-->
-                                <!--                                </div>-->
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="radio" name="clf_gnb_manual"-->
-                                <!--                                           id="clf_gnb_manual">-->
-                                <!--                                    <label class="form-check-label" for="clf_gnb_manual">Manually</label>-->
 
                                 <div class="form-row">
                                     <div class="col-xs-6">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_gnb"
-                                                   id="clf_bagging_gnb">
+                                                   id="clf_bagging_gnb" checked>
                                             <label class="form-check-label" for="clf_bagging_gnb">Bagging of
                                                 GNB</label>
                                         </div>
@@ -396,16 +355,6 @@
                             </div>
 
                             <div id="gbm" style="display: none">
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="radio" name="clf_gbm_auto" id="clf_gbm_auto"-->
-                                <!--                                           checked>-->
-                                <!--                                    <label class="form-check-label" for="clf_gbm_auto">Auto-Tune</label>-->
-                                <!--                                </div>-->
-                                <!--                                <div class="form-check">-->
-                                <!--                                    <input class="form-check-input" type="radio" name="clf_gbm_manual"-->
-                                <!--                                           id="clf_gbm_manual">-->
-                                <!--                                    <label class="form-check-label" for="clf_gbm_manual">Manually</label>-->
-                                <!--                                </div>-->
 
                                 <div class="form-row">
                                     <div class="col-xs-6">
@@ -431,21 +380,11 @@
 
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="clf_rf_flg" id="clf_rf_flg"
-                                       checked>
+                                >
                                 <label class="form-check-label" for="clf_rf_flg">Random Forest</label>
                             </div>
 
                             <div id="rforest" style="display: none">
-                                <!--                        <div class="form-check">-->
-                                <!--                            <input class="form-check-input" type="radio" name="clf_rf_auto" id="clf_rf_auto"-->
-                                <!--                                   checked>-->
-                                <!--                            <label class="form-check-label" for="clf_rf_auto">Auto-Tune</label>-->
-                                <!--                        </div>-->
-                                <!--                        <div class="form-check">-->
-                                <!--                            <input class="form-check-input" type="radio" name="clf_rf_manual"-->
-                                <!--                                   id="clf_rf_manual">-->
-                                <!--                            <label class="form-check-label" for="clf_rf_manual">Manually</label>-->
-                                <!--                        </div>-->
                                 <div class="form-row">
                                     <div class="col-xs-6">
                                         <div class="form-check">
@@ -469,22 +408,11 @@
 
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="clf_mlp_flg" id="clf_mlp_flg"
-                                       checked>
+                                >
                                 <label class="form-check-label" for="clf_mlp_flg">Multi-Layer Perceptron</label>
                             </div>
 
                             <div id="mlp" style="display: none">
-                                <!--                        <div class="form-check">-->
-                                <!--                            <input class="form-check-input" type="radio" name="clf_mlp_auto" id="clf_mlp_auto"-->
-                                <!--                                   checked>-->
-                                <!--                            <label class="form-check-label" for="clf_mlp_auto">Auto-Tune</label>-->
-                                <!--                        </div>-->
-                                <!--                        <div class="form-check">-->
-                                <!--                            <input class="form-check-input" type="radio" name="clf_mlp_manual"-->
-                                <!--                                   id="clf_mlp_manual">-->
-                                <!--                            <label class="form-check-label" for="clf_mlp_manual">Manually</label>-->
-                                <!--                        </div>-->
-
                                 <div class="form-row">
                                     <div class="col-xs-6">
                                         <div class="form-check">
@@ -524,7 +452,7 @@
 
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="cv_5fold_flg" id="cv_5fold_flg"
-                                       checked>
+                                >
                                 <label class="form-check-label" for="cv_5fold_flg">5-Fold Cross Validation </label>
                             </div>
 
@@ -558,7 +486,7 @@
 
                             <div class="form-check form-check-inline">
                                 <input type="checkbox" class="form-check-input" id="db_foodb_flg" name="db_foodb_flg"
-                                       onclick="show_simililarity_measures()" checked>
+                                       onclick="show_simililarity_measures()">
                                 <label class="form-check-label" for="db_foodb_flg">FOODB</label>
                             </div>
 
@@ -593,13 +521,13 @@
 
                                 <div class="form-check form-check-inline">
                                     <input type="checkbox" class="form-check-input" id="sim_tanimoto_flg"
-                                           name="sim_tanimoto_flg">
+                                           name="sim_tanimoto_flg" checked>
                                     <label class="form-check-label" for="sim_tanimoto_flg">Tanimoto</label>
                                 </div>
 
                                 <div class="form-check form-check-inline">
                                     <input type="checkbox" class="form-check-input" id="sim_dice_flg"
-                                           name="sim_dice_flg">
+                                           name="sim_dice_flg" checked>
                                     <label class="form-check-label" for="sim_dice_flg">Dice</label>
                                 </div>
 

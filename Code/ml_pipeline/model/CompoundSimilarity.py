@@ -171,6 +171,10 @@ class CompoundSimilarity:
 
     def check_similarity_using_fps(self, db_fps, sim_metric="tanimoto",
                                    sim_threshold=0.8):
+        global fps_matches
+        global db_cntr
+        fps_matches = {}
+        db_cntr = 0
 
         fng_sim_metric = self.get_sim_metric_custom_mapping(sim_metric)
         if fng_sim_metric != None:
