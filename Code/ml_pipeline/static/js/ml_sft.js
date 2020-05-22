@@ -230,6 +230,12 @@ console.log("Reset Form")
 document.getElementById("ml_job_frm").reset();
 }
 
+function set_default_job_params(){
+console.log("Setting default job")
+$("#job_type").val("default_job");
+$("#job_description").val("Default OR1A1 Job");
+}
+
 function show_simililarity_measures(){
 
     hmdb = ($("#db_hmdb_flg").is(":checked"))

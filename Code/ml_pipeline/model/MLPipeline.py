@@ -10,6 +10,7 @@ import TestSetPreprocessing as tspp
 import TestSetPrediction as tsprd
 import CrossValidation as cv
 
+
 class MLPipeline(BaseMLJob):
 
     def __init__(self, job_id):
@@ -30,7 +31,7 @@ class MLPipeline(BaseMLJob):
 
     def start(self):
         rud.ReadUserData(self)
-        fg.FeatureGeneration(self)
+        fg.FeatureGeneration(self, is_train=True)
         pp.Preprocessing(self)
         fs.FeatureSelection(self)
         fe.FeatureExtraction(self)

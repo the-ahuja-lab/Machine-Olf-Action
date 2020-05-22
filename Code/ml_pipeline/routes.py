@@ -47,21 +47,65 @@ def create_job():
         #
         # print("@@ json_data ", json_data)
         user_form_json = user_form.to_dict()
-        user_file = request.files['user_file']
-        user_filename = None
-        if user_file and allowed_file(user_file.filename):
-            user_filename = secure_filename(user_file.filename)
-        # TODO handle other extensions error here
         config_user_dict = check_if_valid_job_config(user_form_json)
 
-        if config_user_dict != None and user_filename != None:
-            job_desc = config_user_dict['job_description']
-            job_id = createjob(job_desc, config_user_dict, app.root_path, user_file)
+        if user_form.get("job_type") == "default_job":
+            print("Default Job")
+            if config_user_dict != None:
+                job_desc = config_user_dict['job_description']
+                job_id = createjob(job_desc, config_user_dict, app.root_path, None, is_default=False)
+        else:
+            print("User uploaded job")
+            user_file = request.files['user_file']
+            user_filename = None
+            # # TODO handle other extensions error here
+            if user_file and allowed_file(user_file.filename):
+                user_filename = secure_filename(user_file.filename)
 
-            # return redirect(url_for('view_all_jobs'))
+            if config_user_dict != None and user_filename != None:
+                job_desc = config_user_dict['job_description']
+                job_id = createjob(job_desc, config_user_dict, app.root_path, user_file, is_default=True)
+
+        # user_file = request.files['user_file']
+        # user_filename = None
+        # if user_file and allowed_file(user_file.filename):
+        #     user_filename = secure_filename(user_file.filename)
+        # # TODO handle other extensions error here
+        # config_user_dict = check_if_valid_job_config(user_form_json)
+        #
+        # if config_user_dict != None and user_filename != None:
+        #     job_desc = config_user_dict['job_description']
+        #     job_id = createjob(job_desc, config_user_dict, app.root_path, user_file, is_default=True)
+
+        # return redirect(url_for('view_all_jobs'))
     # else:
     return render_template('create_job.html', title="Create New Job")
 
+
+# @app.route("/create_example_job", methods=['POST'])
+# def create_example_job():
+#     # parse json file and input
+#     # if both input valid, show success message, create new job folder, upload files to correct location
+#     # otherwise show error message
+#     if request.method == 'POST':
+#         user_form = request.form
+#         print("@@@@ result", user_form)
+#         # print(user_form.to_dict())
+#         # print(user_form.to_dict(flat=False))
+#         # json_data = request.get_json(force=True)
+#         #
+#         # print("@@ json_data ", json_data)
+#         user_form_json = user_form.to_dict()
+#
+#         config_user_dict = check_if_valid_job_config(user_form_json)
+#
+#         if config_user_dict != None:
+#             job_desc = config_user_dict['job_description']
+#             job_id = createjob(job_desc, config_user_dict, app.root_path, None, is_default=True)
+#
+#             # return redirect(url_for('view_all_jobs'))
+#     # else:
+#     return render_template('create_job.html', title="Create New Job")
 
 # @app.route("/create_job_service", methods=['GET', 'POST'])
 # def create_job_service():

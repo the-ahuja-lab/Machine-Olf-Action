@@ -64,6 +64,9 @@ class Classification:
         self.apply_et()
         self.apply_mlp()
 
+        #TODO check where to update this status
+        self.ml_pipeline.status = "classification"
+
     def apply_gbm(self):
 
         if self.ml_pipeline.config.clf_gbm_flg:

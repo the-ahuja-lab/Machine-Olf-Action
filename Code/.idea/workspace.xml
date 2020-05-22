@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5308871d-b1e4-47cf-90d7-70b3581c610f" name="Default Changelist" comment="" />
+    <list default="true" id="5308871d-b1e4-47cf-90d7-70b3581c610f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/Classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/Classification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/CompoundSimilarity.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/CompoundSimilarity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/CrossValidation.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/CrossValidation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/FeatureGeneration.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/FeatureGeneration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/MLPipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/MLPipeline.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ManageJob.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ManageJob.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetGeneration.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetGeneration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetPreprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetPreprocessing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/FG_Padel.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/css/ml_sft.css" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/css/ml_sft.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/js/ml_sft.js" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/js/ml_sft.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/user_data.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/create_job.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/create_job.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,7 +34,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1a4zuJKcPWmRhhW79wqVzZbs4zP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -24,16 +47,18 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/ml_pipeline/templates" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/ml_pipeline" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/ml_pipeline/templates" />
       <recent name="$PROJECT_DIR$/ml_pipeline/model" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ml_pipeline/static/user_ip/or1a1" />
+      <recent name="$PROJECT_DIR$/ml_pipeline" />
     </key>
   </component>
   <component name="RunManager" selected="Python.run">
@@ -190,58 +215,58 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="649" y="286" key="FileChooserDialogImpl/55.24.1311.744@55.24.1311.744" timestamp="1586956485099" />
-    <state width="1288" height="246" key="GridCell.Tab.0.bottom" timestamp="1589587797517">
+    <state width="1288" height="246" key="GridCell.Tab.0.bottom" timestamp="1590141898501">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="246" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1589587797517" />
-    <state width="1288" height="246" key="GridCell.Tab.0.center" timestamp="1589587797515">
+    <state width="1288" height="246" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590141898501" />
+    <state width="1288" height="246" key="GridCell.Tab.0.center" timestamp="1590141898499">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="246" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1589587797515" />
-    <state width="1288" height="246" key="GridCell.Tab.0.left" timestamp="1589587797514">
+    <state width="1288" height="246" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1590141898499" />
+    <state width="1288" height="246" key="GridCell.Tab.0.left" timestamp="1590141898498">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="246" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1589587797514" />
-    <state width="1288" height="246" key="GridCell.Tab.0.right" timestamp="1589587797516">
+    <state width="1288" height="246" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1590141898498" />
+    <state width="1288" height="246" key="GridCell.Tab.0.right" timestamp="1590141898500">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="246" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1589587797516" />
-    <state width="1288" height="259" key="GridCell.Tab.1.bottom" timestamp="1589581270275">
+    <state width="1288" height="246" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1590141898500" />
+    <state width="1288" height="259" key="GridCell.Tab.1.bottom" timestamp="1590128308952">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1589581270275" />
-    <state width="1288" height="259" key="GridCell.Tab.1.center" timestamp="1589581270273">
+    <state width="1288" height="259" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590128308952" />
+    <state width="1288" height="259" key="GridCell.Tab.1.center" timestamp="1590128308950">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1589581270273" />
-    <state width="1288" height="259" key="GridCell.Tab.1.left" timestamp="1589581270272">
+    <state width="1288" height="259" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1590128308950" />
+    <state width="1288" height="259" key="GridCell.Tab.1.left" timestamp="1590128308949">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1589581270272" />
-    <state width="1288" height="259" key="GridCell.Tab.1.right" timestamp="1589581270274">
+    <state width="1288" height="259" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1590128308949" />
+    <state width="1288" height="259" key="GridCell.Tab.1.right" timestamp="1590128308951">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1589581270274" />
-    <state x="55" y="24" width="1311" height="744" key="SettingsEditor" timestamp="1588454531451">
+    <state width="1288" height="259" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590128308951" />
+    <state x="55" y="24" width="1311" height="744" key="SettingsEditor" timestamp="1590113476524">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="55" y="24" width="1311" height="744" key="SettingsEditor/55.24.1311.744@55.24.1311.744" timestamp="1588454531451" />
+    <state x="55" y="24" width="1311" height="744" key="SettingsEditor/55.24.1311.744@55.24.1311.744" timestamp="1590113476524" />
     <state width="656" height="386" key="XDebugger.FullValuePopup" timestamp="1588921255989">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state width="656" height="386" key="XDebugger.FullValuePopup/55.24.1311.744@55.24.1311.744" timestamp="1588921255989" />
-    <state x="371" y="211" key="com.intellij.ide.util.TipDialog" timestamp="1589711127212">
+    <state x="371" y="211" key="com.intellij.ide.util.TipDialog" timestamp="1590128452289">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="371" y="211" key="com.intellij.ide.util.TipDialog/55.24.1311.744@55.24.1311.744" timestamp="1589711127212" />
+    <state x="371" y="211" key="com.intellij.ide.util.TipDialog/55.24.1311.744@55.24.1311.744" timestamp="1590128452289" />
     <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1587156037513">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/55.24.1311.744@55.24.1311.744" timestamp="1587156037513" />
-    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1589712021886">
+    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1590131791909">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1589712021886" />
+    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590131791909" />
     <state x="460" y="26" key="refactoring.ChangeSignatureDialog" timestamp="1589549223098">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
