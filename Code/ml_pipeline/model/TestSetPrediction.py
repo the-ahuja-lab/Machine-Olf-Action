@@ -6,6 +6,9 @@ from sklearn.decomposition import PCA
 from joblib import dump, load
 
 import MLPipeline
+
+import LIMEExplanation
+
 from CompoundSimilarity import CompoundSimilarity
 from ml_pipeline.settings import APP_STATIC
 
@@ -33,9 +36,17 @@ class TestSetPrediction:
 
         self.ml_pipeline = ml_pipeline
 
+        self.lime_exp = None
+
         # TODO change status from test_set_generation to test_set_prediction
         if self.ml_pipeline.status == "test_set_generation":  # resuming at step 1
+            self.initialize_lime_explanation()
             self.apply_classification_models()
+
+    def initialize_lime_explanation(self):
+        lime_ml_pipeline = MLPipeline.MLPipeline(self.ml_pipeline.job_id)
+        lime_ml_pipeline.status = "test_set_generation"
+        self.lime_exp = LIMEExplanation.LIMEExplanation(lime_ml_pipeline)
 
     def apply_classification_models(self):
         self.apply_gbm()
@@ -102,6 +113,8 @@ class TestSetPrediction:
 
         all_test_df, all_test_compounds = self.load_all_test_files()
 
+        self.lime_exp.lime_explainer = None
+
         for padel_fname, test_df in all_test_df.items():
             test_compounds = all_test_compounds[padel_fname]
             novel_compounds_predictions = self.apply_model_for_predictions(model, test_df, test_compounds)
@@ -115,6 +128,17 @@ class TestSetPrediction:
             novel_pred_fp = os.path.join(novel_pred_fld_p, pred_f_name)
 
             novel_compounds_predictions.to_csv(novel_pred_fp, index=False)
+
+            lime_exp_f_name = "lime_exp_" + model_name + "_" + self.change_ext(padel_fname, ".csv", ".pdf")
+            lime_exp_pdf_fp = os.path.join(novel_pred_fld_p, lime_exp_f_name)
+
+            self.lime_exp.exp_preds_using_lime(model, test_compounds, padel_fname, lime_exp_pdf_fp)
+
+    def change_ext(self, fname, ext_init, ext_fin):
+        if fname.endswith(ext_init):
+            return fname.replace(ext_init, ext_fin)
+        else:
+            return fname + ext_fin
 
     def apply_gnb(self):
         if self.ml_pipeline.config.clf_gnb_flg:

@@ -14,6 +14,7 @@ TEST_FLD_NAME = "test"
 PADEL_FLD_NAME = "fg_padel"
 PADEL_FLD_RAW_NAME = "raw"
 PADEL_FLD_PP_NAME = "preprocessed"
+PADEL_FLD_PP_LIME_NAME = "pp_lime"
 
 TEST_CMPNDS_FLD_NAME = "test_compounds"
 TEST_CMPNDS_FILE_NAME = "test_compounds.csv"
@@ -45,11 +46,16 @@ class TestSetPreprocessing:
 
         padel_pp_fld_path = os.path.join(
             *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, PADEL_FLD_PP_NAME])
+        os.makedirs(padel_pp_fld_path, exist_ok=True)
+
+
+        padel_pp_lime_fld_path = os.path.join(
+            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, PADEL_FLD_PP_LIME_NAME])
+        os.makedirs(padel_pp_lime_fld_path, exist_ok=True)
+
 
         padel_test_cmpnd_fld_path = os.path.join(
             *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, TEST_CMPNDS_FLD_NAME])
-
-        os.makedirs(padel_pp_fld_path, exist_ok=True)
         os.makedirs(padel_test_cmpnd_fld_path, exist_ok=True)
 
         for file in os.listdir(padel_raw_fld_path):
@@ -57,14 +63,17 @@ class TestSetPreprocessing:
 
             if file.endswith(".csv"):  # checking only csv files
                 padel_fp = os.path.join(padel_raw_fld_path, file)
-                ligands, padel_pp_df = self.preprocess_now(padel_fp)
+                ligands, padel_pp_lime_df, padel_pp_fin_df = self.preprocess_now(padel_fp)
 
                 ligands_df = pd.DataFrame(ligands, columns=["Ligand"])
                 test_cmpnd_fp = os.path.join(padel_test_cmpnd_fld_path, file)
                 ligands_df.to_csv(test_cmpnd_fp, index=False)
 
                 padel_pp_fp = os.path.join(padel_pp_fld_path, file)
-                padel_pp_df.to_csv(padel_pp_fp, index=False)
+                padel_pp_fin_df.to_csv(padel_pp_fp, index=False)
+
+                padel_pp_lime_fp = os.path.join(padel_pp_lime_fld_path, file)
+                padel_pp_lime_df.to_csv(padel_pp_lime_fp, index=False)
 
     def preprocess_now(self, padel_fp):
         df_test = pd.read_csv(padel_fp)
@@ -90,7 +99,7 @@ class TestSetPreprocessing:
 
         df_test_final = pd.DataFrame(test_final_np)
 
-        return ligands, df_test_final
+        return ligands, df_test_pp_final, df_test_final
 
     def extract_initial_train_features(self):
         # TODO make sure final features files is there (a copy of final features with given naming convention)
@@ -172,7 +181,7 @@ class TestSetPreprocessing:
 
     def apply_pca(self, df_test_fltrd):
         if self.ml_pipeline.config.fe_pca_flg:
-            xtest = df_test_fltrd
+            xtest = df_test_fltrd.copy()
 
             pca_model_path = os.path.join(
                 *[self.ml_pipeline.job_data['job_data_path'], PCA_FLD, PCA_MODEL])

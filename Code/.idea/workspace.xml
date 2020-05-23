@@ -3,7 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="5308871d-b1e4-47cf-90d7-70b3581c610f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/Evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/Evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/FeatureSelection.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/FeatureSelection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/MLPipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/MLPipeline.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetPreprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetPreprocessing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.spec" beforeDir="false" afterPath="$PROJECT_DIR$/run.spec" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +93,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="MLPipeline" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="LIMEExplanation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Software" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -100,7 +105,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ml_pipeline/model/MLPipeline.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ml_pipeline/model/LIMEExplanation.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -154,10 +159,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.run" />
+        <item itemvalue="Python.LIMEExplanation" />
         <item itemvalue="Python.routes" />
         <item itemvalue="Python.FeatureGeneration" />
         <item itemvalue="Python.CrossValidation" />
-        <item itemvalue="Python.MLPipeline" />
       </list>
     </recent_temporary>
   </component>
@@ -199,58 +204,58 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="649" y="286" key="FileChooserDialogImpl/55.24.1311.744@55.24.1311.744" timestamp="1586956485099" />
-    <state width="1288" height="259" key="GridCell.Tab.0.bottom" timestamp="1590171872276">
+    <state width="1288" height="246" key="GridCell.Tab.0.bottom" timestamp="1590268722338">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590171872276" />
-    <state width="1288" height="259" key="GridCell.Tab.0.center" timestamp="1590171872275">
+    <state width="1288" height="246" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590268722338" />
+    <state width="1288" height="246" key="GridCell.Tab.0.center" timestamp="1590268722337">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1590171872275" />
-    <state width="1288" height="259" key="GridCell.Tab.0.left" timestamp="1590171872274">
+    <state width="1288" height="246" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1590268722337" />
+    <state width="1288" height="246" key="GridCell.Tab.0.left" timestamp="1590268722337">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1590171872274" />
-    <state width="1288" height="259" key="GridCell.Tab.0.right" timestamp="1590171872275">
+    <state width="1288" height="246" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1590268722337" />
+    <state width="1288" height="246" key="GridCell.Tab.0.right" timestamp="1590268722338">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1590171872275" />
-    <state width="1288" height="259" key="GridCell.Tab.1.bottom" timestamp="1590171872286">
+    <state width="1288" height="246" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1590268722338" />
+    <state width="1288" height="444" key="GridCell.Tab.1.bottom" timestamp="1590266874621">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590171872286" />
-    <state width="1288" height="259" key="GridCell.Tab.1.center" timestamp="1590171872279">
+    <state width="1288" height="444" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590266874621" />
+    <state width="1288" height="444" key="GridCell.Tab.1.center" timestamp="1590266874619">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1590171872279" />
-    <state width="1288" height="259" key="GridCell.Tab.1.left" timestamp="1590171872278">
+    <state width="1288" height="444" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1590266874619" />
+    <state width="1288" height="444" key="GridCell.Tab.1.left" timestamp="1590266874618">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1590171872278" />
-    <state width="1288" height="259" key="GridCell.Tab.1.right" timestamp="1590171872281">
+    <state width="1288" height="444" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1590266874618" />
+    <state width="1288" height="444" key="GridCell.Tab.1.right" timestamp="1590266874620">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="259" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590171872281" />
-    <state x="55" y="24" width="1311" height="744" key="SettingsEditor" timestamp="1590173539313">
+    <state width="1288" height="444" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590266874620" />
+    <state x="55" y="24" width="1311" height="744" key="SettingsEditor" timestamp="1590219283300">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="55" y="24" width="1311" height="744" key="SettingsEditor/55.24.1311.744@55.24.1311.744" timestamp="1590173539313" />
+    <state x="55" y="24" width="1311" height="744" key="SettingsEditor/55.24.1311.744@55.24.1311.744" timestamp="1590219283300" />
     <state width="656" height="386" key="XDebugger.FullValuePopup" timestamp="1588921255989">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state width="656" height="386" key="XDebugger.FullValuePopup/55.24.1311.744@55.24.1311.744" timestamp="1588921255989" />
-    <state x="371" y="211" key="com.intellij.ide.util.TipDialog" timestamp="1590170686673">
+    <state x="371" y="211" key="com.intellij.ide.util.TipDialog" timestamp="1590219124436">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="371" y="211" key="com.intellij.ide.util.TipDialog/55.24.1311.744@55.24.1311.744" timestamp="1590170686673" />
+    <state x="371" y="211" key="com.intellij.ide.util.TipDialog/55.24.1311.744@55.24.1311.744" timestamp="1590219124436" />
     <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1587156037513">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/55.24.1311.744@55.24.1311.744" timestamp="1587156037513" />
-    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1590169957885">
+    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1590264582577">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590169957885" />
+    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590264582577" />
     <state x="460" y="26" key="refactoring.ChangeSignatureDialog" timestamp="1589549223098">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
