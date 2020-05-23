@@ -87,6 +87,7 @@ class FeatureSelection:
         ytrain = self.ml_pipeline.y_train
         ytest = self.ml_pipeline.y_test
 
+        # TODO add these (activation statuses to the files too)
         # x_train['Activation Status'] = ytrain
         # x_test['Activation Status'] = ytest
 
@@ -96,8 +97,18 @@ class FeatureSelection:
         train_file_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "train.csv")
         test_file_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "test.csv")
 
+        # TODO remove these (activation statuses to the files too)
+        train_labels_file_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "train_labels.csv")
+        test_labels_file_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "test_labels.csv")
+
         x_train.to_csv(train_file_path, index=False)
         x_test.to_csv(test_file_path, index=False)
+
+        ytrain_df = pd.DataFrame(ytrain)
+        ytest_df = pd.DataFrame(ytest)
+
+        ytrain_df.to_csv(train_labels_file_path, index=False)
+        ytest_df.to_csv(test_labels_file_path, index=False)
 
         # update status
         self.ml_pipeline.status = "feature_selection"

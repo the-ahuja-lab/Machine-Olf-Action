@@ -382,5 +382,5 @@ class Evaluation:
         figlist = self.Figureset
         pdf = matplotlib.backends.backend_pdf.PdfPages(pdf_file_path)
         for i in range(len(figlist)):
-            pdf.savefig(figlist[i])
+            pdf.savefig(figlist[i], bbox_inches="tight")
         pdf.close()
