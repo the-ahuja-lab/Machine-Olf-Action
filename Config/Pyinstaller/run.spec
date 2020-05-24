@@ -14,20 +14,27 @@ from PyInstaller.utils.hooks import collect_submodules
 #flask_autoindex_hiddenimports = collect_submodules('flask_autoindex')
 #flask_silk_hiddenimports = collect_submodules('flask_silk')
 padel_py_hiddenimports = collect_submodules('padelpy')
+mordred_py_hiddenimports = collect_submodules('mordred')
+
 
 flask_autoindex_datafiles = collect_data_files('flask_autoindex')
 flask_silk_datafiles = collect_data_files('flask_silk')
 padel_py_datafiles = collect_data_files('padelpy')
+mordred_py_datafiles = collect_data_files('mordred')
 
 
 all_hiddenimports = ['pkg_resources.py2_warn','sklearn.utils._cython_blas','sklearn.neighbors.typedefs','sklearn.neighbors.quad_tree','sklearn.tree._utils']
 #all_hiddenimports.extend(flask_autoindex_hiddenimports)
 #all_hiddenimports.extend(flask_silk_hiddenimports)
 all_hiddenimports.extend(padel_py_hiddenimports)
+all_hiddenimports.extend(mordred_py_hiddenimports)
+
 
 added_files.extend(flask_autoindex_datafiles)
 added_files.extend(flask_silk_datafiles)
 added_files.extend(padel_py_datafiles)
+added_files.extend(mordred_py_datafiles)
+
 
 #print("@@ all_data_files ", added_files)
 #print("@@ all_hiddenimports ", all_hiddenimports)
