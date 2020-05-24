@@ -13,6 +13,9 @@ from padelpy.wrapper import padeldescriptor
 
 from ml_pipeline.settings import APP_STATIC
 
+from mordred import Calculator, descriptors
+from rdkit import Chem
+
 DATA_FLD_NAME = "step1"
 DATA_FILE_NAME_PRFX = "FG"
 
@@ -35,11 +38,14 @@ class FeatureGeneration:
             self.generate_features_from_smiles()
 
     def generate_features_from_smiles(self):
-        padel_df = self.generate_features_using_padel()
+        # padel_df = self.generate_features_using_padel()
+        # if self.is_train and padel_df is not None:
+        #     self.write_padel_to_csv(padel_df)
+
+        padel_df = self.generate_features_using_mordered()
+
         if self.is_train and padel_df is not None:
             self.write_padel_to_csv(padel_df)
-
-        self.generate_features_using_mordered()
         # TODO - Can run above two methods in different threads
 
         # TODO update status that this stage is completed
@@ -162,7 +168,22 @@ class FeatureGeneration:
 
     def generate_features_using_mordered(self):
         # TODO Check Mordered
-        pass
+        if self.ml_pipeline.config.fg_mordered_flg:
+            data = self.ml_pipeline.data
+            calc = Calculator(descriptors, ignore_3D=True)
+            mols = [Chem.MolFromSmiles(smi) for smi in data["Smiles"]]
+            df = calc.pandas(mols)  ## All features
+            df["Ligand"] = data["Ligand"]
+            df["Activation Status"] = data["Activation Status"]
+
+            self.ml_pipeline.data = df
+
+            return df
+
+        else:
+            # TODO Log
+            pass
+            return None
 
     def write_padel_to_csv(self, df):
         padel_fld_path = self.ml_pipeline.job_data['job_data_path']

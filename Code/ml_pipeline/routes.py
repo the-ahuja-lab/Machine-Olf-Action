@@ -90,10 +90,21 @@ def view_job_files(path='.'):
     return job_files_index.render_autoindex(path=path)
 
 
+@app.route("/view-job-details")
+@app.route('/view-job-details/<path:path>')
+def view_job_details(path='.'):
+    print("Path ", path)
+    # return job_files_index.render_autoindex(path=path)
+    job = None
+    return render_template('view_job_detail.html', title="View Job Detail", job=job)
+
+
 @app.route("/view-all-jobs")
 def view_all_jobs():
     all_jobs = ListAllJobs()
     all_jobs_lst = all_jobs.get_all_jobs()
+    if len(all_jobs_lst) == 0:
+        flash("No jobs present yet, create a new job first and then check back here", "danger")
     return render_template('view_all_jobs.html', title="View All Jobs", all_jobs=all_jobs_lst)
 
 

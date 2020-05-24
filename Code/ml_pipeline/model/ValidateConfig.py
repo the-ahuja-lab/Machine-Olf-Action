@@ -49,7 +49,7 @@ def validate_error_form_fields(config_form_dict):
 
     print("Inside validate_form_fields ", config_user_dict)
 
-    if not config_user_dict.get("fg_padelpy_flg"):
+    if not config_user_dict.get("fg_padelpy_flg") and not config_user_dict.get("fg_mordered_flg"):
         # if ALL_VALID_ERRORS["FG"] is None:
         #     ALL_VALID_ERRORS["FG"] = list()
         # ALL_VALID_ERRORS["FG"].append("Please select at-least one feature generation method from Padel or Mordered")
