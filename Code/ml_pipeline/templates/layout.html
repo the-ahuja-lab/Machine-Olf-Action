@@ -12,9 +12,6 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap_4.3.1.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui_1.12.1.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/icon.css') }}">
-    <!--    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">-->
-
 
     <script src="{{ url_for('static', filename='js/jquery.min_3.3.1.js') }}"></script>
     <script src="{{ url_for('static', filename='js/popper.min_1.14.7.js') }}"></script>
@@ -23,34 +20,14 @@
 
     <script src="{{ url_for('static', filename='js/ml_sft.js') }}"></script>
 
-    <!--    <link rel="stylesheet" type=text/css href="css/ml_sft.css"/>-->
-
-    <!--    <link rel="stylesheet" href="css/bootstrap_4.3.1.css">-->
-    <!--    <link rel="stylesheet" href="css/jquery-ui_1.12.1.css">-->
-    <!--    <link rel="stylesheet" href="css/icon.css'">-->
-
-    <!--    <script src="js/jquery.min_3.3.1.js"></script>-->
-    <!--    <script src="js/popper.min_1.14.7.js"></script>-->
-    <!--    <script src="js/bootstrap.min_4.3.1.js"></script>-->
-    <!--    <script src="js/jquery-ui_1.12.1.js"></script>-->
-
-    <!--    <script src="js/ml_sft.js"></script>-->
-
 </head>
 <body>
 
 <div class="sft-cnt-header">
     <div class="sft-header">
-        <i class="material-icons" style="font-size:50px; color:white;">memory</i>
-        Machine-<em>OLF</em>-action: a machine learning-driven framework
-        <i class="material-icons" style="font-size:50px; color:white;">memory</i>
-
-        <!--        <button type="button" class="btn btn-secondary">-->
-        <!--            <h5><b><i class="material-icons" style="font-size:20px; color:white;">account_circle</i>THE AHUJA-->
-        <!--                LAB<br></b></h5>-->
-        <!--            <h6><i class="material-icons" style="font-size:20px; color:white;">public</i><u>https://ahuja-lab.in/</u>-->
-        <!--            </h6>-->
-        <!--        </button>-->
+        <img class="soft-title-logo" src="../static/images/ml_olfa_logo.svg" alt="logo"/>
+        Machine-<em>OlF</em>-Action: a machine learning-driven framework
+        <img class="soft-title-logo-flip" src="../static/images/ml_olfa_logo.svg" alt="logo"/>
     </div>
 </div>
 
@@ -59,27 +36,27 @@
     <!--    <button type="button" class="btn btn-light" title="Create New Job">-->
     <!--        <h6><b>Create New Job</b></h6>-->
     <!--    </button>-->
-    <a href="{{ url_for('create_job') }}" class="btn btn-light" role="button" title="Create New Job">
+    <a href="{{ url_for('create_job') }}" class="btn btn-light btn-sec-cust" role="button" title="Create New Job">
         <h6><b>Create New Job</b></h6>
     </a>
 
     <!--    <button type="button" class="btn btn-light" title="View All Jobs">-->
     <!--        <h6><b>View All Jobs</b></h6>-->
     <!--    </button>-->
-    <a href="{{ url_for('view_all_jobs') }}" class="btn btn-light" role="button" title="View All Jobs">
+    <a href="{{ url_for('view_all_jobs') }}" class="btn btn-light btn-sec-cust" role="button" title="View All Jobs">
         <h6><b>View All Jobs</b></h6>
     </a>
     <!--    <button type="button" class="btn btn-light" title="View All Databases">-->
     <!--        <h6><b>View All Databases</b></h6>-->
     <!--    </button>-->
-    <a href="{{ url_for('view_all_dbs') }}" class="btn btn-light" role="button" title="View All Databases">
+    <a href="{{ url_for('view_all_dbs') }}" class="btn btn-light btn-sec-cust" role="button" title="View All Databases">
         <h6><b>View All Databases</b></h6>
     </a>
 
     <br>
 </div>
 
-<div id="mainContent">
+<div id="mainContent" class="sft-main-content">
     <div class="alerts-div">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -94,6 +71,13 @@
         {% endwith %}
     </div>
     {% block content %}{% endblock %}
+</div>
+
+<div class="sft-cnt-footer">
+    <div class="sft-footer">
+        Creators: Mohit Choudhary & Anku Gupta | Contact: <a href="https://ahuja-lab.in/" target="_blank">The Ahuja
+        Lab</a>
+    </div>
 </div>
 
 </body>

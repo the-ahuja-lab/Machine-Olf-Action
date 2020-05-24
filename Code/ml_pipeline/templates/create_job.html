@@ -2,17 +2,16 @@
 {% block content %}
 <input type="hidden" id="job_type" name="job_type" value="user_uploaded" form="ml_job_frm">
 <form method="POST" id="ml_job_frm" enctype=multipart/form-data>
-    <!--    id="chkSubmit" -->
     <div class="sft-form-btns-div">
-        <button type="button" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-secondary"
+        <button type="button" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-success"
                 title="Create Job!">
-            <h4><b><i class="material-icons" style="font-size:30px; color:black;">alarm_on</i><em>CREATE JOB</em></b>
-            </h4>
+            <b><img class="btn-icon" src="../static/images/create_job.svg"
+                    alt="Create Job"/><em>CREATE JOB</em></b>
         </button>
-        <button type="button" class="btn btn-secondary" title="Reset Job" onclick="reset_ml_job_form()">
-            <h4><b><i class="material-icons" style="font-size:30px; color:black;">cached</i><em>RESET JOB</em></b></h4>
+        <button type="button" class="btn btn-danger" title="Reset Job" onclick="reset_ml_job_form()">
+            <b><img class="btn-icon" src="../static/images/reset_job.svg"
+                    alt="Reset Job"/><em>RESET JOB</em></b>
         </button>
-
     </div>
 
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
@@ -27,7 +26,6 @@
                                   aria-describedby="jd_help"></textarea>
                         <small id="jd_help" class="form-text text-muted">It can be used to refer to job later
                             in-case you forget job-id</small>
-
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -39,21 +37,21 @@
     </div>
 
     <div class="sft-form-cntnt-div">
-
         <div class="row">
             <div class="card-group">
-                <div class="card border-primary mb-3">
-                    <img src="https://static.thenounproject.com/png/1631012-200.png"
-                         class="card-img-top embed-responsive-item"
-                         alt="...">
+                <div class="card card-cust border-primary mb-3">
+                    <img src="../static/images/upload_data.svg"
+                         class="card-img-top card-img-cust embed-responsive-item"
+                         alt="STEP 1: Upload Dataset">
                     <div class="card-body">
-                        <h5 class="card-title">Step 1: UPLOAD DATASET</h5>
+                        <h5 class="card-title card-title-cust">STEP 1: UPLOAD DATASET</h5>
 
                         <div class="card-text">
                             <div class="form-group">
                                 <input type="file" class="form-control-file" id="user_file" name="user_file">
 
-                                <a class="no-data-link" data-toggle="modal" data-target="#exampleModalCenter" href="#" onclick="set_default_job_params()">
+                                <a class="no-data-link" data-toggle="modal" data-target="#exampleModalCenter" href="#"
+                                   onclick="set_default_job_params()">
                                     Don't have data? Try using our example data
                                 </a>
 
@@ -75,29 +73,29 @@
                         </div>
                     </div>
                 </div>
-                <div class="card border-primary mb-3">
-                    <img src="https://cdn-media-1.freecodecamp.org/images/1*1mpE6fsq5LNxH31xeTWi5w.jpeg"
-                         class="card-img-top embed-responsive-item" alt="...">
+                <div class="card card-cust border-primary mb-3">
+                    <img src="../static/images/feature_generation.svg"
+                         class="card-img-top card-img-cust embed-responsive-item" alt="STEP 2: Feature Generation">
                     <div class="card-body">
-                        <h5 class="card-title">Step 2: FEATURE GENERATION</h5>
+                        <h5 class="card-title card-title-cust">STEP 2: FEATURE GENERATION</h5>
                         <div class="card-text">
-                            <button type="button" class="btn btn-dark" title="Generate Descriptors">
+                            <button type="button" class="btn btn-light btn-info-cust" title="Generate Descriptors">
                                 <h6><b>I. Generate Chemical Descriptors</b></h6>
                             </button>
 
                             <div class="form-check form-check-inline">
                                 <input type="checkbox" id="fg_padelpy_flg" name="fg_padelpy_flg"
-                                       class="form-check-input" checked>
+                                       class="form-check-input">
                                 <label class="form-check-label" for="fg_padelpy_flg">Padel</label>
                             </div>
 
                             <div class="form-check form-check-inline">
                                 <input type="checkbox" id="fg_mordered_flg" name="fg_mordered_flg"
-                                       class="form-check-input">
+                                       class="form-check-input" checked>
                                 <label class="form-check-label" for="fg_mordered_flg">Mordred</label>
                             </div>
 
-                            <button type="button" class="btn btn-dark" title="Pre processing Steps">
+                            <button type="button" class="btn btn-light btn-info-cust" title="Pre processing Steps">
                                 <h6><b>II. Choose Pre processing Steps</b></h6>
                             </button>
 
@@ -186,12 +184,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="card border-primary mb-3">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTrIuHxc-ljrIiLqQBtFg3-Ql75gTzMQomHV25jt5SLPccRs8W1&usqp=CAU"
-                         class="card-img-top embed-responsive-item" alt="...">
+                <div class="card card-cust border-primary mb-3">
+                    <img src="../static/images/feature_reduction.svg"
+                         class="card-img-top card-img-cust embed-responsive-item" alt="STEP 3: Feature Reduction">
                     <div class="card-body">
-                        <h5 class="card-title">Step 3: FEATURE REDUCTION </h5>
-                        <button type="button" class="btn btn-dark" title="Pre processing Steps">
+                        <h5 class="card-title card-title-cust">STEP 3: FEATURE REDUCTION </h5>
+                        <button type="button" class="btn btn-light btn-info-cust" title="Pre processing Steps">
                             <h6><b>I. Feature Selection</b></h6>
                         </button>
 
@@ -201,7 +199,7 @@
                             <label class="form-check-label" for="fs_boruta_flg">Boruta</label>
                         </div>
 
-                        <button type="button" class="btn btn-dark" title="Pre processing Steps">
+                        <button type="button" class="btn btn-light btn-info-cust" title="Pre processing Steps">
                             <h6><b>II. Feature Extraction</b></h6>
                         </button>
 
@@ -223,13 +221,13 @@
 
         <div class="row">
             <div class="card-group">
-                <div class="card border-primary mb-3">
-                    <img src="https://cdn-media-1.freecodecamp.org/images/1*1mpE6fsq5LNxH31xeTWi5w.jpeg"
-                         class="card-img-top embed-responsive-item" alt="...">
+                <div class="card card-cust border-primary mb-3">
+                    <img src="../static/images/classification.svg"
+                         class="card-img-top card-img-cust embed-responsive-item" alt="STEP 4: Classification">
                     <div class="card-body">
-                        <h5 class="card-title">Step 5: CLASSIFICATION</h5>
+                        <h5 class="card-title card-title-cust">STEP 5: CLASSIFICATION</h5>
                         <div class="card-text">
-                            <button type="button" class="btn btn-dark" title="Tuning Method">
+                            <button type="button" class="btn btn-light btn-info-cust" title="Tuning Method">
                                 <h6><b>Choose the Tuning Method</b></h6>
                             </button>
 
@@ -437,11 +435,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="card border-primary mb-3">
-                    <img src="https://png.pngtree.com/png-vector/20190830/ourlarge/pngtree-validate-line-vector-icon-png-image_1716071.jpg"
-                         class="card-img-top embed-responsive-item" alt="...">
+                <div class="card card-cust border-primary mb-3">
+                    <img src="../static/images/data_validation.svg"
+                         class="card-img-top card-img-cust embed-responsive-item" alt="STEP 5: Validation">
                     <div class="card-body">
-                        <h5 class="card-title">Step 6: VALIDATION SCHEME</h5>
+                        <h5 class="card-title card-title-cust">STEP 6: VALIDATION SCHEME</h5>
                         <div class="card-text">
 
                             <div class="form-group form-check">
@@ -465,14 +463,12 @@
 
                     </div>
                 </div>
-                <div class="card border-primary mb-3">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQWSajZzGh2CW9KwQtKrj91DMp2ExzyiD7_UHgAqY-relRuGTGv&usqp=CAU"
-                         class="card-img-top embed-responsive-item">
-                    <br>
+                <div class="card card-cust border-primary mb-3">
+                    <img src="../static/images/databases.svg"
+                         class="card-img-top card-img-cust embed-responsive-item" alt="STEP 6: Test Set Generation">
                     <div class="card-body">
-                        <p class="card-text">
-                        <h5 class="card-title">Step 7: TEST SET GENERATION</h5>
-                        <button type="button" class="btn btn-dark" title="Search Database">
+                        <h5 class="card-title card-title-cust">STEP 7: TEST SET GENERATION</h5>
+                        <button type="button" class="btn btn-light btn-info-cust" title="Search Database">
                             <h6><b>Search Database</b></h6>
                         </button>
 
@@ -513,7 +509,7 @@
 
                         <div id="sim_msrs_div" style="display:none;">
 
-                            <button type="button" class="btn btn-dark" title="Similarity Measure">
+                            <button type="button" class="btn btn-light btn-info-cust" title="Similarity Measure">
                                 <h6><b>Choose Similarity Measure</b></h6>
                             </button>
 
@@ -560,7 +556,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </form>
 {% endblock content %}

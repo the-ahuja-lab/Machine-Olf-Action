@@ -1,7 +1,9 @@
 body{
-    background-image: url("../images/smoke-vapour-aroma-incense.jpg");
+    background-image: url("../images/mainbg_4.jpg");
     background-size: cover;
     background-repeat: no-repeat;
+    opacity: 0.95;
+
 }
 
 .no-data-link{
@@ -11,12 +13,28 @@ font-size:12px;
 .sft-cnt-header{
 margin-bottom: 25px
 }
+
 .sft-header{
-    color:#FFFFFF;
+    color:white;
     font-weight: bolder;
     line-height: 1.2;
     margin-bottom: .5rem;
     font-size: 2.5rem;
+    text-align: center;
+}
+
+.sft-cnt-footer{
+background-color: rgba(0,0,0,0.95) !important;
+padding:10px;
+}
+
+.sft-main-content{
+min-height: 100vh
+}
+
+.sft-footer{
+    color:white;
+    font-size: 0.9rem;
     text-align: center;
 }
 
@@ -35,10 +53,52 @@ margin-bottom: 25px
 .sft-form-cntnt-div{
     width: 900px;
     margin: 0 auto;
-    color:#212529 !important;
+    /*color:#212529 !important;*/
+    color:white !important;
 }
 
 .alerts-div{
-    width: 600px;
+    width: 800px;
     margin: 0 auto;
+}
+
+.card-img-cust{
+width:300px;
+height:200px;
+}
+
+.btn-info-cust{
+margin: 7px 0 7px 0;
+}
+
+.card-title-cust{
+font-size: 1.00rem;
+font-weight: bolder;
+/*color: #eb0e50;*/
+color:white;
+}
+
+.soft-title-logo{
+width:40px;
+height:40px;
+}
+
+.soft-title-logo-flip{
+width:40px;
+height:40px;
+transform: rotateY(180deg);
+}
+
+.card-cust{
+background-color: rgba(0,0,0,0.9) !important
+}
+
+.btn-sec-cust{
+/*background-color:#3fada8 !important*/
+}
+
+.btn-icon{
+width:40px;
+height:40px;
+padding-right:5px
 }
