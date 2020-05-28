@@ -164,13 +164,23 @@ class Evaluation:
         return results
 
     def evaluate_and_save_bagging_results(self, bc, n, x_test, y_test, title, fld_path):
-        #resetting all figures
+        # resetting all figures
         self.figcount = 0
         self.Figureset = []
 
         # evaluate aggregated bagging clf
         bc_ypred = bc.predict(x_test)
         bc_yproba = bc.predict_proba(x_test)
+
+        df_test = pd.DataFrame([], columns=['Prediction', 'Ground Truth', 'Prob 0', 'Prob 1'])
+        df_test['Prediction'] = bc_ypred
+        df_test['Ground Truth'] = y_test
+        df_test['Prob 0'] = bc_yproba[:, 0]
+        df_test['Prob 1'] = bc_yproba[:, 1]
+
+        test_preds_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + title + ".csv")
+        df_test.to_csv(test_preds_path, index=False)
+
         self.save_all_model_plots(bc_ypred, y_test, bc_yproba, title)
 
         # evaluate each of the bagged classifier
@@ -189,15 +199,14 @@ class Evaluation:
 
     def evaluate_bagging_model(self, clf, n, fld_name):
 
-        #convert to int in case float
+        # convert to int in case float
         n = int(n)
 
         fld_path = self.ml_pipeline.job_data['job_data_path']
 
-        #TODO check if need to add bagging folder
-        #fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, BAGGING_FLD_NAME, fld_name])
+        # TODO check if need to add bagging folder
+        # fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, BAGGING_FLD_NAME, fld_name])
         fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, fld_name])
-
 
         os.makedirs(fld_path, exist_ok=True)
 
