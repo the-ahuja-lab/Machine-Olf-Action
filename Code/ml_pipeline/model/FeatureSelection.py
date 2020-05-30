@@ -76,9 +76,11 @@ class FeatureSelection:
 
             self.ml_pipeline.x_train = pd.read_csv(mordred_xtrain_fp)
             self.ml_pipeline.y_train = pd.read_csv(mordred_ytrain_fp)
+            self.ml_pipeline.y_train = self.ml_pipeline.y_train.values.ravel()
 
             self.ml_pipeline.x_test = pd.read_csv(mordred_xtest_fp)
             self.ml_pipeline.y_test = pd.read_csv(mordred_ytest_fp)
+            self.ml_pipeline.y_test = self.ml_pipeline.y_test.values.ravel()
 
             # folder path to save output of preprocessed mordred features feature selection data
             fs_mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
