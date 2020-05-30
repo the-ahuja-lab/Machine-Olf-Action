@@ -64,40 +64,40 @@ class FeatureSelection:
 
             self.perform_feature_selection()
 
-            if self.ml_pipeline.config.fg_mordered_flg:
-                self.jlogger.info("Started feature selection of preprocessed mordred features")
-                job_fld_path = self.ml_pipeline.job_data['job_fld_path']
-                pp_mordred_fld_path = os.path.join(
-                    *[job_fld_path, app_config.TEMP_TTS_FLD_NAME, app_config.FG_MORDRED_FLD_NAME])
-                mordred_xtrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTRAIN_FNAME)
-                mordred_ytrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTRAIN_FNAME)
-                mordred_xtest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTEST_FNAME)
-                mordred_ytest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTEST_FNAME)
+        if self.ml_pipeline.config.fg_mordered_flg:
+            self.jlogger.info("Started feature selection of preprocessed mordred features")
+            job_fld_path = self.ml_pipeline.job_data['job_fld_path']
+            pp_mordred_fld_path = os.path.join(
+                *[job_fld_path, app_config.TEMP_TTS_FLD_NAME, app_config.FG_MORDRED_FLD_NAME])
+            mordred_xtrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTRAIN_FNAME)
+            mordred_ytrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTRAIN_FNAME)
+            mordred_xtest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTEST_FNAME)
+            mordred_ytest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTEST_FNAME)
 
-                self.ml_pipeline.x_train = pd.read_csv(mordred_xtrain_fp)
-                self.ml_pipeline.y_train = pd.read_csv(mordred_ytrain_fp)
+            self.ml_pipeline.x_train = pd.read_csv(mordred_xtrain_fp)
+            self.ml_pipeline.y_train = pd.read_csv(mordred_ytrain_fp)
 
-                self.ml_pipeline.x_test = pd.read_csv(mordred_xtest_fp)
-                self.ml_pipeline.y_test = pd.read_csv(mordred_ytest_fp)
+            self.ml_pipeline.x_test = pd.read_csv(mordred_xtest_fp)
+            self.ml_pipeline.y_test = pd.read_csv(mordred_ytest_fp)
 
-                # folder path to save output of preprocessed mordred features feature selection data
-                fs_mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
-                                                   app_config.FG_MORDRED_FLD_NAME])
+            # folder path to save output of preprocessed mordred features feature selection data
+            fs_mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
+                                               app_config.FG_MORDRED_FLD_NAME])
 
-                self.fg_fs_fld_path = fs_mordred_fld_path
-                os.makedirs(self.fg_fs_fld_path, exist_ok=True)
+            self.fg_fs_fld_path = fs_mordred_fld_path
+            os.makedirs(self.fg_fs_fld_path, exist_ok=True)
 
-                self.perform_feature_selection()
+            self.perform_feature_selection()
 
-            if self.is_train:
-                updated_status = app_config.STEP3_STATUS
+        if self.is_train:
+            updated_status = app_config.STEP3_STATUS
 
-                job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
-                helper.update_job_status(job_oth_config_fp, updated_status)
+            job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
+            helper.update_job_status(job_oth_config_fp, updated_status)
 
-                self.ml_pipeline.status = updated_status
+            self.ml_pipeline.status = updated_status
 
-                self.jlogger.info("Feature selection completed successfully")
+            self.jlogger.info("Feature selection completed successfully")
 
     def perform_feature_selection(self):
         self.perform_boruta_fs()
