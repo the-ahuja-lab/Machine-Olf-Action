@@ -3,39 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5308871d-b1e4-47cf-90d7-70b3581c610f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/AppConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/AppConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/BaseMLJob.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/BaseMLJob.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/Classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/Classification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/CompoundSimilarity.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/CompoundSimilarity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/CrossValidation.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/CrossValidation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/Evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/Evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/FeatureExtraction.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/FeatureExtraction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/FeatureGeneration.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/FeatureGeneration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/FeatureSelection.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/FeatureSelection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/LIMEExplanation.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/LIMEExplanation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ListAllJobs.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ListAllJobs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/MLJobConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/MLJobConfig.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/model/MLPipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/MLPipeline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ManageJob.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ManageJob.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/Preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/Preprocessing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ReadUserData.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ReadUserData.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetGeneration.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetGeneration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetPreprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetPreprocessing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/chebi_ds_2020_03_09.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/chebi_ds_2020_03_09.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/foodb_final_2020_03_21.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/foodb_final_2020_03_21.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/hmdb-2019-08-19.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/imppat_2020_03_16.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/imppat_2020_03_16.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/user_ip/or1a1/user_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/user_ip/or1a1/user_data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/create_job.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/create_job.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/foodb_final_2020_03_21.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/view_all_jobs.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/view_all_jobs.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/utils/Logging.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/utils/Logging.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -292,10 +263,10 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/55.24.1311.744@55.24.1311.744" timestamp="1590768773385" />
-    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1590863411490">
+    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1590867077276">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590863411490" />
+    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590867077276" />
     <state x="460" y="26" key="refactoring.ChangeSignatureDialog" timestamp="1589549223098">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
