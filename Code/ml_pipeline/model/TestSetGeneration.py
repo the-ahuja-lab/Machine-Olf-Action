@@ -161,37 +161,43 @@ class TestSetGeneration:
         self.generate_mordred_features(shortlisted_novel_df, mordred_fnmae)
 
     def generate_padel_features(self, df, padel_file_name):
-        fg_ml_pipeline = MLPipeline.MLPipeline(self.ml_pipeline.job_id)
+        if self.ml_pipeline.config.fg_padelpy_flg:
+            fg_ml_pipeline = MLPipeline.MLPipeline(self.ml_pipeline.job_id)
 
-        fg_ml_pipeline.data = df
-        fg_obj = fg.FeatureGeneration(fg_ml_pipeline, is_train=False)
-        padel_df = fg_obj.generate_features_using_padel()
-        padel_df = padel_df.drop("Activation Status", axis=1)
+            fg_ml_pipeline.data = df
+            fg_obj = fg.FeatureGeneration(fg_ml_pipeline, is_train=False)
+            padel_df = fg_obj.generate_features_using_padel()
 
-        padel_raw_fld_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, app_config.FG_PADEL_FLD_NAME,
-              app_config.TSG_RAW_FLD_NAME])
-        padel_file_name = os.path.join(padel_raw_fld_path, padel_file_name)
+            if not padel_df is None:
+                padel_df = padel_df.drop("Activation Status", axis=1)
 
-        # make dir if not exists
-        os.makedirs(padel_raw_fld_path, exist_ok=True)
+                padel_raw_fld_path = os.path.join(
+                    *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, app_config.FG_PADEL_FLD_NAME,
+                      app_config.TSG_RAW_FLD_NAME])
+                padel_file_name = os.path.join(padel_raw_fld_path, padel_file_name)
 
-        padel_df.to_csv(padel_file_name, index=False)
+                # make dir if not exists
+                os.makedirs(padel_raw_fld_path, exist_ok=True)
+
+                padel_df.to_csv(padel_file_name, index=False)
 
     def generate_mordred_features(self, df, mordred_file_name):
-        fg_ml_pipeline = MLPipeline.MLPipeline(self.ml_pipeline.job_id)
+        if self.ml_pipeline.config.fg_mordered_flg:
+            fg_ml_pipeline = MLPipeline.MLPipeline(self.ml_pipeline.job_id)
 
-        fg_ml_pipeline.data = df
-        fg_obj = fg.FeatureGeneration(fg_ml_pipeline, is_train=False)
-        mordred_df = fg_obj.generate_features_using_mordered()
-        mordred_df = mordred_df.drop("Activation Status", axis=1)
+            fg_ml_pipeline.data = df
+            fg_obj = fg.FeatureGeneration(fg_ml_pipeline, is_train=False)
+            mordred_df = fg_obj.generate_features_using_mordered()
 
-        mordred_raw_fld_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, app_config.FG_MORDRED_FLD_NAME,
-              app_config.TSG_RAW_FLD_NAME])
-        mordred_file_name = os.path.join(mordred_raw_fld_path, mordred_file_name)
+            if not mordred_df is None:
+                mordred_df = mordred_df.drop("Activation Status", axis=1)
 
-        # make dir if not exists
-        os.makedirs(mordred_raw_fld_path, exist_ok=True)
+                mordred_raw_fld_path = os.path.join(
+                    *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, app_config.FG_MORDRED_FLD_NAME,
+                      app_config.TSG_RAW_FLD_NAME])
+                mordred_file_name = os.path.join(mordred_raw_fld_path, mordred_file_name)
 
-        mordred_df.to_csv(mordred_file_name, index=False)
+                # make dir if not exists
+                os.makedirs(mordred_raw_fld_path, exist_ok=True)
+
+                mordred_df.to_csv(mordred_file_name, index=False)
