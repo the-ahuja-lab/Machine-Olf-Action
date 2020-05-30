@@ -68,42 +68,42 @@ class Classification:
 
             self.apply_classification_models()
 
-            if self.ml_pipeline.config.fg_mordered_flg:
-                self.jlogger.info("Started classification of preprocessed mordred features")
+        if self.ml_pipeline.config.fg_mordered_flg:
+            self.jlogger.info("Started classification of preprocessed mordred features")
 
-                job_fld_path = self.ml_pipeline.job_data['job_fld_path']
-                pp_mordred_fld_path = os.path.join(
-                    *[job_fld_path, app_config.TEMP_TTS_FLD_NAME, app_config.FG_MORDRED_FLD_NAME])
-                mordred_xtrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTRAIN_FNAME)
-                mordred_ytrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTRAIN_FNAME)
-                mordred_xtest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTEST_FNAME)
-                mordred_ytest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTEST_FNAME)
+            job_fld_path = self.ml_pipeline.job_data['job_fld_path']
+            pp_mordred_fld_path = os.path.join(
+                *[job_fld_path, app_config.TEMP_TTS_FLD_NAME, app_config.FG_MORDRED_FLD_NAME])
+            mordred_xtrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTRAIN_FNAME)
+            mordred_ytrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTRAIN_FNAME)
+            mordred_xtest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTEST_FNAME)
+            mordred_ytest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTEST_FNAME)
 
-                self.ml_pipeline.x_train = pd.read_csv(mordred_xtrain_fp)
-                self.ml_pipeline.y_train = pd.read_csv(mordred_ytrain_fp)
-                self.ml_pipeline.y_train = self.ml_pipeline.y_train.values.ravel()
+            self.ml_pipeline.x_train = pd.read_csv(mordred_xtrain_fp)
+            self.ml_pipeline.y_train = pd.read_csv(mordred_ytrain_fp)
+            self.ml_pipeline.y_train = self.ml_pipeline.y_train.values.ravel()
 
-                self.ml_pipeline.x_test = pd.read_csv(mordred_xtest_fp)
-                self.ml_pipeline.y_test = pd.read_csv(mordred_ytest_fp)
-                self.ml_pipeline.y_test = self.ml_pipeline.y_test.values.ravel()
+            self.ml_pipeline.x_test = pd.read_csv(mordred_xtest_fp)
+            self.ml_pipeline.y_test = pd.read_csv(mordred_ytest_fp)
+            self.ml_pipeline.y_test = self.ml_pipeline.y_test.values.ravel()
 
-                # folder path to save output of preprocessed mordred features classification data
-                clf_mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
-                                                     app_config.FG_MORDRED_FLD_NAME])
+            # folder path to save output of preprocessed mordred features classification data
+            clf_mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
+                                                 app_config.FG_MORDRED_FLD_NAME])
 
-                self.ml_pipeline.fg_clf_fld_path = clf_mordred_fld_path
-                os.makedirs(self.ml_pipeline.fg_clf_fld_path, exist_ok=True)
+            self.ml_pipeline.fg_clf_fld_path = clf_mordred_fld_path
+            os.makedirs(self.ml_pipeline.fg_clf_fld_path, exist_ok=True)
 
-                self.apply_classification_models()
+            self.apply_classification_models()
 
-            updated_status = app_config.STEP5_STATUS
+        updated_status = app_config.STEP5_STATUS
 
-            job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
-            helper.update_job_status(job_oth_config_fp, updated_status)
+        job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
+        helper.update_job_status(job_oth_config_fp, updated_status)
 
-            self.ml_pipeline.status = updated_status
+        self.ml_pipeline.status = updated_status
 
-            self.jlogger.info("Classification completed successfully")
+        self.jlogger.info("Classification completed successfully")
 
     def apply_classification_models(self):
         self.jlogger.info("Inside Classification, Train Shape: {}".format(self.ml_pipeline.x_train.shape))
