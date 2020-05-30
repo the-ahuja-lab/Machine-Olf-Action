@@ -1,4 +1,4 @@
-HMDB_ID,NAME,SMILES
+CID,CNAME,SMILES
 CID:11646359,(?)-Vincapusine,COC(=O)[C@@]12O[C@H]3[C@](C1)(CC)[C@H]1c4n2c2ccccc2c4CCN1C[C@@H]3O
 CID:11953964,"1,2-Dihydrovomilenine",C/C=C1/[C@@H](O)N2[C@@H]3C4[C@H]1C[C@H]2[C@H]1[C@@](C4OC(=O)C)(C3)c2c(N1)cccc2
 CID:102004710,18-Hydroxy-3-epi-alpha-yohimbine,COC(=O)[C@H]1[C@H]2C[C@H]3N(C[C@H]2C[C@H]([C@@H]1O)O)CCc1c3[nH]c2c1cccc2

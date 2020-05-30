@@ -31,10 +31,10 @@ class ListAllJobs:
                 job_status = self.get_job_status(job_fld)
                 job_desc = self.get_job_desc(job_fld)
 
-                print("Job ID: ", fld)
-                print("Job Created Time : ", job_created_time)
-                print("Job Status: ", job_status)
-                print("Job Description : ", job_desc)
+                # print("Job ID: ", fld)
+                # print("Job Created Time : ", job_created_time)
+                # print("Job Status: ", job_status)
+                # print("Job Description : ", job_desc)
 
                 ml_job = MLJob(fld, job_status, job_desc, job_created_time)
 
@@ -53,18 +53,18 @@ class ListAllJobs:
 
     def get_job_status(self, job_id):
         jobs_fld = app_config['jobs_folder']
-        print(jobs_fld)
+        # print(jobs_fld)
         # create a job id here
 
         # TODO read Job Status from Status file
         oth_config_json_path = os.path.join(*[jobs_fld, job_id, ".config", "other_config.json"])
-        print(oth_config_json_path)
+        # print(oth_config_json_path)
         with open(oth_config_json_path) as f:
             json_str = f.read()
             othr_config = json.loads(json_str)
 
-        print(othr_config)
-        print(othr_config['status'])
+        # print(othr_config)
+        # print(othr_config['status'])
 
         status = othr_config['status']
 
@@ -72,7 +72,7 @@ class ListAllJobs:
 
     def get_job_desc(self, job_id):
         jobs_fld = app_config['jobs_folder']
-        print(jobs_fld)
+        # print(jobs_fld)
         # create a job id here
 
         oth_config_json_path = os.path.join(*[jobs_fld, job_id, ".config", "other_config.json"])
@@ -80,8 +80,8 @@ class ListAllJobs:
             json_str = f.read()
             othr_config = json.loads(json_str)
 
-        print(othr_config)
-        print(othr_config['jd_text'])
+        # print(othr_config)
+        # print(othr_config['jd_text'])
 
         # TODO read Job Status from Status file
         job_desc = othr_config['jd_text']

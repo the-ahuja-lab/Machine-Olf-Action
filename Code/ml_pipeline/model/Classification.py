@@ -1,4 +1,3 @@
-import MLPipeline
 import os
 import pandas as pd
 import numpy as np
@@ -15,47 +14,101 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 
 import pickle
+
+import MLPipeline
+import AppConfig as app_config
+import ml_pipeline.utils.Helper as helper
 import Evaluation
 
-DATA_FLD_NAME = "step5"
-DATA_FILE_NAME_PRFX = "clf_"
+DATA_FLD_NAME = app_config.CLF_FLD_NAME
+DATA_FILE_NAME_PRFX = app_config.CLF_FLD_PREFIX
 
 
 class Classification:
 
     def __init__(self, ml_pipeline: MLPipeline):
-        print("Inside Classification initialization")
 
         self.ml_pipeline = ml_pipeline
+        self.jlogger = self.ml_pipeline.jlogger
 
-        if self.ml_pipeline.status == "feature_extraction":  # resuming at step 5
-            print(ml_pipeline.job_data)
+        self.jlogger.info(
+            "Inside Classification initialization with status {}".format(self.ml_pipeline.status))
+        step5 = os.path.join(self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME)
+        os.makedirs(step5, exist_ok=True)
 
-            if self.ml_pipeline.data is None or self.ml_pipeline.x_train is None or self.ml_pipeline.x_test is None:
-                padel_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step1", "FG_Padel.csv")
-                train_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step4", "FE_train.csv")
-                test_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step4", "FE_test.csv")
+        if self.ml_pipeline.status == app_config.STEP4_STATUS:  # resuming at step 5
+            self.apply_on_all_fg()
 
-                # data, data_labels = self.read_data(padel_data_fp)
-                # self.ml_pipeline.data = data
-                # self.ml_pipeline.data_labels = data_labels
+    def apply_on_all_fg(self):
 
-                x_train = pd.read_csv(train_data_fp)
-                y_train = x_train['Activation Status']
-                x_train = x_train.drop("Activation Status", axis=1)
+        if self.ml_pipeline.config.fg_padelpy_flg:
+            self.jlogger.info("Started classification of preprocessed PaDEL features")
+            job_fld_path = self.ml_pipeline.job_data['job_fld_path']
+            pp_padel_fld_path = os.path.join(
+                *[job_fld_path, app_config.TEMP_TTS_FLD_NAME, app_config.FG_PADEL_FLD_NAME])
 
-                x_test = pd.read_csv(test_data_fp)
-                y_test = x_test['Activation Status']
-                x_test = x_test.drop("Activation Status", axis=1)
+            padel_xtrain_fp = os.path.join(pp_padel_fld_path, app_config.TEMP_XTRAIN_FNAME)
+            padel_ytrain_fp = os.path.join(pp_padel_fld_path, app_config.TEMP_YTRAIN_FNAME)
+            padel_xtest_fp = os.path.join(pp_padel_fld_path, app_config.TEMP_XTEST_FNAME)
+            padel_ytest_fp = os.path.join(pp_padel_fld_path, app_config.TEMP_YTEST_FNAME)
 
-                self.ml_pipeline.x_train = x_train
-                self.ml_pipeline.x_test = x_test
-                self.ml_pipeline.y_train = y_train
-                self.ml_pipeline.y_test = y_test
+            self.ml_pipeline.x_train = pd.read_csv(padel_xtrain_fp)
+            self.ml_pipeline.y_train = pd.read_csv(padel_ytrain_fp)
+            self.ml_pipeline.y_train = self.ml_pipeline.y_train.values.ravel()
+
+            self.ml_pipeline.x_test = pd.read_csv(padel_xtest_fp)
+            self.ml_pipeline.y_test = pd.read_csv(padel_ytest_fp)
+            self.ml_pipeline.y_test = self.ml_pipeline.y_test.values.ravel()
+
+            # folder path to save output of preprocessed padel features classification data
+            clf_padel_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
+                                               app_config.FG_PADEL_FLD_NAME])
+            self.ml_pipeline.fg_clf_fld_path = clf_padel_fld_path
+            os.makedirs(self.ml_pipeline.fg_clf_fld_path, exist_ok=True)
 
             self.apply_classification_models()
 
+            if self.ml_pipeline.config.fg_mordered_flg:
+                self.jlogger.info("Started classification of preprocessed mordred features")
+
+                job_fld_path = self.ml_pipeline.job_data['job_fld_path']
+                pp_mordred_fld_path = os.path.join(
+                    *[job_fld_path, app_config.TEMP_TTS_FLD_NAME, app_config.FG_MORDRED_FLD_NAME])
+                mordred_xtrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTRAIN_FNAME)
+                mordred_ytrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTRAIN_FNAME)
+                mordred_xtest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTEST_FNAME)
+                mordred_ytest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTEST_FNAME)
+
+                self.ml_pipeline.x_train = pd.read_csv(mordred_xtrain_fp)
+                self.ml_pipeline.y_train = pd.read_csv(mordred_ytrain_fp)
+                self.ml_pipeline.y_train = self.ml_pipeline.y_train.values.ravel()
+
+                self.ml_pipeline.x_test = pd.read_csv(mordred_xtest_fp)
+                self.ml_pipeline.y_test = pd.read_csv(mordred_ytest_fp)
+                self.ml_pipeline.y_test = self.ml_pipeline.y_test.values.ravel()
+
+                # folder path to save output of preprocessed mordred features classification data
+                clf_mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
+                                                     app_config.FG_MORDRED_FLD_NAME])
+
+                self.ml_pipeline.fg_clf_fld_path = clf_mordred_fld_path
+                os.makedirs(self.ml_pipeline.fg_clf_fld_path, exist_ok=True)
+
+                self.apply_classification_models()
+
+            updated_status = app_config.STEP5_STATUS
+
+            job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
+            helper.update_job_status(job_oth_config_fp, updated_status)
+
+            self.ml_pipeline.status = updated_status
+
+            self.jlogger.info("Classification completed successfully")
+
     def apply_classification_models(self):
+        self.jlogger.info("Inside Classification, Train Shape: {}".format(self.ml_pipeline.x_train.shape))
+        self.jlogger.info("Inside Classification, Test Shape: {}".format(self.ml_pipeline.x_test.shape))
+
         self.apply_gbm()
         self.apply_svm()
         self.apply_rf()
@@ -63,9 +116,6 @@ class Classification:
         self.apply_gnb()
         self.apply_et()
         self.apply_mlp()
-
-        #TODO check where to update this status
-        self.ml_pipeline.status = "classification"
 
     def apply_gbm(self):
 
@@ -75,7 +125,7 @@ class Classification:
                 x_train = self.ml_pipeline.x_train
                 y_train = self.ml_pipeline.y_train
 
-                #TODO perform grid search here
+                # TODO perform grid search here
                 clf = GradientBoostingClassifier(n_estimators=50, random_state=None, max_depth=2)
                 chosen_model = clf.fit(x_train, y_train)
             else:
@@ -120,7 +170,7 @@ class Classification:
                 grid_search_model = self.SVM_GridSearch()
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
-                print(chosen_model)
+                self.jlogger.info(str(chosen_model))
             else:
                 manual_params = self.ml_pipeline.config.clf_svm_manual
 
@@ -130,7 +180,6 @@ class Classification:
             if self.ml_pipeline.config.clf_bagging_svm:
                 n = self.ml_pipeline.config.clf_bag_svm_n
                 evalclf.evaluate_bagging_model(chosen_model, n, "svm_bagging")
-
 
     def apply_rf(self):
 
@@ -143,7 +192,7 @@ class Classification:
                 grid_search_model = self.RF_GridSearch()
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
-                print(chosen_model)
+                self.jlogger.info(str(chosen_model))
             else:
                 manual_params = self.ml_pipeline.config.clf_svm_manual
 
@@ -153,7 +202,6 @@ class Classification:
             if self.ml_pipeline.config.clf_bagging_rf:
                 n = self.ml_pipeline.config.clf_bag_rf_n
                 evalclf.evaluate_bagging_model(chosen_model, n, "rf_bagging")
-
 
     def apply_lr(self):
 
@@ -165,7 +213,7 @@ class Classification:
             if self.ml_pipeline.config.clf_lr_auto:
                 model = LogisticRegression(C=1.0, random_state=50, solver='liblinear')
                 chosen_model = model.fit(x_train, y_train)
-                print(chosen_model)
+                self.jlogger.info(str(chosen_model))
             else:
                 manual_params = self.ml_pipeline.config.clf_svm_manual
 
@@ -175,7 +223,6 @@ class Classification:
             if self.ml_pipeline.config.clf_bagging_lr:
                 n = self.ml_pipeline.config.clf_bag_lr_n
                 evalclf.evaluate_bagging_model(chosen_model, n, "lr_bagging")
-
 
     def apply_gnb(self):
 
@@ -187,7 +234,7 @@ class Classification:
             if self.ml_pipeline.config.clf_gnb_auto:
                 model = GaussianNB()
                 chosen_model = model.fit(x_train, y_train)
-                print(chosen_model)
+                self.jlogger.info(str(chosen_model))
             else:
                 manual_params = self.ml_pipeline.config.clf_svm_manual
 
@@ -197,7 +244,6 @@ class Classification:
             if self.ml_pipeline.config.clf_bagging_gnb:
                 n = self.ml_pipeline.config.clf_bag_gnb_n
                 evalclf.evaluate_bagging_model(chosen_model, n, "gnb_bagging")
-
 
     def apply_mlp(self):
 
@@ -210,7 +256,7 @@ class Classification:
                 grid_search_model = self.MLP_GridSearch()
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
-                print(chosen_model)
+                self.jlogger.info(str(chosen_model))
             else:
                 manual_params = self.ml_pipeline.config.clf_svm_manual
 

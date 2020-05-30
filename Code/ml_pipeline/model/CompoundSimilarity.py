@@ -137,15 +137,15 @@ class CompoundSimilarity:
         for db_row in fps_matches:
             #         print(hmdb_row)
             db_row_srs = self.db_df.iloc[db_row]
-            db_mol = db_row_srs['NAME']
+            db_mol = db_row_srs['CNAME']
             db_smile = db_row_srs['SMILES']
 
             for usr_mtchs in fps_matches[db_row]:
                 user_row_srs = self.pos_user_df.iloc[usr_mtchs[0]]
                 sim = usr_mtchs[1]
 
-                user_row_name = user_row_srs['Ligand']
-                user_row_smile = user_row_srs['Smiles']
+                user_row_name = user_row_srs['CNAME']
+                user_row_smile = user_row_srs['SMILES']
 
                 data.append([user_row_name, user_row_smile, db_mol, db_smile, sim])
         return data
@@ -159,10 +159,10 @@ class CompoundSimilarity:
         fps_matches = {}
         db_cntr = 0
 
-        self.db_df = self.db_df[['NAME', 'SMILES']]
+        self.db_df = self.db_df[['CNAME', 'SMILES']]
 
         # get fingerprints from smile
-        user_ip_fps = self.pos_user_df['Smiles'].apply(self.smile_to_fingerprints)
+        user_ip_fps = self.pos_user_df['SMILES'].apply(self.smile_to_fingerprints)
         db_fps = self.db_df['SMILES'].apply(self.smile_to_fingerprints)
 
         print("Done generating fingerprints, starting to measure similarity")
@@ -178,10 +178,10 @@ class CompoundSimilarity:
 
         fng_sim_metric = self.get_sim_metric_custom_mapping(sim_metric)
         if fng_sim_metric != None:
-            print("Inside custom similarity measure")
+            # print("Inside custom similarity measure")
             tmp = db_fps.apply(self.measure_similarity_custom, sim_metric=fng_sim_metric, th=sim_threshold)
         else:
-            print("Inside rdkit similarity measure")
+            # print("Inside rdkit similarity measure")
             fng_sim_metric = self.get_sim_metric_rdkit_mapping(sim_metric)
             tmp = db_fps.apply(self.measure_similarity, sim_metric=fng_sim_metric, th=sim_threshold)
 
@@ -194,12 +194,14 @@ class CompoundSimilarity:
         fin_novel_df = novel_df[["DB_Compound", "DB_SMILES"]].drop_duplicates(subset='DB_Compound', keep='first')
 
         #TODO change name Ligand to Compound everywhere
-        fin_novel_df = fin_novel_df.rename(columns={'DB_Compound': 'Ligand', 'DB_SMILES': 'Smiles'})
+        fin_novel_df = fin_novel_df.rename(columns={'DB_Compound': 'CNAME', 'DB_SMILES': 'SMILES'})
         fin_novel_df = fin_novel_df.reset_index(drop=True)
-        fin_novel_df = fin_novel_df.sort_values('Ligand')
+        fin_novel_df = fin_novel_df.sort_values('CNAME')
         fin_novel_df["Activation Status"] = ['?'] * len(fin_novel_df)
 
         # fin_novel_df.to_csv("Shortlisted_Compounds_" + db_name + "_" + sim_metric + str(sim_threshold) + ".csv",
         #                     index=False)
 
         return novel_df, fin_novel_df
+
+        #TODO handle prints here

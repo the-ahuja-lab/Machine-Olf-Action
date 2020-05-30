@@ -1,22 +1,27 @@
+import os
+
 import numpy as np
 import pandas as pd
-import os
 
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import LeavePOut
 
-import MLPipeline
-import PostPreprocessing as ppp
-import Evaluation
-
 import pickle
 
-DATA_FLD_NAME = "step2"
-DATA_FILE_NAME_PRFX = "PP_"
+import MLPipeline
+# import PostPreprocessing as ppp
 
-MODEL_FLD = "step5"
+import Preprocessing as ppp
+import FeatureSelection as pfs
+import FeatureExtraction as pfe
 
-RESULTS_FLD_NAME = "cross-validation"
+import AppConfig as app_config
+import Evaluation
+
+DATA_FLD_NAME = app_config.PP_FLD_NAME
+DATA_FILE_NAME_PRFX = app_config.PP_FLD_PREFIX
+MODEL_FLD = app_config.CLF_FLD_NAME
+RESULTS_FLD_NAME = app_config.CV_RESULTS_FLD_NAME
 
 ALL_MODELS = {}
 
@@ -24,63 +29,63 @@ ALL_MODELS = {}
 class CrossValidation:
 
     def __init__(self, ml_pipeline: MLPipeline):
-        print("Inside CrossValidation initialization")
         self.ml_pipeline = ml_pipeline
+        self.jlogger = self.ml_pipeline.jlogger
 
-        # TODO read after column pruning
-        padel_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step1", "FG_Padel.csv")
+        self.jlogger.info(
+            "Inside CrossValidation initialization with status {}".format(self.ml_pipeline.status))
 
-        data, data_labels = self.read_data(padel_data_fp)
-        self.ml_pipeline.data = data
-        self.ml_pipeline.data_labels = data_labels
+        if self.ml_pipeline.status == app_config.STEP5_STATUS:  # resuming at step 5
+            self.apply_on_all_fg()
 
-        self.perform_column_pruning()
+    def apply_on_all_fg(self):
 
-        self.apply_cv()
+        if self.ml_pipeline.config.fg_padelpy_flg:
+            self.jlogger.info("Started cross validation of preprocessed PaDEL features")
+            pp_padel_fld_path = os.path.join(
+                *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, app_config.FG_PADEL_FLD_NAME])
 
-    def read_data(self, filepath):  # Input data should have one 1 column "Activation_Status" 1 column named "Ligand"
-        data = pd.read_csv(filepath)
-        data_labels = data["Activation Status"]
-        Ligand_names = data["Ligand"]
-        data = data.drop("Activation Status", axis=1)
-        data = data.drop("Ligand", axis=1)
-        try:
-            data = data.drop("Smiles", axis=1)
-        except:
-            print("Don't have Smile's Column")
-        data = self.coerce_df_columns_to_numeric(data, data.columns)
-        return data, data_labels
+            self.fg_fld_name = app_config.FG_PADEL_FLD_NAME
 
-    def coerce_df_columns_to_numeric(self, df, column_list):
-        df[column_list] = df[column_list].apply(pd.to_numeric, errors='coerce')
-        return df
+            if self.ml_pipeline.config.pp_mv_col_pruning_flg:
+                padel_cols_pruned_fp = os.path.join(pp_padel_fld_path, DATA_FILE_NAME_PRFX + "cols_pruned.csv")
+                padel_labels_data_fp = os.path.join(pp_padel_fld_path, DATA_FILE_NAME_PRFX + "init_labels.csv")
 
-    def perform_column_pruning(self):
-        if self.ml_pipeline.config.pp_mv_col_pruning_flg:
-            th = self.ml_pipeline.config.pp_mv_col_pruning_th
+                self.ml_pipeline.data = pd.read_csv(padel_cols_pruned_fp)
+                self.ml_pipeline.data_labels = pd.read_csv(padel_labels_data_fp)
 
-            data = self.ml_pipeline.data
+            else:
+                padel_init_data_fp = os.path.join(pp_padel_fld_path, DATA_FILE_NAME_PRFX + "init_data.csv")
+                padel_labels_data_fp = os.path.join(pp_padel_fld_path, DATA_FILE_NAME_PRFX + "init_labels.csv")
 
-            data = data.replace(r'\s+', np.nan, regex=True)
-            data[data == np.inf] = np.nan
-            data = data.replace(r'^\s*$', np.nan, regex=True)
+                self.ml_pipeline.data = pd.read_csv(padel_init_data_fp)
+                self.ml_pipeline.data_labels = pd.read_csv(padel_labels_data_fp)
 
-            NAN_fld_path = self.ml_pipeline.job_data['job_data_path']
-            NAN_fld_path = os.path.join(NAN_fld_path, DATA_FLD_NAME)
+            self.apply_cv()
 
-            NAN_file_path = os.path.join(NAN_fld_path, DATA_FILE_NAME_PRFX + "NAN_values1.csv")
+        if self.ml_pipeline.config.fg_mordered_flg:
+            self.jlogger.info("Started cross validation of preprocessed mordred features")
+            pp_mordred_fld_path = os.path.join(
+                *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, app_config.FG_MORDRED_FLD_NAME])
 
-            NAN_data = pd.read_csv(NAN_file_path, header=None)
-            dropped = []
-            for i in range(len(NAN_data)):
-                if NAN_data.iloc[i][1] >= th:
-                    dropped.append(NAN_data.iloc[i][0])
-            data = data.drop(dropped, axis=1)
+            self.fg_fld_name = app_config.FG_MORDRED_FLD_NAME
 
-            print("Dropped columns: ", len(dropped))
-            print("Data shape after pruning NAN values: ", data.shape)
+            if self.ml_pipeline.config.pp_mv_col_pruning_flg:
+                mordred_cols_pruned_fp = os.path.join(pp_mordred_fld_path, DATA_FILE_NAME_PRFX + "cols_pruned.csv")
+                mordred_labels_data_fp = os.path.join(pp_mordred_fld_path, DATA_FILE_NAME_PRFX + "init_labels.csv")
 
-            self.ml_pipeline.data = data
+                self.ml_pipeline.data = pd.read_csv(mordred_cols_pruned_fp)
+                self.ml_pipeline.data_labels = pd.read_csv(mordred_labels_data_fp)
+            else:
+                mordred_init_data_fp = os.path.join(pp_mordred_fld_path, DATA_FILE_NAME_PRFX + "init_data.csv")
+                mordred_labels_data_fp = os.path.join(pp_mordred_fld_path, DATA_FILE_NAME_PRFX + "init_labels.csv")
+
+                self.ml_pipeline.data = pd.read_csv(mordred_init_data_fp)
+                self.ml_pipeline.data_labels = pd.read_csv(mordred_labels_data_fp)
+
+            self.apply_cv()
+
+        self.jlogger.info("Cross-validation completed successfully")
 
     def apply_cv(self):
         self.apply_3fold_cv()
@@ -91,9 +96,9 @@ class CrossValidation:
         cv_data_splits = []
 
         x = self.ml_pipeline.data.values
-        y = self.ml_pipeline.data_labels.values
+        y = self.ml_pipeline.data_labels.values.ravel()
 
-        i = 0
+        i = 1
         for train_index, test_index in cv_method.split(x, y):
             x_train, x_test = x[train_index], x[test_index]
             y_train, y_test = y[train_index], y[test_index]
@@ -107,17 +112,24 @@ class CrossValidation:
             ppp_ml_pipeline.x_test = x_test_pd
             ppp_ml_pipeline.y_test = y_test
 
-            ppp.PostPreprocessing(ppp_ml_pipeline)
+            pp = ppp.Preprocessing(ppp_ml_pipeline, is_train=False)
+            pp.preprocess_data()
 
-            print(ppp_ml_pipeline.x_train.shape)
-            print(ppp_ml_pipeline.x_test.shape)
-            print(ppp_ml_pipeline.y_train.shape)
-            print(ppp_ml_pipeline.y_test.shape)
+            fs = pfs.FeatureSelection(ppp_ml_pipeline, is_train=False)
+            fs.perform_feature_selection()
+
+            fe = pfe.FeatureExtraction(ppp_ml_pipeline, is_train=False)
+            fe.perform_feature_extraction()
+
+            self.jlogger.info("Cross validation split number {}".format(i))
+            self.jlogger.info("XTrain Shape: {}".format(ppp_ml_pipeline.x_train.shape))
+            self.jlogger.info("XTest Shape: {}".format(ppp_ml_pipeline.x_test.shape))
+            self.jlogger.info("YTrain Shape: {}".format(ppp_ml_pipeline.y_train.shape))
+            self.jlogger.info("YTest Shape: {}".format(ppp_ml_pipeline.y_test.shape))
 
             cv_data_splits.append(
                 (ppp_ml_pipeline.x_train, ppp_ml_pipeline.x_test, ppp_ml_pipeline.y_train, ppp_ml_pipeline.y_test))
 
-            print("Split ", i)
             i += 1
 
         return cv_data_splits
@@ -130,6 +142,7 @@ class CrossValidation:
         evaluation = Evaluation.Evaluation(self.ml_pipeline)
 
         for model_name, clf in ALL_MODELS.items():
+            # TODO check if can be moved to evaluation file
             res_list = []
             iters = []
             res_dict_keys = {}
@@ -149,13 +162,14 @@ class CrossValidation:
                 iters.append(i + 1)
 
                 i += 1
-                print(i)
-                print(res)
+
+                self.jlogger.info("Cross validation split {} has evaluation results {}".format(i + 1, res))
 
             results = pd.DataFrame(res_list, columns=res_dict_keys)
 
             fld_path = os.path.join(
-                *[self.ml_pipeline.job_data['job_results_path'], RESULTS_FLD_NAME, str(k) + "Fold"])
+                *[self.ml_pipeline.job_data['job_results_path'], self.fg_fld_name, RESULTS_FLD_NAME,
+                  str(k) + "Fold"])
             os.makedirs(fld_path, exist_ok=True)
 
             file_name = model_name + "_" + str(k) + "_fold.csv"
@@ -174,7 +188,7 @@ class CrossValidation:
         res_dict_keys = {}
 
         for model_name, clf in ALL_MODELS.items():
-
+            # TODO check if can be moved to evaluation file
             all_ypreds = []
             all_ytrues = []
             all_yprobas = []
@@ -216,12 +230,12 @@ class CrossValidation:
             res_list.append(list(res.values()))
             res_dict_keys = list(res.keys())
 
-            print(model_name, res)
+            self.jlogger.info("LOOCV result for model {} is {}".format(model_name, res))
 
         results = pd.DataFrame(res_list, columns=res_dict_keys, index=ALL_MODELS.keys())
 
         fld_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_results_path'], RESULTS_FLD_NAME, "LOOCV"])
+            *[self.ml_pipeline.job_data['job_results_path'], self.fg_fld_name, RESULTS_FLD_NAME, "LOOCV"])
         os.makedirs(fld_path, exist_ok=True)
 
         loocv_result_fp = os.path.join(fld_path, "LOOCV_ALL_CLASSIFIERS.csv")
@@ -238,7 +252,7 @@ class CrossValidation:
             cv_data_splits = self.get_data_splits(skf)
 
             self.evaluate_kfold_splits(3, cv_data_splits)
-            print("Completed 3-Fold")
+            self.jlogger.info("Completed 3-Fold")
 
     def apply_5fold_cv(self):
         if self.ml_pipeline.config.cv_5fold_flg:
@@ -246,7 +260,7 @@ class CrossValidation:
             cv_data_splits = self.get_data_splits(skf)
 
             self.evaluate_kfold_splits(5, cv_data_splits)
-            print("Completed 5-Fold")
+            self.jlogger.info("Completed 5-Fold")
 
     def apply_loocv(self):
         if self.ml_pipeline.config.cv_loocv_flg:
@@ -261,6 +275,7 @@ class CrossValidation:
             #     cv_data_splits = pickle.load(f)
 
             self.evaluate_loocv_splits(cv_data_splits)
+            self.jlogger.info("Completed LOOCV")
 
     def get_all_classifiers(self):
         self.apply_gbm()
@@ -273,7 +288,8 @@ class CrossValidation:
 
     def fetch_and_store_model(self, model_name):
         model_pkl_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], MODEL_FLD, model_name, "clf_" + model_name + ".pkl"])
+            *[self.ml_pipeline.job_data['job_data_path'], MODEL_FLD, self.fg_fld_name, model_name,
+              "clf_" + model_name + ".pkl"])
 
         # TODO handle error incase file is not found
         with open(model_pkl_path, 'rb') as f:

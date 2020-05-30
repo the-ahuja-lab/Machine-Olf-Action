@@ -1,73 +1,98 @@
 import os
 import pandas as pd
 import numpy as np
-from sklearn import preprocessing
-from sklearn.decomposition import PCA
-from joblib import dump, load
+
+from joblib import load
 
 import MLPipeline
-from CompoundSimilarity import CompoundSimilarity
-from ml_pipeline.settings import APP_STATIC
+import AppConfig as app_config
+import ml_pipeline.utils.Helper as helper
 
-DATA_FLD_NAME = "step6"
-TEST_FLD_NAME = "test"
-PADEL_FLD_NAME = "fg_padel"
-PADEL_FLD_RAW_NAME = "raw"
-PADEL_FLD_PP_NAME = "preprocessed"
-PADEL_FLD_PP_LIME_NAME = "pp_lime"
 
-TEST_CMPNDS_FLD_NAME = "test_compounds"
-TEST_CMPNDS_FILE_NAME = "test_compounds.csv"
+DATA_FLD_NAME = app_config.TSG_FLD_NAME
 
-PP_FLD = "step2"
-PP_FIN_NAME = "PP_train.csv"
-PP_NORM_NAME = "PP_data_normalization.joblib"
 
-BORUTA_FLD = "step3"
-BORUTA_FS_NAME = "FS_train.csv"
+# TEST_FLD_NAME = app_config.TSG_TEST_FLD_NAME
+#
+# PADEL_FLD_RAW_NAME = app_config.TSG_RAW_FLD_NAME
+# PADEL_FLD_PP_NAME = app_config.TSG_PP_FLD_NAME
+# PADEL_FLD_PP_LIME_NAME = "pp_lime"
 
-PCA_FLD = "step4"
-PCA_MODEL = "FE_PCA.joblib"
+# TEST_CMPNDS_FLD_NAME = app_config.TSG_CMPND_FLD_NAME
+#
+# PP_FLD = app_config.PP_FLD_NAME
+# PP_FIN_NAME = app_config.PP_FIN_XTRAIN_FNAME
+# PP_NORM_NAME = app_config.PP_NORM_DUMP_NAME
+#
+# BORUTA_FLD = app_config.FS_FLD_NAME
+# BORUTA_FS_NAME = app_config.FS_XTRAIN_FNAME
+#
+# PCA_FLD = app_config.FE_FLD_NAME
+# PCA_MODEL = app_config.FE_PCA_DUMP_FNAME
 
 
 class TestSetPreprocessing:
 
     def __init__(self, ml_pipeline: MLPipeline):
-        print("Inside TestSetGeneration initialization")
 
         self.ml_pipeline = ml_pipeline
+        self.jlogger = self.ml_pipeline.jlogger
 
-        if self.ml_pipeline.status == "test_set_generation":  # resuming at step 1
-            self.preprocess_test_padel()
+        self.jlogger.info("Inside TestSetPreprocessing initialization")
 
-    def preprocess_test_padel(self):
+        if self.ml_pipeline.status == app_config.STEP6_STATUS:  # resuming at step 1
+            self.apply_on_all_fg()
+
+    def apply_on_all_fg(self):
+        # Padel
+        if self.ml_pipeline.config.fg_padelpy_flg:
+            self.fg_fld_name = app_config.FG_PADEL_FLD_NAME
+            self.preprocess_test_set()
+
+        if self.ml_pipeline.config.fg_mordered_flg:
+            # Mordred
+            self.fg_fld_name = app_config.FG_MORDRED_FLD_NAME
+            self.preprocess_test_set()
+
+        updated_status = app_config.STEP6_1_STATUS
+
+        job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
+        helper.update_job_status(job_oth_config_fp, updated_status)
+
+        self.ml_pipeline.status = updated_status
+
+        self.jlogger.info("Generated test set preprocessing completed successfully")
+
+    def preprocess_test_set(self):
         padel_raw_fld_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, PADEL_FLD_RAW_NAME])
+            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, self.fg_fld_name,
+              app_config.TSG_RAW_FLD_NAME])
 
         padel_pp_fld_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, PADEL_FLD_PP_NAME])
+            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, self.fg_fld_name,
+              app_config.TSG_PP_FLD_NAME])
         os.makedirs(padel_pp_fld_path, exist_ok=True)
 
-
         padel_pp_lime_fld_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, PADEL_FLD_PP_LIME_NAME])
+            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, self.fg_fld_name,
+              app_config.TSG_PP_LIME_FLD_NAME])
         os.makedirs(padel_pp_lime_fld_path, exist_ok=True)
 
-
         padel_test_cmpnd_fld_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, TEST_CMPNDS_FLD_NAME])
+            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, self.fg_fld_name,
+              app_config.TSG_CMPND_FLD_NAME])
         os.makedirs(padel_test_cmpnd_fld_path, exist_ok=True)
 
         for file in os.listdir(padel_raw_fld_path):
-            print(file)
-
             if file.endswith(".csv"):  # checking only csv files
-                padel_fp = os.path.join(padel_raw_fld_path, file)
-                ligands, padel_pp_lime_df, padel_pp_fin_df = self.preprocess_now(padel_fp)
+                self.jlogger.info("Starting preprocessing {}".format(file))
 
-                ligands_df = pd.DataFrame(ligands, columns=["Ligand"])
+                padel_fp = os.path.join(padel_raw_fld_path, file)
+                cnames, padel_pp_lime_df, padel_pp_fin_df = self.preprocess_generated_test_set(padel_fp)
+
+                cnames_df = pd.DataFrame(cnames, columns=["CNAME"])
                 test_cmpnd_fp = os.path.join(padel_test_cmpnd_fld_path, file)
-                ligands_df.to_csv(test_cmpnd_fp, index=False)
+                cnames_df.to_csv(test_cmpnd_fp, index=False)
 
                 padel_pp_fp = os.path.join(padel_pp_fld_path, file)
                 padel_pp_fin_df.to_csv(padel_pp_fp, index=False)
@@ -75,36 +100,41 @@ class TestSetPreprocessing:
                 padel_pp_lime_fp = os.path.join(padel_pp_lime_fld_path, file)
                 padel_pp_lime_df.to_csv(padel_pp_lime_fp, index=False)
 
-    def preprocess_now(self, padel_fp):
+    def preprocess_generated_test_set(self, padel_fp):
         df_test = pd.read_csv(padel_fp)
-        print(df_test.columns)
-        ligands = df_test['Ligand']
+        compound_names = df_test['CNAME']
 
-        print("Before shape test ", df_test.shape)
+        self.jlogger.info("Before shape test {}".format(df_test.shape))
 
         df_init_train, init_features = self.extract_initial_train_features()
         df_init_test_fltrd = df_test[init_features]
         df_test_pp = self.apply_other_preprocess(df_init_train, df_init_test_fltrd)
 
-        print("After preprocessing shape test ", df_test_pp.shape)
+        self.jlogger.info("After preprocessing shape test {}".format(df_test_pp.shape))
 
         df_fin_train, fin_features = self.extract_final_train_features()
         df_test_pp_final = df_test_pp[fin_features]
 
-        print("After feature selection shape test ", df_test_pp_final.shape)
+        self.jlogger.info("After feature selection shape test {}".format(df_test_pp_final.shape))
 
         test_final_np = self.apply_pca(df_test_pp_final)
 
-        print("After feature extraction shape test ", test_final_np.shape)
+        self.jlogger.info("After feature extraction shape test {}".format(test_final_np.shape))
 
         df_test_final = pd.DataFrame(test_final_np)
 
-        return ligands, df_test_pp_final, df_test_final
+        return compound_names, df_test_pp_final, df_test_final
 
     def extract_initial_train_features(self):
-        # TODO make sure final features files is there (a copy of final features with given naming convention)
-        pp_train_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], PP_FLD, "PP_init_train.csv"])
+        if self.ml_pipeline.config.pp_mv_col_pruning_flg:
+            pp_train_path = os.path.join(
+                *[self.ml_pipeline.job_data['job_data_path'], app_config.PP_FLD_NAME, self.fg_fld_name,
+                  app_config.PP_INIT_COL_PRUNED_FNAME])
+        else:
+            pp_train_path = os.path.join(
+                *[self.ml_pipeline.job_data['job_data_path'], app_config.PP_FLD_NAME, self.fg_fld_name,
+                  app_config.PP_INIT_DATA_FNAME])
+
         df = pd.read_csv(pp_train_path)
         features = df.columns.to_list()
 
@@ -115,13 +145,14 @@ class TestSetPreprocessing:
         df = None
         if self.ml_pipeline.config.fs_boruta_flg:
             boruta_train_path = os.path.join(
-                *[self.ml_pipeline.job_data['job_data_path'], BORUTA_FLD, BORUTA_FS_NAME])
+                *[self.ml_pipeline.job_data['job_data_path'], app_config.FS_FLD_NAME, self.fg_fld_name,
+                  app_config.FS_XTRAIN_FNAME])
             df = pd.read_csv(boruta_train_path)
             fin_features = df.columns.to_list()
         else:
-            # TODO make sure final features files is there (a copy of final features with given naming convention)
             pp_train_path = os.path.join(
-                *[self.ml_pipeline.job_data['job_data_path'], PP_FLD, PP_FIN_NAME])
+                *[self.ml_pipeline.job_data['job_data_path'], app_config.PP_FLD_NAME, self.fg_fld_name,
+                  app_config.PP_FIN_XTRAIN_FNAME])
             df = pd.read_csv(pp_train_path)
             fin_features = df.columns.to_list()
 
@@ -145,8 +176,8 @@ class TestSetPreprocessing:
                 X_test.fillna(X_train.mean(), inplace=True)
                 df_test_fltrd = X_test.copy()
             else:
-                # TODO if not mean, handle other cases
-                pass
+                self.jlogger.error("Mean imputing is only supported")
+                raise ValueError("{} imputation method specified, only mean imputation supported".format(impute_mthd))
 
         return df_test_fltrd
 
@@ -157,11 +188,11 @@ class TestSetPreprocessing:
             testdata = df_test_fltrd
 
             if self.ml_pipeline.config.pp_normalization_mthd == 'min_max':
-                print("Inside performing minmax normalization")
+                self.jlogger.info("Inside performing minmax normalization")
 
                 pp_norm_model_path = os.path.join(
-                    *[self.ml_pipeline.job_data['job_data_path'], PP_FLD, PP_NORM_NAME])
-                print(pp_norm_model_path)
+                    *[self.ml_pipeline.job_data['job_data_path'], app_config.PP_FLD_NAME, self.fg_fld_name,
+                      app_config.PP_NORM_DUMP_NAME])
 
                 min_max_scaler = load(pp_norm_model_path)
 
@@ -174,8 +205,9 @@ class TestSetPreprocessing:
 
                 df_test_fltrd = test_normal
             else:
-                # TODO if not minmax, handle other cases
-                pass
+                self.jlogger.error("Min-max normalization is only supported")
+                raise ValueError("{} normalization method specified, only min-max normalization supported".format(
+                    self.ml_pipeline.config.pp_normalization_mthd))
 
         return df_test_fltrd
 
@@ -184,14 +216,14 @@ class TestSetPreprocessing:
             xtest = df_test_fltrd.copy()
 
             pca_model_path = os.path.join(
-                *[self.ml_pipeline.job_data['job_data_path'], PCA_FLD, PCA_MODEL])
-            print(pca_model_path)
+                *[self.ml_pipeline.job_data['job_data_path'], app_config.FE_FLD_NAME, self.fg_fld_name,
+                  app_config.FE_PCA_DUMP_FNAME])
 
             pca = load(pca_model_path)
 
-            print("Inside PCA, Before Shape Test: ", xtest.shape)
+            self.jlogger.info("Inside PCA, Before Shape Test: {}".format(xtest.shape))
             xtest_new = pca.transform(xtest)
-            print("Inside PCA, After Shape Test: ", xtest_new.shape)
+            self.jlogger.info("Inside PCA, After Shape Test: {}".format(xtest_new.shape))
 
             pca_op = xtest_new
 
