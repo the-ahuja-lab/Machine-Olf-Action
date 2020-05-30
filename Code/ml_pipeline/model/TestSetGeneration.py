@@ -72,7 +72,7 @@ class TestSetGeneration:
 
         if self.ml_pipeline.config.db_foodb_flg:
             compound_db_fld = os.path.join(APP_STATIC, "compound_dbs")
-            food_db_fp = os.path.join(compound_db_fld, "foodb_final_2020_03_21.csv")
+            food_db_fp = os.path.join(compound_db_fld, "foodb_2020_05_30.csv")
 
             self.jlogger.info("FoodDB DB File Path {}".format(food_db_fp))
 

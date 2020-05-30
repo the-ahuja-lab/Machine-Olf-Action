@@ -38,14 +38,14 @@ class MLPipeline(BaseMLJob):
         self.jlogger.debug("Job Other Data: {}".format(self.job_data))
 
         try:
-            # rud.ReadUserData(self)
-            # fg.FeatureGeneration(self, is_train=True)
-            # pp.Preprocessing(self, is_train=True)
-            # fs.FeatureSelection(self, is_train=True)
-            # fe.FeatureExtraction(self, is_train=True)
-            # clf.Classification(self)
-            # cv.CrossValidation(self)
-            # tsg.TestSetGeneration(self)
+            rud.ReadUserData(self)
+            fg.FeatureGeneration(self, is_train=True)
+            pp.Preprocessing(self, is_train=True)
+            fs.FeatureSelection(self, is_train=True)
+            fe.FeatureExtraction(self, is_train=True)
+            clf.Classification(self)
+            cv.CrossValidation(self)
+            tsg.TestSetGeneration(self)
             tspp.TestSetPreprocessing(self)
             tsprd.TestSetPrediction(self)
             job_success_status = True
