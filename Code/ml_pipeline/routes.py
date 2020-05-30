@@ -26,20 +26,16 @@ def create_job():
 
         if not error:
             if user_form.get("job_type") == "default_job":
-                print("Default Job")
-                job_desc = config_user_dict['job_description']
-                job_id = createjob(job_desc, config_user_dict, app.root_path, None, is_default=False)
+                job_id = createjob(config_user_dict, None, is_example_job=True)
             else:
-                print("User uploaded job")
                 user_file = request.files['user_file']
                 user_filename = None
-                # # TODO handle other extensions error here
+
                 if user_file and allowed_file(user_file.filename):
                     user_filename = secure_filename(user_file.filename)
 
                 if user_filename != None:
-                    job_desc = config_user_dict['job_description']
-                    job_id = createjob(job_desc, config_user_dict, app.root_path, user_file, is_default=True)
+                    job_id = createjob(config_user_dict, user_file, is_example_job=False)
 
                 else:
                     error = True
@@ -71,13 +67,20 @@ def create_job():
 def start_or_resume_job():
     job_id = request.args.get('job_id')
 
-    # TODO create a new process or thread here and update its details to job folder, if already created don't adhere request
+    # TODO create a new process or thread here and update its details to job folder, if already started don't adhere request
     ml = MLPipeline(job_id)
-    ml.start()
+    job_success_status = ml.start()
+
+    if job_success_status:
+        flash("Job with job id {} completed successfully".format(job_id), "success")
+    else:
+        flash(
+            "An exception occurred while processing job with job id {}. Please check job logs for details related to exception".format(
+                job_id), "danger")
 
     # TODO add check job status
-
-    return "Job Completed Successfully"
+    # TODO return something meaningful here instead of a blank page with just success message
+    return redirect(url_for("view_all_jobs"))
 
 
 job_files_index = AutoIndex(app, app_config['jobs_folder'])

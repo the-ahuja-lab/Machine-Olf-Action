@@ -1,54 +1,108 @@
-import MLPipeline
 import os
+
 import pandas as pd
 import numpy as np
+
 from sklearn.decomposition import PCA
-from joblib import dump, load
+from joblib import dump
 
+import MLPipeline
+import AppConfig as app_config
+import ml_pipeline.utils.Helper as helper
 
-DATA_FLD_NAME = "step4"
-DATA_FILE_NAME_PRFX = "FE_"
+DATA_FLD_NAME = app_config.FE_FLD_NAME
+DATA_FILE_NAME_PRFX = app_config.FE_FLD_PREFIX
 
 
 class FeatureExtraction:
 
-    def __init__(self, ml_pipeline: MLPipeline):
-        print("Inside FeatureExtraction initialization")
+    def __init__(self, ml_pipeline: MLPipeline, is_train: bool):
 
         self.ml_pipeline = ml_pipeline
+        self.jlogger = self.ml_pipeline.jlogger
 
-        if self.ml_pipeline.status == "feature_selection":  # resuming at step 4
-            print(ml_pipeline.job_data)
+        self.is_train = is_train
 
-            if self.ml_pipeline.data is None or self.ml_pipeline.x_train is None or self.ml_pipeline.x_test is None:
-                padel_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step1", "FG_Padel.csv")
-                train_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step3", "FS_train.csv")
-                test_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step3", "FS_test.csv")
+        self.jlogger.info(
+            "Inside FeatureExtraction initialization with status {} and is_train as {}".format(self.ml_pipeline.status,
+                                                                                               self.is_train))
 
-                # data, data_labels = self.read_data(padel_data_fp)
-                # self.ml_pipeline.data = data
-                # self.ml_pipeline.data_labels = data_labels
+        # call only when in training state - inorder to reuse code for post preprocessing when not in training state
+        if self.is_train:
+            step4 = os.path.join(self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME)
+            os.makedirs(step4, exist_ok=True)
 
-                x_train = pd.read_csv(train_data_fp)
-                y_train = x_train['Activation Status']
-                x_train = x_train.drop("Activation Status", axis=1)
+            if self.ml_pipeline.status == app_config.STEP3_STATUS:  # resuming at step 4
+                self.apply_on_all_fg()
 
-                x_test = pd.read_csv(test_data_fp)
-                y_test = x_test['Activation Status']
-                x_test = x_test.drop("Activation Status", axis=1)
+    def apply_on_all_fg(self):
 
-                self.ml_pipeline.x_train = x_train
-                self.ml_pipeline.x_test = x_test
-                self.ml_pipeline.y_train = y_train
-                self.ml_pipeline.y_test = y_test
+        if self.ml_pipeline.config.fg_padelpy_flg:
+            self.jlogger.info("Started feature extraction of preprocessed PaDEL features")
+            job_fld_path = self.ml_pipeline.job_data['job_fld_path']
+            pp_padel_fld_path = os.path.join(
+                *[job_fld_path, app_config.TEMP_TTS_FLD_NAME, app_config.FG_PADEL_FLD_NAME])
+
+            padel_xtrain_fp = os.path.join(pp_padel_fld_path, app_config.TEMP_XTRAIN_FNAME)
+            padel_ytrain_fp = os.path.join(pp_padel_fld_path, app_config.TEMP_YTRAIN_FNAME)
+            padel_xtest_fp = os.path.join(pp_padel_fld_path, app_config.TEMP_XTEST_FNAME)
+            padel_ytest_fp = os.path.join(pp_padel_fld_path, app_config.TEMP_YTEST_FNAME)
+
+            self.ml_pipeline.x_train = pd.read_csv(padel_xtrain_fp)
+            self.ml_pipeline.y_train = pd.read_csv(padel_ytrain_fp)
+
+            self.ml_pipeline.x_test = pd.read_csv(padel_xtest_fp)
+            self.ml_pipeline.y_test = pd.read_csv(padel_ytest_fp)
+
+            # folder path to save output of preprocessed padel features feature extraction data
+            fs_padel_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
+                                               app_config.FG_PADEL_FLD_NAME])
+            self.fg_fe_fld_path = fs_padel_fld_path
+            os.makedirs(self.fg_fe_fld_path, exist_ok=True)
 
             self.perform_feature_extraction()
+
+            if self.ml_pipeline.config.fg_mordered_flg:
+                self.jlogger.info("Started feature extraction of preprocessed mordred features")
+
+                job_fld_path = self.ml_pipeline.job_data['job_fld_path']
+                pp_mordred_fld_path = os.path.join(
+                    *[job_fld_path, app_config.TEMP_TTS_FLD_NAME, app_config.FG_MORDRED_FLD_NAME])
+                mordred_xtrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTRAIN_FNAME)
+                mordred_ytrain_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTRAIN_FNAME)
+                mordred_xtest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_XTEST_FNAME)
+                mordred_ytest_fp = os.path.join(pp_mordred_fld_path, app_config.TEMP_YTEST_FNAME)
+
+                self.ml_pipeline.x_train = pd.read_csv(mordred_xtrain_fp)
+                self.ml_pipeline.y_train = pd.read_csv(mordred_ytrain_fp)
+
+                self.ml_pipeline.x_test = pd.read_csv(mordred_xtest_fp)
+                self.ml_pipeline.y_test = pd.read_csv(mordred_ytest_fp)
+
+                # folder path to save output of preprocessed mordred features feature extraction data
+                fs_mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
+                                                     app_config.FG_MORDRED_FLD_NAME])
+
+                self.fg_fe_fld_path = fs_mordred_fld_path
+                os.makedirs(self.fg_fe_fld_path, exist_ok=True)
+
+                self.perform_feature_extraction()
+
+            if self.is_train:
+                updated_status = app_config.STEP4_STATUS
+
+                job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
+                helper.update_job_status(job_oth_config_fp, updated_status)
+
+                self.ml_pipeline.status = updated_status
+
+                self.jlogger.info("Feature extraction completed successfully")
 
     def perform_feature_extraction(self):
         self.perform_pca()
 
-        # TODO check if all above steps successful
-        self.write_to_csv_and_update_status()
+        if self.is_train:
+            self.write_final_data_to_csv()
 
     def perform_pca(self):
 
@@ -58,44 +112,76 @@ class FeatureExtraction:
             xtrain = self.ml_pipeline.x_train
             xtest = self.ml_pipeline.x_test
 
-            print("Inside PCA, Before Shape Train: ", xtrain.shape)
-            print("Inside PCA, Before Shape Test: ", xtest.shape)
+            self.jlogger.info("Inside PCA, Before Shape Train: {}".format(xtrain.shape))
+            self.jlogger.info("Inside PCA, Before Shape Test: {}".format(xtest.shape))
             pca = PCA(pca_energy)
             pca.fit(xtrain)
 
             xtrain_new = pca.transform(xtrain)
             xtest_new = pca.transform(xtest)
-            print("Inside PCA, After Shape Train: ", xtrain_new.shape)
-            print("Inside PCA, After Shape Test: ", xtest_new.shape)
+            self.jlogger.info("Inside PCA, After Shape Train: {}".format(xtrain_new.shape))
+            self.jlogger.info("Inside PCA, After Shape Test: {}".format(xtest_new.shape))
 
             self.ml_pipeline.x_train = xtrain_new
             self.ml_pipeline.x_test = xtest_new
 
-            fld_path = self.ml_pipeline.job_data['job_data_path']
-            fld_path = os.path.join(fld_path, DATA_FLD_NAME)
+            if self.is_train:
+                fld_path = self.fg_fe_fld_path
+                pca_model_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "PCA.joblib")
+                dump(pca, pca_model_path)
 
-            pca_model_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "PCA.joblib")
-            dump(pca, pca_model_path)
-
-    def write_to_csv_and_update_status(self):
-        # TODO write to csv and update status
-
+    def write_final_data_to_csv(self):
         x_train = pd.DataFrame(self.ml_pipeline.x_train)
         x_test = pd.DataFrame(self.ml_pipeline.x_test)
         ytrain = self.ml_pipeline.y_train
         ytest = self.ml_pipeline.y_test
 
-        x_train['Activation Status'] = ytrain
-        x_test['Activation Status'] = ytest
 
-        fld_path = self.ml_pipeline.job_data['job_data_path']
-        fld_path = os.path.join(fld_path, DATA_FLD_NAME)
+        fld_path = self.fg_fe_fld_path
 
         train_file_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "train.csv")
         test_file_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "test.csv")
 
+        train_labels_file_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "train_labels.csv")
+        test_labels_file_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + "test_labels.csv")
+
         x_train.to_csv(train_file_path, index=False)
         x_test.to_csv(test_file_path, index=False)
 
-        # update status
-        self.ml_pipeline.status = "feature_extraction"
+        ytrain_df = pd.DataFrame(ytrain)
+        ytest_df = pd.DataFrame(ytest)
+
+        ytrain_df.to_csv(train_labels_file_path, index=False)
+        ytest_df.to_csv(test_labels_file_path, index=False)
+
+        self.save_final_data_copy_to_temp()
+
+    def save_final_data_copy_to_temp(self):
+        x_train = pd.DataFrame(self.ml_pipeline.x_train)
+        x_test = pd.DataFrame(self.ml_pipeline.x_test)
+        ytrain = self.ml_pipeline.y_train
+        ytest = self.ml_pipeline.y_test
+
+        # save a copy to temp folder for further processing in pipeline
+        fg_fld_name = self.fg_fe_fld_path
+
+        job_fld_path = self.ml_pipeline.job_data['job_fld_path']
+        fld_path = os.path.join(job_fld_path, app_config.TEMP_TTS_FLD_NAME, os.path.basename(fg_fld_name))
+
+        if not os.path.exists(fld_path):
+            os.makedirs(fld_path, exist_ok=True)
+
+        train_file_path = os.path.join(fld_path, app_config.TEMP_XTRAIN_FNAME)
+        test_file_path = os.path.join(fld_path, app_config.TEMP_XTEST_FNAME)
+
+        train_labels_file_path = os.path.join(fld_path, app_config.TEMP_YTRAIN_FNAME)
+        test_labels_file_path = os.path.join(fld_path, app_config.TEMP_YTEST_FNAME)
+
+        x_train.to_csv(train_file_path, index=False)
+        x_test.to_csv(test_file_path, index=False)
+
+        ytrain_df = pd.DataFrame(ytrain)
+        ytest_df = pd.DataFrame(ytest)
+
+        ytrain_df.to_csv(train_labels_file_path, index=False)
+        ytest_df.to_csv(test_labels_file_path, index=False)

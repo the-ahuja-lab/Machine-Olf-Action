@@ -1,35 +1,41 @@
 import os
 import pandas as pd
 import numpy as np
-from sklearn import preprocessing
-from sklearn.decomposition import PCA
-from joblib import dump, load
 
-import MLPipeline
-from CompoundSimilarity import CompoundSimilarity
-from ml_pipeline.settings import APP_STATIC
-
-import pickle
-
-import lime
-from lime.lime_tabular import LimeTabularExplainer
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_pdf
 
 from sklearn.base import clone
 
-DATA_FLD_NAME = "step6"
-TEST_FLD_NAME = "test"
-PADEL_FLD_NAME = "fg_padel"
-PADEL_FLD_PP_NAME = "preprocessed"
-PADEL_FLD_PP_LIME_NAME = "pp_lime"
+import MLPipeline
+import AppConfig as app_config
 
-TEST_CMPNDS_FLD_NAME = "test_compounds"
-TEST_CMPNDS_FILE_NAME = "test_compounds.csv"
+import lime
+from lime.lime_tabular import LimeTabularExplainer
 
-RESULTS_FLD_NAME = "novel_predictions"
+DATA_FLD_NAME = app_config.TSG_FLD_NAME
+# TEST_FLD_NAME = "test"
+# PADEL_FLD_NAME = "fg_padel"
+# PADEL_FLD_PP_NAME = "preprocessed"
+# PADEL_FLD_PP_LIME_NAME = "pp_lime"
+#
+# TEST_CMPNDS_FLD_NAME = "test_compounds"
+# TEST_CMPNDS_FILE_NAME = "test_compounds.csv"
+#
+# RESULTS_FLD_NAME = "novel_predictions"
+#
+# MODEL_FLD = "step5"
 
-MODEL_FLD = "step5"
+# TEST_FLD_NAME = app_config.TSG_TEST_FLD_NAME
+# PADEL_FLD_NAME = app_config.FG_PADEL_FLD_NAME
+# PADEL_FLD_PP_NAME = app_config.TSG_PP_FLD_NAME
+# TEST_CMPNDS_FLD_NAME = app_config.TSG_CMPND_FLD_NAME
+#
+# RESULTS_FLD_NAME = app_config.NOVEL_RESULTS_FLD_NAME
+#
+# MODEL_FLD = app_config.CLF_FLD_NAME
+#
+# PADEL_FLD_PP_LIME_NAME = app_config.TSG_PP_LIME_FLD_NAME
 
 ALL_TEST_DF = {}
 ALL_TEST_COMPOUNDS = {}
@@ -40,23 +46,39 @@ gnb_explainer = None
 class LIMEExplanation:
 
     def __init__(self, ml_pipeline: MLPipeline):
-        print("Inside TestSetPrediction initialization")
-
         self.ml_pipeline = ml_pipeline
+        self.jlogger = self.ml_pipeline.jlogger
+
+        self.jlogger.info("Inside LIMEExplanation initialization")
 
         self.lime_explainer = None
+        self.fg_fld_name = None
 
-        # TODO change status from test_set_generation to test_set_prediction
-        if self.ml_pipeline.status == "test_set_generation":  # resuming at step 1
-            self.fetch_train_data()
+        # # TODO change status from test_set_generation to test_set_prediction
+        # if self.ml_pipeline.status == app_config.STEP6_1_STATUS:  # resuming at step 6
+        #     self.fetch_train_data()
+        #
+        #     self.fg_fld_name = ""
 
     def fetch_train_data(self):
-        # TODO if boruta is enable then do otherwise fetch from previous step
-        train_data_fp = os.path.join(self.ml_pipeline.job_data['job_data_path'], "step3", "FS_train.csv")
-        test_data_fp = os.path.join(self.ml_pipeline.job_data['job_data_path'], "step3", "FS_test.csv")
+        if self.ml_pipeline.config.fs_boruta_flg:
+            lime_data_fld_path = os.path.join(
+                *[self.ml_pipeline.job_data['job_data_path'], app_config.FS_FLD_NAME, self.fg_fld_name])
 
-        train_data_labels_fp = os.path.join(self.ml_pipeline.job_data['job_data_path'], "step3", "FS_train_labels.csv")
-        test_data_labels_fp = os.path.join(self.ml_pipeline.job_data['job_data_path'], "step3", "FS_test_labels.csv")
+            train_data_fp = os.path.join(lime_data_fld_path, app_config.FS_XTRAIN_FNAME)
+            test_data_fp = os.path.join(lime_data_fld_path, app_config.FS_XTEST_FNAME)
+
+            train_data_labels_fp = os.path.join(lime_data_fld_path, app_config.FS_YTRAIN_FNAME)
+            test_data_labels_fp = os.path.join(lime_data_fld_path, app_config.FS_YTEST_FNAME)
+        else:
+            lime_data_fld_path = os.path.join(
+                *[self.ml_pipeline.job_data['job_data_path'], app_config.PP_FLD_NAME, self.fg_fld_name])
+
+            train_data_fp = os.path.join(lime_data_fld_path, app_config.PP_FIN_XTRAIN_FNAME)
+            test_data_fp = os.path.join(lime_data_fld_path, app_config.PP_FIN_XTEST_FNAME)
+
+            train_data_labels_fp = os.path.join(lime_data_fld_path, app_config.PP_FIN_YTRAIN_FNAME)
+            test_data_labels_fp = os.path.join(lime_data_fld_path, app_config.PP_FIN_YTEST_FNAME)
 
         x_train = pd.read_csv(train_data_fp)
         y_train_df = pd.read_csv(train_data_labels_fp)
@@ -79,12 +101,12 @@ class LIMEExplanation:
             self.lime_explainer = LimeTabularExplainer(xtrain.values, mode='classification', training_labels=ytrain,
                                                        feature_names=xtrain.columns)
 
-            print(model.get_params())
+            self.jlogger.info("Model params inside LIME {}".format(model.get_params()))
             new_model = clone(model)
             new_model.fit(self.ml_pipeline.x_train, self.ml_pipeline.y_train)
             self.model = new_model
 
-            print(self.model)
+            # print(self.model)
 
     def exp_preds_using_lime(self, model, test_compounds, test_features_fname, result_pdf_fp):
         self.figcount = 0
@@ -93,16 +115,21 @@ class LIMEExplanation:
         self.get_explainer(model)
 
         padel_pp_lime_fld_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, PADEL_FLD_PP_LIME_NAME])
+            *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, self.fg_fld_name,
+              app_config.TSG_PP_LIME_FLD_NAME])
 
         padel_test_fp = os.path.join(padel_pp_lime_fld_path, test_features_fname)
         xtest = pd.read_csv(padel_test_fp)
 
-        print("Getting lime predictions for ", test_features_fname, " total data points ", len(xtest))
+        self.jlogger.info(
+            "Getting lime predictions for {}, total data points {} ".format(test_features_fname, len(xtest)))
 
         explainer = self.lime_explainer
+
+        # TODO check if can be made faster
         for j in range(len(xtest)):
-            print(j)
+            self.jlogger.info("Started processing explanation for test compound {}".format(j))
+
             # change labels to  [0, 1], if want to calculate for both the classes
             labels = [1]
             exp = explainer.explain_instance(xtest.iloc[j], self.model.predict_proba, num_features=25, labels=labels)

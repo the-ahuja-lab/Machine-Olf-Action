@@ -1,6 +1,5 @@
 class MLJobConfig:
     def empty(self):
-        print("Inside MLJobConfig")
         self.fg_padelpy_flg = None
         self.fg_mordered_flg = None
 
@@ -83,7 +82,6 @@ class MLJobConfig:
         if config is None:
             self.empty()
         else:
-            print("Inside MLJobConfig with config")
             self.fg_padelpy_flg = config.fg_padelpy_flg
             self.fg_mordered_flg = config.fg_mordered_flg
 
@@ -158,7 +156,8 @@ class MLJobConfig:
             self.sim_manhattan_flg = config.sim_manhattan_flg
             self.sim_soergel_flg = config.sim_soergel_flg
 
+    # TODO comment this if need to disable debug logging of config
     def __repr__(self):
         attrs = vars(self)
-        print('\n '.join("%s: %s" % item for item in attrs.items()))
-        return ""
+        obj_str = ('\n '.join("%s: %s" % item for item in attrs.items()))
+        return obj_str

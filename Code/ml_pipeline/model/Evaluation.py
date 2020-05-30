@@ -8,7 +8,6 @@ from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import classification_report
 from sklearn.metrics import cohen_kappa_score
 from sklearn.metrics import roc_curve, auc
-from collections import OrderedDict
 
 from sklearn.ensemble import BaggingClassifier
 
@@ -21,19 +20,23 @@ import seaborn as sns
 # import rpy2.robjects as robjects  # robjects as python objects
 # import rpy2.robjects.packages as rpackages  # helps download and import r packages
 
-import pickle
 import os
 import pandas as pd
 import numpy as np
 
-import MLPipeline
+from collections import OrderedDict
 
-DATA_FLD_NAME = "step5"
-DATA_FILE_NAME_PRFX = "clf_"
+import pickle
+
+import MLPipeline
+import AppConfig as app_config
+
+DATA_FLD_NAME = app_config.CLF_FLD_NAME
+DATA_FILE_NAME_PRFX = app_config.CLF_FLD_PREFIX
 
 # BAGGING_FLD_NAME = "bagging"
 
-RESULTS_FLD_NAME = "classifiers"
+RESULTS_FLD_NAME = app_config.CLF_RESULTS_FLD_NAME
 
 
 # figcount = 0
@@ -43,8 +46,8 @@ RESULTS_FLD_NAME = "classifiers"
 class Evaluation:
 
     def __init__(self, ml_pipeline: MLPipeline):
-        print("Inside Classification initialization")
         self.ml_pipeline = ml_pipeline
+        self.jlogger = self.ml_pipeline.jlogger
         self.figcount = 0
         self.Figureset = []
 
@@ -55,8 +58,10 @@ class Evaluation:
         x_test = self.ml_pipeline.x_test
         y_test = self.ml_pipeline.y_test
 
+        fg_fld_name = os.path.basename(self.ml_pipeline.fg_clf_fld_path)
+
         fld_path = self.ml_pipeline.job_data['job_data_path']
-        fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, fld_name])
+        fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, fg_fld_name, fld_name])
 
         os.makedirs(fld_path, exist_ok=True)
 
@@ -117,8 +122,11 @@ class Evaluation:
         self.save_plots_pdf(fld_name)
 
     def save_plots_pdf(self, fld_name):
+
+        fg_fld_name = os.path.basename(self.ml_pipeline.fg_clf_fld_path)
+
         fld_path = self.ml_pipeline.job_data['job_results_path']
-        fld_path = os.path.join(*[fld_path, RESULTS_FLD_NAME])
+        fld_path = os.path.join(*[fld_path, fg_fld_name, RESULTS_FLD_NAME])
 
         os.makedirs(fld_path, exist_ok=True)
 
@@ -136,7 +144,7 @@ class Evaluation:
         self.print_roc_curve(np_ytrues, np_ypreds, np_yprobas, "ROC Curve - " + title)
         res = self.evaluate_model(np_ypreds, np_ytrues, np_yprobas)
 
-        print(title, res)
+        self.jlogger.info("Evaluation of {} {}".format(title, res))
 
     def evaluate_all_bagged_clf(self, bc, n, x_test, y_test):
         res_list = []
@@ -164,9 +172,9 @@ class Evaluation:
         return results
 
     def evaluate_and_save_bagging_results(self, bc, n, x_test, y_test, title, fld_path):
-        # resetting all figures
-        self.figcount = 0
-        self.Figureset = []
+        # # resetting all figures
+        # self.figcount = 0
+        # self.Figureset = []
 
         # evaluate aggregated bagging clf
         bc_ypred = bc.predict(x_test)
@@ -187,8 +195,12 @@ class Evaluation:
         results = self.evaluate_all_bagged_clf(bc, n, x_test, y_test)
         self.plot_box_plot_results(results, title)
 
-        pdf_file_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + title + ".pdf")
-        self.plot_all_figures(pdf_file_path)
+        # fg_fld_name = os.path.basename(self.ml_pipeline.fg_clf_fld_path)
+        # res_fld_path = self.ml_pipeline.job_data['job_results_path']
+        # res_fld_path = os.path.join(*[res_fld_path, fg_fld_name, RESULTS_FLD_NAME])
+        #
+        # pdf_file_path = os.path.join(res_fld_path, DATA_FILE_NAME_PRFX + title + ".pdf")
+        # self.plot_all_figures(pdf_file_path)
 
         iter_results_csv_path = os.path.join(fld_path,
                                              DATA_FILE_NAME_PRFX + title + " Iteration wise Evaluation Results.csv")
@@ -198,15 +210,16 @@ class Evaluation:
         results.describe().to_csv(stats_results_csv_path, float_format='%.4f')
 
     def evaluate_bagging_model(self, clf, n, fld_name):
+        # resetting all figures
+        self.figcount = 0
+        self.Figureset = []
 
         # convert to int in case float
         n = int(n)
 
+        fg_fld_name = os.path.basename(self.ml_pipeline.fg_clf_fld_path)
         fld_path = self.ml_pipeline.job_data['job_data_path']
-
-        # TODO check if need to add bagging folder
-        # fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, BAGGING_FLD_NAME, fld_name])
-        fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, fld_name])
+        fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, fg_fld_name, fld_name])
 
         os.makedirs(fld_path, exist_ok=True)
 
@@ -224,6 +237,13 @@ class Evaluation:
 
         self.evaluate_and_save_bagging_results(bc, n, x_train, y_train, "Training - " + fld_name, fld_path)
         self.evaluate_and_save_bagging_results(bc, n, x_test, y_test, "Testing - " + fld_name, fld_path)
+
+        fg_fld_name = os.path.basename(self.ml_pipeline.fg_clf_fld_path)
+        res_fld_path = self.ml_pipeline.job_data['job_results_path']
+        res_fld_path = os.path.join(*[res_fld_path, fg_fld_name, RESULTS_FLD_NAME])
+
+        pdf_file_path = os.path.join(res_fld_path, DATA_FILE_NAME_PRFX + fld_name + ".pdf")
+        self.plot_all_figures(pdf_file_path)
 
     def evaluate_model(self, ytest_pred, ytest, ytest_probas):
         """
@@ -246,17 +266,6 @@ class Evaluation:
         aucroc = metrics.auc(fpr, tpr)
 
         ap = average_precision_score(ytest, ytest_probas[:, 1])
-
-        #     print("Accuracy: ", accuracy)
-        #     print("Precision: ", prf[0])
-        #     print("Recall: ", prf[1])
-        #     print("F1-Score: ", prf[2])
-        #     print("MCC: ", mcc)
-        #     print("Specificity: ", specificity)
-        #     print("Sensitivity: ", sensitivity)
-        #     print("Kappa: ", kappa)
-        #     print("AUCROC: ", aucroc)
-        #     print("AP: ",ap)
 
         res = OrderedDict()
         res["Accuracy"] = accuracy
@@ -288,13 +297,10 @@ class Evaluation:
         self.figcount += 1
         self.Figureset.append(fig)
 
-        # print("@@@ figcount ", self.figcount)
-        # print("@@@ Figureset ", self.Figureset)
-
         # plt.show()
 
     def get_smoothened_fpr_tpr_from_pROC(self, gt, probs):
-        print("Inside get_smoothened_fpr_tpr_from_pROC ", len(gt), len(probs))
+        # print("Inside get_smoothened_fpr_tpr_from_pROC ", len(gt), len(probs))
         # try:
         #     package = "pROC"
         #     if not rpackages.isinstalled(package):
@@ -339,7 +345,7 @@ class Evaluation:
         # global figcount
         # global Figureset
         roc_auc = auc(fpr, tpr)
-        print("AUC VALUE :", roc_auc)
+        # print("AUC VALUE :", roc_auc)
 
         fig = plt.figure(self.figcount, clear=True)
 
@@ -360,7 +366,7 @@ class Evaluation:
         # global Figureset
         fpr, tpr, _ = roc_curve(testlabel, y_proba[:, 1])
         roc_auc = auc(fpr, tpr)
-        print("AUC VALUE :", roc_auc)
+        # print("AUC VALUE :", roc_auc)
 
         fig = plt.figure(self.figcount, clear=True)
 

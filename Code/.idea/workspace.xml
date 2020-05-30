@@ -3,9 +3,39 @@
   <component name="ChangeListManager">
     <list default="true" id="5308871d-b1e4-47cf-90d7-70b3581c610f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/AppConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/AppConfig.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/model/BaseMLJob.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/BaseMLJob.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/Classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/Classification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/CompoundSimilarity.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/CompoundSimilarity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/CrossValidation.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/CrossValidation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/model/Evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/Evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/FeatureExtraction.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/FeatureExtraction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/FeatureGeneration.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/FeatureGeneration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/FeatureSelection.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/FeatureSelection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/LIMEExplanation.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/LIMEExplanation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ListAllJobs.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ListAllJobs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/MLJobConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/MLJobConfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/MLPipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/MLPipeline.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ManageJob.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ManageJob.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/model/Preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/Preprocessing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ReadUserData.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ReadUserData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetGeneration.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetGeneration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetPreprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetPreprocessing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/chebi_ds_2020_03_09.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/chebi_ds_2020_03_09.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/foodb_final_2020_03_21.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/foodb_final_2020_03_21.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/hmdb-2019-08-19.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/imppat_2020_03_16.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/compound_dbs/imppat_2020_03_16.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/user_ip/or1a1/user_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/user_ip/or1a1/user_data.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/create_job.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/create_job.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/view_all_jobs.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/view_all_jobs.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/utils/Logging.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/utils/Logging.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,16 +70,16 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/ml_pipeline/templates" />
-      <recent name="$PROJECT_DIR$/ml_pipeline/model" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/ml_pipeline/static/user_ip/or1a1" />
       <recent name="$PROJECT_DIR$/ml_pipeline" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ml_pipeline/templates" />
+      <recent name="$PROJECT_DIR$/ml_pipeline/model" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.Sanjay">
+  <component name="RunManager" selected="Python.run">
     <configuration name="FeatureGeneration" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Software" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -157,8 +187,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Sanjay" />
         <item itemvalue="Python.run" />
+        <item itemvalue="Python.Sanjay" />
         <item itemvalue="Python.routes" />
         <item itemvalue="Python.LIMEExplanation" />
         <item itemvalue="Python.FeatureGeneration" />
@@ -202,10 +232,10 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="448" y="132" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/55.24.1311.744@55.24.1311.744" timestamp="1586868327167" />
-    <state width="1309" height="542" key="DebuggerActiveHint" timestamp="1586762792212">
+    <state width="1309" height="542" key="DebuggerActiveHint" timestamp="1590742817468">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1309" height="542" key="DebuggerActiveHint/55.24.1311.744@55.24.1311.744" timestamp="1586762792212" />
+    <state width="1309" height="542" key="DebuggerActiveHint/55.24.1311.744@55.24.1311.744" timestamp="1590742817468" />
     <state x="154" y="96" width="1113" height="573" key="DiffContextDialog" timestamp="1589138332435">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
@@ -214,38 +244,38 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="649" y="286" key="FileChooserDialogImpl/55.24.1311.744@55.24.1311.744" timestamp="1586956485099" />
-    <state width="1288" height="246" key="GridCell.Tab.0.bottom" timestamp="1590655125195">
+    <state width="1288" height="390" key="GridCell.Tab.0.bottom" timestamp="1590864386014">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="246" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590655125195" />
-    <state width="1288" height="246" key="GridCell.Tab.0.center" timestamp="1590655125194">
+    <state width="1288" height="390" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590864386014" />
+    <state width="1288" height="390" key="GridCell.Tab.0.center" timestamp="1590864386012">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="246" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1590655125194" />
-    <state width="1288" height="246" key="GridCell.Tab.0.left" timestamp="1590655125194">
+    <state width="1288" height="390" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1590864386012" />
+    <state width="1288" height="390" key="GridCell.Tab.0.left" timestamp="1590864386011">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="246" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1590655125194" />
-    <state width="1288" height="246" key="GridCell.Tab.0.right" timestamp="1590655125194">
+    <state width="1288" height="390" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1590864386011" />
+    <state width="1288" height="390" key="GridCell.Tab.0.right" timestamp="1590864386013">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="246" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1590655125194" />
-    <state width="1288" height="253" key="GridCell.Tab.1.bottom" timestamp="1590363312945">
+    <state width="1288" height="390" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1590864386013" />
+    <state width="1288" height="265" key="GridCell.Tab.1.bottom" timestamp="1590863717774">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="253" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590363312945" />
-    <state width="1288" height="253" key="GridCell.Tab.1.center" timestamp="1590363312930">
+    <state width="1288" height="265" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590863717774" />
+    <state width="1288" height="265" key="GridCell.Tab.1.center" timestamp="1590863717773">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="253" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1590363312930" />
-    <state width="1288" height="253" key="GridCell.Tab.1.left" timestamp="1590363312929">
+    <state width="1288" height="265" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1590863717773" />
+    <state width="1288" height="265" key="GridCell.Tab.1.left" timestamp="1590863717772">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="253" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1590363312929" />
-    <state width="1288" height="253" key="GridCell.Tab.1.right" timestamp="1590363312931">
+    <state width="1288" height="265" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1590863717772" />
+    <state width="1288" height="265" key="GridCell.Tab.1.right" timestamp="1590863717773">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="253" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590363312931" />
+    <state width="1288" height="265" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590863717773" />
     <state x="55" y="24" width="1311" height="744" key="SettingsEditor" timestamp="1590219283300">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
@@ -254,25 +284,25 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state width="656" height="386" key="XDebugger.FullValuePopup/55.24.1311.744@55.24.1311.744" timestamp="1588921255989" />
-    <state x="371" y="211" key="com.intellij.ide.util.TipDialog" timestamp="1590672305993">
+    <state x="371" y="211" key="com.intellij.ide.util.TipDialog" timestamp="1590849178232">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="371" y="211" key="com.intellij.ide.util.TipDialog/55.24.1311.744@55.24.1311.744" timestamp="1590672305993" />
-    <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1587156037513">
+    <state x="371" y="211" key="com.intellij.ide.util.TipDialog/55.24.1311.744@55.24.1311.744" timestamp="1590849178232" />
+    <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1590768773385">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/55.24.1311.744@55.24.1311.744" timestamp="1587156037513" />
-    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1590602109308">
+    <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/55.24.1311.744@55.24.1311.744" timestamp="1590768773385" />
+    <state x="55" y="24" width="704" height="744" key="find.popup" timestamp="1590863411490">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590602109308" />
+    <state x="55" y="24" width="704" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590863411490" />
     <state x="460" y="26" key="refactoring.ChangeSignatureDialog" timestamp="1589549223098">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="460" y="26" key="refactoring.ChangeSignatureDialog/55.24.1311.744@55.24.1311.744" timestamp="1589549223098" />
-    <state x="373" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1586872513732">
+    <state x="373" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1590761758217">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="373" y="89" width="672" height="678" key="search.everywhere.popup/55.24.1311.744@55.24.1311.744" timestamp="1586872513732" />
+    <state x="373" y="89" width="672" height="678" key="search.everywhere.popup/55.24.1311.744@55.24.1311.744" timestamp="1590761758217" />
   </component>
 </project>

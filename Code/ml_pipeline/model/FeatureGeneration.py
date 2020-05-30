@@ -1,6 +1,4 @@
-import MLPipeline
 import os
-from padelpy import from_smiles
 import pandas as pd
 
 from collections import OrderedDict
@@ -9,48 +7,76 @@ from datetime import datetime
 import shutil
 
 # PaDELPy imports
+from padelpy import from_smiles
 from padelpy.wrapper import padeldescriptor
 
-from ml_pipeline.settings import APP_STATIC
-
+# mordred imports
 from mordred import Calculator, descriptors
 from rdkit import Chem
 
-DATA_FLD_NAME = "step1"
-DATA_FILE_NAME_PRFX = "FG"
+from ml_pipeline.settings import APP_STATIC
+import MLPipeline
+from AppConfig import app_config
+import ml_pipeline.utils.Helper as helper
+
+DATA_FLD_NAME = app_config['fg_fld_name']
 
 
 class FeatureGeneration:
 
-    def __init__(self, ml_pipeline: MLPipeline, is_train):
-        print("Inside FeatureGeneration initialization")
-
+    def __init__(self, ml_pipeline: MLPipeline, is_train: bool):
         self.ml_pipeline = ml_pipeline
+        self.jlogger = self.ml_pipeline.jlogger
+
         self.is_train = is_train
 
-        if self.ml_pipeline.status == "read_data":  # resuming at step 1
-            if self.ml_pipeline.data is None:  # resuming from stop
-                print(ml_pipeline.job_data)
-                user_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], "step0", "user_data.csv")
-                data = pd.read_csv(user_data_fp)
-                self.ml_pipeline.data = data
+        self.jlogger.info(
+            "Inside FeatureGeneration initialization with status {} and is_train as {}".format(self.ml_pipeline.status,
+                                                                                               self.is_train))
 
-            self.generate_features_from_smiles()
+        # call only when in training state - inorder to reuse code for feature generation when not in training state
+        if self.is_train:
+            step1 = os.path.join(self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME)
+            os.makedirs(step1, exist_ok=True)
+
+            if self.ml_pipeline.status == app_config["step0_status"]:  # resuming at step 1
+                if self.ml_pipeline.data is None:  # resuming from stop
+                    self.jlogger.info("Resuming from step 1 of read user data")
+                    user_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], app_config['user_ip_fld_name'],
+                                                app_config['user_ip_fname'])
+
+                    # Assuming data is already validated
+                    data = pd.read_csv(user_data_fp)
+                    self.ml_pipeline.data = data
+
+                self.generate_features_from_smiles()
 
     def generate_features_from_smiles(self):
-        # padel_df = self.generate_features_using_padel()
-        # if self.is_train and padel_df is not None:
-        #     self.write_padel_to_csv(padel_df)
+        self.jlogger.info("Inside generate_features_from_smiles while is_train flag {}".format(self.is_train))
 
-        padel_df = self.generate_features_using_mordered()
+        data = self.ml_pipeline.data
+        org_data = data.copy()
 
+        # TODO - Can run below two methods in different threads
+        padel_df = self.generate_features_using_padel()
         if self.is_train and padel_df is not None:
-            self.write_padel_to_csv(padel_df)
-        # TODO - Can run above two methods in different threads
+            self.write_padel_features_to_csv(padel_df)
 
-        # TODO update status that this stage is completed
-        # update status
-        self.ml_pipeline.status = "feature_generation"
+        # resetting data after being used by padel feature generation
+        self.ml_pipeline.data = org_data.copy()
+        mordred_df = self.generate_features_using_mordered()
+        if self.is_train and mordred_df is not None:
+            self.write_mordred_features_to_csv(mordred_df)
+
+        if self.is_train:
+            updated_status = app_config["step1_status"]
+
+            job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
+            helper.update_job_status(job_oth_config_fp, updated_status)
+
+            self.ml_pipeline.status = updated_status
+
+        self.jlogger.info("Feature generation completed successfully")
 
     def from_smiles_dir(self, smiles_dir: str, output_csv: str = None, descriptors: bool = True,
                         fingerprints: bool = False, timeout: int = None) -> OrderedDict:
@@ -122,8 +148,9 @@ class FeatureGeneration:
     def generate_features_using_padel(self):
 
         if self.ml_pipeline.config.fg_padelpy_flg:
+            self.jlogger.info("Inside generate_features_using_padel method")
 
-            #TODO handle harcoded path
+            # TODO handle harcoded path
             temp_smi_fld_path = os.path.join("C:/all_jobs/", "SMI_Files")
             if os.path.exists(temp_smi_fld_path):
                 shutil.rmtree(temp_smi_fld_path)
@@ -131,27 +158,28 @@ class FeatureGeneration:
 
             df = self.ml_pipeline.data
 
-            df = df[['Smiles', 'Ligand', 'Activation Status']]
+            df = df[['SMILES', 'CNAME', 'Activation Status']]
 
-            df["File_Names"] = df['Smiles'].apply(self.padel_desc_from_smile, temp_smi_fld_path=temp_smi_fld_path)
+            df["File_Names"] = df['SMILES'].apply(self.padel_desc_from_smile, temp_smi_fld_path=temp_smi_fld_path)
 
             temp_op_padel_path = os.path.join(temp_smi_fld_path, "temp_op_padel.csv")
 
-            desc = self.from_smiles_dir(temp_smi_fld_path, output_csv=temp_op_padel_path, timeout=1800) #30 mins timeout
+            desc = self.from_smiles_dir(temp_smi_fld_path, output_csv=temp_op_padel_path,
+                                        timeout=1800)  # 30 mins timeout
 
             op_padel_df = pd.DataFrame(desc)
 
             op_padel_df['Fin_CName'] = op_padel_df['Name'].apply(self.clean_padel_name_col)
 
             mrg_df = pd.merge(df, op_padel_df, how='inner', left_on='File_Names', right_on='Fin_CName')
-            mrg_fin_df = mrg_df.drop(['Smiles', 'File_Names', 'Name', 'Fin_CName'], axis=1)
+            mrg_fin_df = mrg_df.drop(['SMILES', 'File_Names', 'Name', 'Fin_CName'], axis=1)
 
-            mrg_fin_df = mrg_fin_df.sort_values('Ligand')
-            ligands = mrg_fin_df['Ligand']
-            mrg_fin_df = mrg_fin_df.drop(['Ligand'], axis=1)
-            mrg_fin_df['Ligand'] = ligands
+            mrg_fin_df = mrg_fin_df.sort_values('CNAME')
+            ligands = mrg_fin_df['CNAME']
+            mrg_fin_df = mrg_fin_df.drop(['CNAME'], axis=1)
+            mrg_fin_df['CNAME'] = ligands
 
-            print(mrg_fin_df.columns)
+            # print(mrg_fin_df.columns)
 
             self.ml_pipeline.data = mrg_fin_df
 
@@ -162,32 +190,36 @@ class FeatureGeneration:
             return mrg_fin_df
 
         else:
-            # TODO Log
-            pass
             return None
 
     def generate_features_using_mordered(self):
-        # TODO Check Mordered
         if self.ml_pipeline.config.fg_mordered_flg:
+            self.jlogger.info("Inside generate_features_using_mordered method")
             data = self.ml_pipeline.data
             calc = Calculator(descriptors, ignore_3D=True)
-            mols = [Chem.MolFromSmiles(smi) for smi in data["Smiles"]]
+            mols = [Chem.MolFromSmiles(smi) for smi in data["SMILES"]]
             df = calc.pandas(mols)  ## All features
-            df["Ligand"] = data["Ligand"]
+            df["CNAME"] = data["CNAME"]
             df["Activation Status"] = data["Activation Status"]
 
-            self.ml_pipeline.data = df
-
-            return df
-
+            mordred_df = df.copy()
+            self.ml_pipeline.data = mordred_df
+            return mordred_df
         else:
-            # TODO Log
-            pass
             return None
 
-    def write_padel_to_csv(self, df):
-        padel_fld_path = self.ml_pipeline.job_data['job_data_path']
-        padel_fld_path = os.path.join(padel_fld_path, DATA_FLD_NAME)
+    def write_padel_features_to_csv(self, df):
+        padel_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
+                                        app_config["fg_padel_fld_name"]])
+        os.makedirs(padel_fld_path, exist_ok=True)
 
-        padel_file_path = os.path.join(padel_fld_path, DATA_FILE_NAME_PRFX + "_Padel.csv")
+        padel_file_path = os.path.join(padel_fld_path, app_config["fg_padel_fname"])
         df.to_csv(padel_file_path, index=False)
+
+    def write_mordred_features_to_csv(self, df):
+        mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
+                                          app_config["fg_mordred_fld_name"]])
+        os.makedirs(mordred_fld_path, exist_ok=True)
+
+        mordred_file_path = os.path.join(mordred_fld_path, app_config["fg_mordred_fname"])
+        df.to_csv(mordred_file_path, index=False)

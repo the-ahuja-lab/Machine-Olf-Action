@@ -1,29 +1,22 @@
 import os
 import pandas as pd
-import numpy as np
-from sklearn import preprocessing
-from sklearn.decomposition import PCA
-from joblib import dump, load
-
-import MLPipeline
-
-import LIMEExplanation
-
-from CompoundSimilarity import CompoundSimilarity
-from ml_pipeline.settings import APP_STATIC
 
 import pickle
 
-DATA_FLD_NAME = "step6"
-TEST_FLD_NAME = "test"
-PADEL_FLD_NAME = "fg_padel"
-PADEL_FLD_PP_NAME = "preprocessed"
-TEST_CMPNDS_FLD_NAME = "test_compounds"
-TEST_CMPNDS_FILE_NAME = "test_compounds.csv"
+import MLPipeline
+import AppConfig as app_config
 
-RESULTS_FLD_NAME = "novel_predictions"
+import LIMEExplanation
 
-MODEL_FLD = "step5"
+DATA_FLD_NAME = app_config.TSG_FLD_NAME
+# TEST_FLD_NAME = app_config.TSG_TEST_FLD_NAME
+# PADEL_FLD_NAME = app_config.FG_PADEL_FLD_NAME
+# PADEL_FLD_PP_NAME = app_config.TSG_PP_FLD_NAME
+# TEST_CMPNDS_FLD_NAME = app_config.TSG_CMPND_FLD_NAME
+#
+# RESULTS_FLD_NAME = app_config.NOVEL_RESULTS_FLD_NAME
+#
+# MODEL_FLD = app_config.CLF_FLD_NAME
 
 ALL_TEST_DF = {}
 ALL_TEST_COMPOUNDS = {}
@@ -32,21 +25,35 @@ ALL_TEST_COMPOUNDS = {}
 class TestSetPrediction:
 
     def __init__(self, ml_pipeline: MLPipeline):
-        print("Inside TestSetPrediction initialization")
-
         self.ml_pipeline = ml_pipeline
+        self.jlogger = self.ml_pipeline.jlogger
+
+        self.jlogger.info("Inside TestSetPrediction initialization")
 
         self.lime_exp = None
 
-        # TODO change status from test_set_generation to test_set_prediction
-        if self.ml_pipeline.status == "test_set_generation":  # resuming at step 1
+        if self.ml_pipeline.status == app_config.STEP6_1_STATUS:  # resuming at step 6
+            self.apply_on_all_fg()
+
+    def apply_on_all_fg(self):
+        # Padel
+        if self.ml_pipeline.config.fg_padelpy_flg:
+            self.fg_fld_name = app_config.FG_PADEL_FLD_NAME
+            self.initialize_lime_explanation()
+            self.apply_classification_models()
+
+        if self.ml_pipeline.config.fg_mordered_flg:
+            # Mordred
+            self.fg_fld_name = app_config.FG_MORDRED_FLD_NAME
             self.initialize_lime_explanation()
             self.apply_classification_models()
 
     def initialize_lime_explanation(self):
         lime_ml_pipeline = MLPipeline.MLPipeline(self.ml_pipeline.job_id)
-        lime_ml_pipeline.status = "test_set_generation"
+        # lime_ml_pipeline.status = "test_set_generation"
         self.lime_exp = LIMEExplanation.LIMEExplanation(lime_ml_pipeline)
+        self.lime_exp.fg_fld_name = self.fg_fld_name
+        self.lime_exp.fetch_train_data()
 
     def apply_classification_models(self):
         self.apply_gbm()
@@ -61,16 +68,18 @@ class TestSetPrediction:
         if len(ALL_TEST_DF) == 0:
 
             padel_pp_fld_path = os.path.join(
-                *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, PADEL_FLD_PP_NAME])
+                *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, self.fg_fld_name,
+                  app_config.TSG_PP_FLD_NAME])
 
             test_cmpnd_fld_path = os.path.join(
-                *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, PADEL_FLD_NAME, TEST_CMPNDS_FLD_NAME])
+                *[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME, self.fg_fld_name,
+                  app_config.TSG_CMPND_FLD_NAME])
 
             # all_test_compounds_df = pd.read_csv(test_cmpnd_fld_path)
             # ALL_TEST_COMPOUNDS = all_test_compounds_df[all_test_compounds_df.columns[0]]
 
             for file in os.listdir(padel_pp_fld_path):
-                print(file)
+                self.jlogger.debug("Collecting test preprocessed file {}".format(file))
 
                 if file.endswith(".csv"):  # checking only csv files
                     padel_test_fp = os.path.join(padel_pp_fld_path, file)
@@ -78,7 +87,7 @@ class TestSetPrediction:
                     ALL_TEST_DF[file] = df
 
             for file in os.listdir(test_cmpnd_fld_path):
-                print(file)
+                self.jlogger.debug("Collecting test compound names from {}".format(file))
 
                 if file.endswith(".csv"):  # checking only csv files
                     cmpnd_name_fp = os.path.join(test_cmpnd_fld_path, file)
@@ -97,16 +106,17 @@ class TestSetPrediction:
         except:
             print("This model does not support probability scores")
             prob = []
-        padel_test_df['Ligand'] = all_test_compounds
+        padel_test_df['CNAME'] = all_test_compounds
 
-        novel_compounds_predictions = pd.DataFrame(list(zip(padel_test_df['Ligand'], pred_labels, prob)),
+        novel_compounds_predictions = pd.DataFrame(list(zip(padel_test_df['CNAME'], pred_labels, prob)),
                                                    columns=['Compound Name', 'Predicted Label',
                                                             'Predicted probability'])
         return novel_compounds_predictions
 
     def fetch_model_save_predictions(self, model_name):
         model_pkl_path = os.path.join(
-            *[self.ml_pipeline.job_data['job_data_path'], MODEL_FLD, model_name, "clf_" + model_name + ".pkl"])
+            *[self.ml_pipeline.job_data['job_data_path'], app_config.CLF_FLD_NAME, self.fg_fld_name, model_name,
+              "clf_" + model_name + ".pkl"])
 
         with open(model_pkl_path, 'rb') as f:
             model = pickle.load(f)
@@ -120,7 +130,8 @@ class TestSetPrediction:
             novel_compounds_predictions = self.apply_model_for_predictions(model, test_df, test_compounds)
 
             novel_pred_fld_p = os.path.join(
-                *[self.ml_pipeline.job_data['job_results_path'], RESULTS_FLD_NAME, model_name])
+                *[self.ml_pipeline.job_data['job_results_path'], self.fg_fld_name, app_config.NOVEL_RESULTS_FLD_NAME,
+                  model_name])
             os.makedirs(novel_pred_fld_p, exist_ok=True)
 
             # TODO Add model name in prediction file

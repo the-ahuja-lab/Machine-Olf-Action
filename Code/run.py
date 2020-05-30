@@ -1,11 +1,12 @@
-# import multiprocessing
-# multiprocessing.freeze_support()
+import multiprocessing
 
 from ml_pipeline import app
 import random, threading, webbrowser
 import os
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
+
     port = 5000 + random.randint(0, 999)
     # port = 5000
     url = "http://127.0.0.1:{0}".format(port)
