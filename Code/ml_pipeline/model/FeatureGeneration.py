@@ -174,7 +174,10 @@ class FeatureGeneration:
                 ff = pd.concat([df, df1], axis=0)
             if i > 1:
                 ff = pd.concat([ff, df1], axis=0)
-        ff = pd.concat([ff, test1['CNAME']], axis=1)
+
+            if i == 3:
+                break
+        ff = pd.concat([ff, test1[['CNAME', 'Activation Status']]], axis=1)
 
         self.ml_pipeline.data = ff
 
