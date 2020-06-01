@@ -102,3 +102,23 @@ width:40px;
 height:40px;
 padding-right:5px
 }
+
+.input-tb{
+max-width:95px
+}
+
+.mv-hr{
+border-color:white
+}
+
+.bagging-div{
+margin-left:20px !important
+}
+
+.info-class{
+width: 12px;
+height:12px;
+margin-left:3px;
+cursor: pointer;
+vertical-align:top !important
+}

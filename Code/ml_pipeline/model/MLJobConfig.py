@@ -66,10 +66,14 @@ class MLJobConfig:
         self.cv_5fold_flg = None
         self.cv_loocv_flg = None
 
+        self.exp_lime_flg = None
+
         self.db_hmdb_flg = None
         self.db_foodb_flg = None
         self.db_imppat_flg = None
         self.db_chebi_flg = None
+        self.db_pubchem_flg = None
+        self.db_custom_flg = None
 
         self.sim_tanimoto_flg = None
         self.sim_dice_flg = None
@@ -144,10 +148,14 @@ class MLJobConfig:
             self.cv_5fold_flg = config.cv_5fold_flg
             self.cv_loocv_flg = config.cv_loocv_flg
 
+            self.exp_lime_flg = config.exp_lime_flg
+
             self.db_hmdb_flg = config.db_hmdb_flg
             self.db_foodb_flg = config.db_foodb_flg
             self.db_imppat_flg = config.db_imppat_flg
             self.db_chebi_flg = config.db_chebi_flg
+            self.db_pubchem_flg = config.db_pubchem_flg
+            self.db_custom_flg = config.db_custom_flg
 
             self.sim_tanimoto_flg = config.sim_tanimoto_flg
             self.sim_dice_flg = config.sim_dice_flg

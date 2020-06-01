@@ -21,6 +21,9 @@ def validate_error_form_fields(config_form_dict):
     if config_user_dict.get("tts_train_per") == 0:
         ALL_VALID_ERRORS.append("Please enter train split value greater than 0")
 
+    if config_form_dict.get("tts_train_per") + config_form_dict.get("tts_test_per") != 100:
+        ALL_VALID_ERRORS.append("Train and test split should add upto 100")
+
     # TODO add all other validations here
 
     if len(ALL_VALID_ERRORS) != 0:
