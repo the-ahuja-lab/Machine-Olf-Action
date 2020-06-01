@@ -1,3 +1,12 @@
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+
 $(document).ready(function() {
 
     $(document).on('change', "input[type=checkbox]", function () {
@@ -48,8 +57,10 @@ $(function() {
  $("#pp_cr_flg").click(function() {
   if ($(this).is(":checked")) {
    $("#dvCorrelation").show();
+   $("#dvCorrelation :input").prop('required',true);
   } else {
    $("#dvCorrelation").hide();
+   $("#dvCorrelation :input").prop('required',null);
   }
  });
 });
@@ -58,8 +69,10 @@ $(function() {
  $("#pp_vt_flg").click(function() {
   if ($(this).is(":checked")) {
    $("#dvVariance").show();
+   $("#dvVariance :input").prop('required',true);
   } else {
    $("#dvVariance").hide();
+   $("#dvVariance :input").prop('required',null);
   }
  });
 });
@@ -69,8 +82,10 @@ $(function() {
  $("#pp_mv_col_pruning_flg").click(function() {
   if ($(this).is(":checked")) {
    $("#prunecolumns").show();
+   $("#prunecolumns :input").prop('required',true);
   } else {
    $("#prunecolumns").hide();
+   $("#prunecolumns :input").prop('required',null);
   }
  });
 });
@@ -79,8 +94,10 @@ $(function() {
  $("#fe_pca_flg").click(function() {
   if ($(this).is(":checked")) {
    $("#pca").show();
+   $("#pca :input").prop('required',true);
   } else {
    $("#pca").hide();
+   $("#pca :input").prop('required',null);
   }
  });
 });
@@ -99,8 +116,10 @@ $(function() {
  $("#clf_bagging_svm").click(function() {
   if ($(this).is(":checked")) {
    $("#dv_bag_svm_n").show();
+   $("#dv_bag_svm_n :input").prop('required',true);
   } else {
    $("#dv_bag_svm_n").hide();
+   $("#dv_bag_svm_n :input").prop('required',null);
   }
  });
 });
@@ -119,8 +138,10 @@ $(function() {
  $("#clf_bagging_et").click(function() {
   if ($(this).is(":checked")) {
    $("#dv_bag_et_n").show();
+   $("#dv_bag_et_n :input").prop('required',true);
   } else {
    $("#dv_bag_et_n").hide();
+   $("#dv_bag_et_n :input").prop('required',null);
   }
  });
 });
@@ -139,8 +160,10 @@ $(function() {
  $("#clf_bagging_lr").click(function() {
   if ($(this).is(":checked")) {
    $("#dv_bag_lr_n").show();
+   $("#dv_bag_lr_n :input").prop('required',true);
   } else {
    $("#dv_bag_lr_n").hide();
+   $("#dv_bag_lr_n :input").prop('required',null);
   }
  });
 });
@@ -159,8 +182,10 @@ $(function() {
  $("#clf_bagging_gnb").click(function() {
   if ($(this).is(":checked")) {
    $("#dv_bag_gnb_n").show();
+   $("#dv_bag_gnb_n :input").prop('required',true);
   } else {
    $("#dv_bag_gnb_n").hide();
+   $("#dv_bag_gnb_n :input").prop('required',null);
   }
  });
 });
@@ -179,8 +204,10 @@ $(function() {
  $("#clf_bagging_gbm").click(function() {
   if ($(this).is(":checked")) {
    $("#dv_bag_gbm_n").show();
+   $("#dv_bag_gbm_n :input").prop('required',true);
   } else {
    $("#dv_bag_gbm_n").hide();
+   $("#dv_bag_gbm_n :input").prop('required',null);
   }
  });
 });
@@ -199,8 +226,10 @@ $(function() {
  $("#clf_bagging_rf").click(function() {
   if ($(this).is(":checked")) {
    $("#dv_bag_rf_n").show();
+   $("#dv_bag_rf_n :input").prop('required',true);
   } else {
    $("#dv_bag_rf_n").hide();
+   $("#dv_bag_rf_n :input").prop('required',null);
   }
  });
 });
@@ -219,8 +248,10 @@ $(function() {
  $("#clf_bagging_mlp").click(function() {
   if ($(this).is(":checked")) {
    $("#dv_bag_mlp_n").show();
+   $("#dv_bag_mlp_n :input").prop('required',true);
   } else {
    $("#dv_bag_mlp_n").hide();
+   $("#dv_bag_mlp_n :input").prop('required',null);
   }
  });
 });

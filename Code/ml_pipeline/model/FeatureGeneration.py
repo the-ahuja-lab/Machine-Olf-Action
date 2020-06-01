@@ -94,7 +94,7 @@ class FeatureGeneration:
         '''
 
         # TODO handle space in path - java is giving issue..as of now hardcoded path C:/all_jobs/
-        print("old output_csv ", output_csv)
+        # print("old output_csv ", output_csv)
 
         # output_csv = os.path.join(*[APP_STATIC, "compound_dbs", "temp_op_padel.csv"])
         #
@@ -122,10 +122,10 @@ class FeatureGeneration:
                 break
             except RuntimeError as exception:
                 if attempt == 0:
-                    print("Exception occured ", exception)
-                    # raise RuntimeError(exception)
-            else:
-                continue
+                    self.jlogger.exception("Padel exception occured while generating features parallely")
+                    raise RuntimeError(exception)
+                else:
+                    continue
 
         with open(output_csv, 'r', encoding='utf-8') as desc_file:
             reader = DictReader(desc_file)
@@ -145,13 +145,49 @@ class FeatureGeneration:
         name = str_name[8:]
         return name
 
-    def generate_features_using_padel(self):
+    def generate_padel_features_serially(self):
+        self.jlogger.info("Inside generate_padel_features_serial")
+        test1 = self.ml_pipeline.data
+        for i in range(len(test1)):
+            self.jlogger.debug("Genertaing Padel Features for datapoint {}".format(i))
+            try:
+                temp = test1["SMILES"][i]
+                descriptors = from_smiles(temp, timeout=30)
+            except RuntimeError:
+                self.jlogger.error(
+                    "Padel feature generation failed, trying again with increased timeout of 60 secs, datapoint {}".format(
+                        i))
+                try:
+                    temp = test1["SMILES"][i]
+                    descriptors = from_smiles(temp, timeout=60)
+                except RuntimeError:
+                    self.jlogger.exception(
+                        "Padel feature generation failed on 2nd retry of 60secs, ignoring this datapoint {}".format(
+                            i))
+                    continue
 
-        if self.ml_pipeline.config.fg_padelpy_flg:
-            self.jlogger.info("Inside generate_features_using_padel method")
+            if i == 0:
+                df = pd.DataFrame(descriptors, columns=descriptors.keys(), index=[0])
+            else:
+                df1 = pd.DataFrame(descriptors, columns=descriptors.keys(), index=[i])
+            if i is 1:
+                ff = pd.concat([df, df1], axis=0)
+            if i > 1:
+                ff = pd.concat([ff, df1], axis=0)
+        ff = pd.concat([ff, test1['CNAME']], axis=1)
 
-            # TODO handle harcoded path
-            temp_smi_fld_path = os.path.join("C:/all_jobs/", "SMI_Files")
+        self.ml_pipeline.data = ff
+
+        return ff
+
+    def generate_padel_features_parallely(self, timeout):
+        self.jlogger.info("Inside generate_padel_features_parallely")
+
+        mrg_fin_df = None
+        # TODO handle harcoded path
+        temp_smi_fld_path = os.path.join("C:/ml_olfa_padel_temp/", "SMI_Files")
+
+        try:
             if os.path.exists(temp_smi_fld_path):
                 shutil.rmtree(temp_smi_fld_path)
             os.makedirs(temp_smi_fld_path, exist_ok=True)
@@ -165,7 +201,7 @@ class FeatureGeneration:
             temp_op_padel_path = os.path.join(temp_smi_fld_path, "temp_op_padel.csv")
 
             desc = self.from_smiles_dir(temp_smi_fld_path, output_csv=temp_op_padel_path,
-                                        timeout=1800)  # 30 mins timeout
+                                        timeout=timeout)  # 30 mins timeout
 
             op_padel_df = pd.DataFrame(desc)
 
@@ -183,12 +219,28 @@ class FeatureGeneration:
 
             self.ml_pipeline.data = mrg_fin_df
 
-            # clean up smi files
-            if os.path.exists(temp_smi_fld_path):
-                shutil.rmtree(temp_smi_fld_path)
+        except:
+            self.jlogger.exception("Error occurred while generating features parallely")
 
-            return mrg_fin_df
+        # clean up smi files
+        if os.path.exists(temp_smi_fld_path):
+            shutil.rmtree(temp_smi_fld_path)
 
+        return mrg_fin_df
+
+    def generate_features_using_padel(self):
+
+        if self.ml_pipeline.config.fg_padelpy_flg:
+            self.jlogger.info("Inside generate_features_using_padel method")
+
+            # TODO temporary fix, try parallel first if fails, fall back to serial
+            self.jlogger.info("Trying generating padel features parallelly first")
+            df = self.generate_padel_features_parallely(600)  # 10 mins timeout
+            if df is None:  # if error while generating parallely
+                self.jlogger.info("Trying generating padel features serially now")
+                df = self.generate_padel_features_serially()
+
+            return df
         else:
             return None
 

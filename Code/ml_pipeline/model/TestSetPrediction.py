@@ -49,11 +49,12 @@ class TestSetPrediction:
             self.apply_classification_models()
 
     def initialize_lime_explanation(self):
-        lime_ml_pipeline = MLPipeline.MLPipeline(self.ml_pipeline.job_id)
-        # lime_ml_pipeline.status = "test_set_generation"
-        self.lime_exp = LIMEExplanation.LIMEExplanation(lime_ml_pipeline)
-        self.lime_exp.fg_fld_name = self.fg_fld_name
-        self.lime_exp.fetch_train_data()
+        if self.ml_pipeline.config.exp_lime_flg:
+            lime_ml_pipeline = MLPipeline.MLPipeline(self.ml_pipeline.job_id)
+            # lime_ml_pipeline.status = "test_set_generation"
+            self.lime_exp = LIMEExplanation.LIMEExplanation(lime_ml_pipeline)
+            self.lime_exp.fg_fld_name = self.fg_fld_name
+            self.lime_exp.fetch_train_data()
 
     def apply_classification_models(self):
         self.apply_gbm()
@@ -123,7 +124,8 @@ class TestSetPrediction:
 
         all_test_df, all_test_compounds = self.load_all_test_files()
 
-        self.lime_exp.lime_explainer = None
+        if not self.lime_exp is None:
+            self.lime_exp.lime_explainer = None
 
         for padel_fname, test_df in all_test_df.items():
             test_compounds = all_test_compounds[padel_fname]
@@ -140,10 +142,11 @@ class TestSetPrediction:
 
             novel_compounds_predictions.to_csv(novel_pred_fp, index=False)
 
-            lime_exp_f_name = "lime_exp_" + model_name + "_" + self.change_ext(padel_fname, ".csv", ".pdf")
-            lime_exp_pdf_fp = os.path.join(novel_pred_fld_p, lime_exp_f_name)
+            if self.ml_pipeline.config.exp_lime_flg:
+                lime_exp_f_name = "lime_exp_" + model_name + "_" + self.change_ext(padel_fname, ".csv", ".pdf")
+                lime_exp_pdf_fp = os.path.join(novel_pred_fld_p, lime_exp_f_name)
 
-            self.lime_exp.exp_preds_using_lime(model, test_compounds, padel_fname, lime_exp_pdf_fp)
+                self.lime_exp.exp_preds_using_lime(model, test_compounds, padel_fname, lime_exp_pdf_fp)
 
     def change_ext(self, fname, ext_init, ext_fin):
         if fname.endswith(ext_init):

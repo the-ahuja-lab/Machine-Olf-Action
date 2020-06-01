@@ -22,15 +22,15 @@
                     <div class="form-group">
                         <label for="job_description">Add Job Description</label>
                         <textarea id="job_description" name="job_description" class="form-control"
-                                  rows="3" placeholder="Upto 100 plain-text chars"
+                                  rows="3" placeholder="Upto 100 plain-text chars" maxlength="100"
                                   aria-describedby="jd_help"></textarea>
                         <small id="jd_help" class="form-text text-muted">It can be used to refer to job later
                             in-case you forget job-id</small>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" id="chkSubmit" class="btn btn-secondary">Create Job</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -44,32 +44,44 @@
                          class="card-img-top card-img-cust embed-responsive-item"
                          alt="STEP 1: Upload Dataset">
                     <div class="card-body">
-                        <h5 class="card-title card-title-cust">STEP 1: UPLOAD DATASET</h5>
-
+                        <h5 class="card-title card-title-cust">STEP 1: UPLOAD DATASET
+                            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                               data-container="body" data-placement="bottom" data-html="true"
+                               data-content="Dataset should be a csv file containing exactly <strong><em>three columns namely CID, CNAME and SMILES</em></strong>. CID stands for Compound IDs, CNAME stands for Compound Names and SMILES stands for Compound SMILES representations. To have a look at a typical dataset, download our example dataset <a target='_blank', href='{{ url_for('static', filename='user_ip/or1a1/user_data.csv') }}'>here</a>."><img
+                                    class="info-class"
+                                    src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
+                        </h5>
                         <div class="card-text">
                             <div class="form-group">
-                                <input type="file" class="form-control-file" id="user_file" name="user_file">
-
+                                <input type="file" class="form-control-file" id="user_file" name="user_file"
+                                       data-toggle="tooltip" data-placement="bottom"
+                                       title="Dataset should be a csv file containing exactly three columns namely CID, CNAME and SMILES. CID stands for Compound IDs, CNAME stands for Compound Names and SMILES stands for Compound SMILES representations">
                                 <a class="no-data-link" data-toggle="modal" data-target="#exampleModalCenter" href="#"
                                    onclick="set_default_job_params()">
                                     Don't have data? Try using our example data
                                 </a>
 
                             </div>
-                            <fieldset>
+                            <fieldset aria-describedby="tts-ideal">
                                 <legend>Data Split</legend>
                                 <div class="form-group">
-                                    <label for="tts_train_per" class="sr-only">Train Split</label>
-                                    <input id="tts_train_per" name="tts_train_per" class="form-control"
-                                           placeholder="Train Split" value="70">
+                                    <label for="tts_train_per" class="sr-only">Train Split (in percentage)</label>
+                                    <input required type="number" min="1" max="99" id="tts_train_per"
+                                           name="tts_train_per" class="form-control"
+                                           placeholder="Train Split (in percentage)" value="70" title="Train Split">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="tts_test_per" class="sr-only">Test Split</label>
-                                    <input id="tts_test_per" name="tts_test_per" class="form-control"
-                                           placeholder="Test Split" value="30">
+                                    <label for="tts_test_per" class="sr-only">Test Split (in percentage)</label>
+                                    <input required type="number" min="1" max="99" id="tts_test_per" name="tts_test_per"
+                                           class="form-control"
+                                           placeholder="Test Split (in percentage)" value="30" title="Test Split">
                                 </div>
                             </fieldset>
+                            <!--                            <small id="fileUploadHelp" class="form-text text-muted">-->
+                            <!--                                Train Test Split should ideally be 70 and 30 respectively-->
+                            <!--                            </small>-->
+
                         </div>
                     </div>
                 </div>
@@ -80,91 +92,109 @@
                         <h5 class="card-title card-title-cust">STEP 2: FEATURE GENERATION</h5>
                         <div class="card-text">
                             <button type="button" class="btn btn-light btn-info-cust" title="Generate Descriptors">
-                                <h6><b>I. Generate Chemical Descriptors</b></h6>
+                                <h6><b>I. Chemical Descriptors</b></h6>
                             </button>
 
-                            <div class="form-check form-check-inline">
+                            <div class="form-group form-check form-check-inline">
                                 <input type="checkbox" id="fg_padelpy_flg" name="fg_padelpy_flg"
                                        class="form-check-input">
                                 <label class="form-check-label" for="fg_padelpy_flg">PaDEL</label>
+                                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                                   data-container="body" data-placement="bottom" data-html="true"
+                                   data-content="Details of all PaDEL features can be downloaded <a target='_blank', href='{{ url_for('static', filename='fg_descriptors/PaDEL_Descriptors.xls') }}'>here</a>."><img
+                                        class="info-class"
+                                        src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
                             </div>
 
-                            <div class="form-check form-check-inline">
+                            <div class="form-group form-check form-check-inline">
                                 <input type="checkbox" id="fg_mordered_flg" name="fg_mordered_flg"
                                        class="form-check-input" checked>
                                 <label class="form-check-label" for="fg_mordered_flg">Mordred</label>
+                                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                                   data-container="body" data-placement="bottom" data-html="true"
+                                   data-content="Details of all Mordred features can be downloaded <a target='_blank', href='{{ url_for('static', filename='fg_descriptors/Mordred_Descriptors.xls') }}'>here</a>. Note only 2d features are used.">
+                                    <img class="info-class"
+                                         src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
                             </div>
 
                             <button type="button" class="btn btn-light btn-info-cust" title="Pre processing Steps">
-                                <h6><b>II. Choose Pre processing Steps</b></h6>
+                                <h6><b>II. Pre processing Steps</b></h6>
                             </button>
+
+                            <!--                            <hr class="mv-hr"/>-->
 
                             <fieldset>
                                 <legend>Missing Values</legend>
 
-                                <div class="form-row">
-                                    <div class="col-xs-6">
-                                        <div class="form-group form-check">
-                                            <input type="checkbox" name="pp_mv_col_pruning_flg" class="form-check-input"
-                                                   id="pp_mv_col_pruning_flg" checked>
-                                            <label class="form-check-label" for="pp_mv_col_pruning_flg">Prune
-                                                Columns</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <div id="prunecolumns" class="form-group"
-                                             style="display: none; max-width: 85px">
-                                            <label for="pp_mv_col_pruning_th" class="sr-only">Prune Column
-                                                Threshold</label>
-                                            <input type="text" id="pp_mv_col_pruning_th" name="pp_mv_col_pruning_th"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="Threshold" value="75"/>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="form-group form-check">
                                     <input type="checkbox" class="form-check-input" name="pp_mv_imputation_flg"
                                            id="pp_mv_imputation_flg" checked>
-                                    <label class="form-check-label" for="pp_mv_imputation_flg">Impute with Mean</label>
+                                    <label class="form-check-label" for="pp_mv_imputation_flg">Impute with
+                                        Mean</label>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-7">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="pp_mv_col_pruning_flg"
+                                                   class="form-check-input"
+                                                   id="pp_mv_col_pruning_flg" checked>
+                                            <label class="form-check-label" for="pp_mv_col_pruning_flg"
+                                                   title="Removes features with missing values">Prune
+                                                Columns</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div id="prunecolumns" class="input-tb">
+                                            <label for="pp_mv_col_pruning_th" class="sr-only">Prune Column
+                                                Threshold</label>
+                                            <input required type="number" min="1" max="99" id="pp_mv_col_pruning_th"
+                                                   name="pp_mv_col_pruning_th"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Threshold" value="75" title="Threshold"/>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </fieldset>
 
-                            <!--                        <hr>-->
+                            <hr class="mv-hr"/>
 
                             <div class="form-row">
-                                <div class="col-xs-6">
+                                <div class="col-7">
                                     <div class="form-group form-check">
                                         <input type="checkbox" class="form-check-input" name="pp_vt_flg" id="pp_vt_flg"
                                                checked>
-                                        <label class="form-check-label" for="pp_vt_flg">Variance Removal</label>
+                                        <label class="form-check-label" for="pp_vt_flg"
+                                               title="Removes low variance features">Low Variance</label>
                                     </div>
                                 </div>
-                                <div class="col-xs-6">
-                                    <div id="dvVariance" class="form-group" style="display: none; max-width: 85px">
+                                <div class="col">
+                                    <div id="dvVariance" class="form-group input-tb">
                                         <label for="pp_vt_th" class="sr-only">Variance Threshold</label>
-                                        <input type="text" id="pp_vt_th" name="pp_vt_th"
+                                        <input required type="number" id="pp_vt_th" name="pp_vt_th"
                                                class="form-control form-control-sm"
-                                               placeholder="Threshold" value="0"/>
+                                               placeholder="Threshold" value="0" title="Threshold"/>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-row">
-                                <div class="col-xs-6">
+                                <div class="col-7">
                                     <div class="form-group form-check">
                                         <input type="checkbox" class="form-check-input" name="pp_cr_flg" id="pp_cr_flg"
                                                checked>
-                                        <label class="form-check-label" for="pp_cr_flg">Correlation Check</label>
+                                        <label class="form-check-label" for="pp_cr_flg"
+                                               title="Removes highly correlated features">High Correlation</label>
                                     </div>
                                 </div>
-                                <div class="col-xs-6">
-                                    <div id="dvCorrelation" class="form-group" style="display: none; max-width: 85px">
+                                <div class="col">
+                                    <div id="dvCorrelation" class="form-group input-tb">
                                         <label for="pp_cr_th" class="sr-only">Correlation Threshold</label>
-                                        <input type="text" id="pp_cr_th" name="pp_cr_th"
+                                        <input required type="number" min="0.01" max="1" step="any" id="pp_cr_th"
+                                               name="pp_cr_th"
                                                class="form-control form-control-sm"
-                                               placeholder="Threshold" value="0.95"/>
+                                               placeholder="Threshold" value="0.95" title="Threshold"/>
                                     </div>
                                 </div>
                             </div>
@@ -172,13 +202,15 @@
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="pp_normalization_flg"
                                        id="pp_normalization_flg" checked>
-                                <label class="form-check-label" for="pp_normalization_flg">Normalize</label>
+                                <label class="form-check-label" for="pp_normalization_flg">Min-Max Normalization</label>
                             </div>
 
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="pp_climb_smote_flg"
                                        id="pp_climb_smote_flg" checked>
-                                <label class="form-check-label" for="pp_climb_smote_flg">SMOTE</label>
+                                <label class="form-check-label" for="pp_climb_smote_flg"
+                                       title="Synthetic Minority Over-sampling Technique">Handle Class Imbalance -
+                                    SMOTE</label>
                             </div>
 
                         </div>
@@ -205,13 +237,14 @@
 
                         <div class="form-group form-check">
                             <input type="checkbox" class="form-check-input" name="fe_pca_flg" id="fe_pca_flg" checked>
-                            <label class="form-check-label" for="fe_pca_flg">PCA</label>
+                            <label class="form-check-label" for="fe_pca_flg">Principal Component Analysis (PCA)</label>
                         </div>
 
-                        <div id="pca" class="form-group" style="display: none;">
+                        <div id="pca" class="form-group">
                             <label for="fe_pca_energy" class="sr-only">Eigen Energy</label>
-                            <input type="text" id="fe_pca_energy" name="fe_pca_energy"
-                                   class="form-control"
+                            <input required type="number" min="0.01" max="0.99" step="any" id="fe_pca_energy"
+                                   name="fe_pca_energy"
+                                   class="form-control" title="Eigen Energy"
                                    placeholder="Eigen Energy" value="0.98"/>
                         </div>
                     </div>
@@ -225,35 +258,35 @@
                     <img src="../static/images/classification.svg"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 4: Classification">
                     <div class="card-body">
-                        <h5 class="card-title card-title-cust">STEP 5: CLASSIFICATION</h5>
+                        <h5 class="card-title card-title-cust">STEP 4: CLASSIFICATION</h5>
                         <div class="card-text">
-                            <button type="button" class="btn btn-light btn-info-cust" title="Choose Classification Model">
-                                <h6><b>Choose Classification Model</b></h6>
-                            </button>
+                            <!--                            <button type="button" class="btn btn-light btn-info-cust"-->
+                            <!--                                    title="Choose Classification Model">-->
+                            <!--                                <h6><b>Choose Classification Model</b></h6>-->
+                            <!--                            </button>-->
 
                             <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" name="clf_svm_flg" id="clf_svm_flg"
-                                >
+                                <input type="checkbox" class="form-check-input" name="clf_svm_flg" id="clf_svm_flg">
                                 <label class="form-check-label" for="clf_svm_flg">Support Vector Machine (SVM)</label>
                             </div>
 
                             <div id="svm" style="display: none">
-                                <div class="form-row">
-                                    <div class="col-xs-6">
-                                        <div class="form-check">
+                                <div class="form-row bagging-div">
+                                    <div class="col-7">
+                                        <div class="form-group form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_svm"
                                                    id="clf_bagging_svm">
                                             <label class="form-check-label" for="clf_bagging_svm">Bagging of
                                                 SVM</label>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <div id="dv_bag_svm_n" class="form-group"
-                                             style="display: none; max-width: 85px">
+                                    <div class="col">
+                                        <div id="dv_bag_svm_n" class="form-group input-tb">
                                             <label for="clf_bag_svm_n" class="sr-only">SVM Bagging</label>
-                                            <input type="text" id="clf_bag_svm_n" name="clf_bag_svm_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_svm_n" name="clf_bag_svm_n"
                                                    class="form-control form-control-sm"
-                                                   placeholder="# of times" value="1000"/>
+                                                   placeholder="# of times" value="1000"
+                                                   title="# of classifiers in ensemble"/>
                                         </div>
                                     </div>
                                 </div>
@@ -267,22 +300,22 @@
 
                             <div id="extratrees" style="display: none">
 
-                                <div class="form-row">
-                                    <div class="col-xs-6">
-                                        <div class="form-check">
+                                <div class="form-row bagging-div">
+                                    <div class="col-7">
+                                        <div class="form-group form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_et"
                                                    id="clf_bagging_et">
                                             <label class="form-check-label" for="clf_bagging_et">Bagging of
                                                 ET</label>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <div id="dv_bag_et_n" class="form-group"
-                                             style="display: none; max-width: 85px">
+                                    <div class="col">
+                                        <div id="dv_bag_et_n" class="form-group input-tb">
                                             <label for="clf_bag_et_n" class="sr-only">ET Bagging</label>
-                                            <input type="text" id="clf_bag_et_n" name="clf_bag_et_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_et_n" name="clf_bag_et_n"
                                                    class="form-control form-control-sm"
-                                                   placeholder="# of times" value="1000"/>
+                                                   placeholder="# of times" value="1000"
+                                                   title="# of classifiers in ensemble"/>
                                         </div>
                                     </div>
                                 </div>
@@ -295,24 +328,24 @@
                                 <label class="form-check-label" for="clf_lr_flg">Logistic Regression (LR)</label>
                             </div>
 
-                            <div id="LR" style="display: none">
+                            <div id="LR">
 
-                                <div class="form-row">
-                                    <div class="col-xs-6">
-                                        <div class="form-check">
+                                <div class="form-row bagging-div">
+                                    <div class="col-7">
+                                        <div class="form-group form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_lr"
                                                    id="clf_bagging_lr" checked>
                                             <label class="form-check-label" for="clf_bagging_lr">Bagging of
                                                 LR</label>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <div id="dv_bag_lr_n" class="form-group"
-                                             style="display: none; max-width: 85px">
+                                    <div class="col">
+                                        <div id="dv_bag_lr_n" class="form-group input-tb">
                                             <label for="clf_bag_lr_n" class="sr-only">LR Bagging</label>
-                                            <input type="text" id="clf_bag_lr_n" name="clf_bag_lr_n"
+                                            <input required type="number" min="2" max="1000" id="clf_bag_lr_n" name="clf_bag_lr_n"
                                                    class="form-control form-control-sm"
-                                                   placeholder="# of times" value="1000"/>
+                                                   placeholder="# of times" value="1000"
+                                                   title="# of classifiers in ensemble"/>
                                         </div>
                                     </div>
                                 </div>
@@ -324,24 +357,24 @@
                                 <label class="form-check-label" for="clf_gnb_flg">Gaussian Naive Bayes (GNB)</label>
                             </div>
 
-                            <div id="GNB" style="display: none">
+                            <div id="GNB">
 
-                                <div class="form-row">
-                                    <div class="col-xs-6">
-                                        <div class="form-check">
+                                <div class="form-row bagging-div">
+                                    <div class="col-7">
+                                        <div class="form-group form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_gnb"
                                                    id="clf_bagging_gnb" checked>
                                             <label class="form-check-label" for="clf_bagging_gnb">Bagging of
                                                 GNB</label>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <div id="dv_bag_gnb_n" class="form-group"
-                                             style="display: none; max-width: 85px">
+                                    <div class="col">
+                                        <div id="dv_bag_gnb_n" class="form-group input-tb">
                                             <label for="clf_bag_gnb_n" class="sr-only">GNB Bagging</label>
-                                            <input type="text" id="clf_bag_gnb_n" name="clf_bag_gnb_n"
+                                            <input required type="number" min="2" max="1000" id="clf_bag_gnb_n" name="clf_bag_gnb_n"
                                                    class="form-control form-control-sm"
-                                                   placeholder="# of times" value="1000"/>
+                                                   placeholder="# of times" value="1000"
+                                                   title="# of classifiers in ensemble"/>
                                         </div>
                                     </div>
                                 </div>
@@ -349,27 +382,28 @@
 
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="clf_gbm_flg" id="clf_gbm_flg">
-                                <label class="form-check-label" for="clf_gbm_flg">Gradient Boosting Machine (GBM)</label>
+                                <label class="form-check-label" for="clf_gbm_flg">Gradient Boosting Machine
+                                    (GBM)</label>
                             </div>
 
                             <div id="gbm" style="display: none">
 
-                                <div class="form-row">
-                                    <div class="col-xs-6">
-                                        <div class="form-check">
+                                <div class="form-row bagging-div">
+                                    <div class="col-7">
+                                        <div class="form-group form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_gbm"
                                                    id="clf_bagging_gbm">
                                             <label class="form-check-label" for="clf_bagging_gbm">Bagging of
                                                 GBM</label>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <div id="dv_bag_gbm_n" class="form-group"
-                                             style="display: none; max-width: 85px">
+                                    <div class="col">
+                                        <div id="dv_bag_gbm_n" class="form-group input-tb">
                                             <label for="clf_bag_gbm_n" class="sr-only">GBM Bagging</label>
-                                            <input type="text" id="clf_bag_gbm_n" name="clf_bag_gbm_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_gbm_n" name="clf_bag_gbm_n"
                                                    class="form-control form-control-sm"
-                                                   placeholder="# of times" value="1000"/>
+                                                   placeholder="# of times" value="1000"
+                                                   title="# of classifiers in ensemble"/>
                                         </div>
                                     </div>
                                 </div>
@@ -383,22 +417,22 @@
                             </div>
 
                             <div id="rforest" style="display: none">
-                                <div class="form-row">
-                                    <div class="col-xs-6">
-                                        <div class="form-check">
+                                <div class="form-row bagging-div">
+                                    <div class="col-7">
+                                        <div class="form-group form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_rf"
                                                    id="clf_bagging_rf">
                                             <label class="form-check-label" for="clf_bagging_rf">Bagging of
                                                 RF</label>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <div id="dv_bag_rf_n" class="form-group"
-                                             style="display: none; max-width: 85px">
+                                    <div class="col">
+                                        <div id="dv_bag_rf_n" class="form-group input-tb">
                                             <label for="clf_bag_rf_n" class="sr-only">RF Bagging</label>
-                                            <input type="text" id="clf_bag_rf_n" name="clf_bag_rf_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_rf_n" name="clf_bag_rf_n"
                                                    class="form-control form-control-sm"
-                                                   placeholder="# of times" value="1000"/>
+                                                   placeholder="# of times" value="1000"
+                                                   title="# of classifiers in ensemble"/>
                                         </div>
                                     </div>
                                 </div>
@@ -411,22 +445,22 @@
                             </div>
 
                             <div id="mlp" style="display: none">
-                                <div class="form-row">
-                                    <div class="col-xs-6">
-                                        <div class="form-check">
+                                <div class="form-row bagging-div">
+                                    <div class="col-7">
+                                        <div class="form-group form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_mlp"
                                                    id="clf_bagging_mlp">
                                             <label class="form-check-label" for="clf_bagging_mlp">Bagging of
                                                 MLP</label>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <div id="dv_bag_mlp_n" class="form-group"
-                                             style="display: none; max-width: 85px">
+                                    <div class="col">
+                                        <div id="dv_bag_mlp_n" class="form-group input-tb">
                                             <label for="clf_bag_mlp_n" class="sr-only">MLP Bagging</label>
-                                            <input type="text" id="clf_bag_mlp_n" name="clf_bag_mlp_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_mlp_n" name="clf_bag_mlp_n"
                                                    class="form-control form-control-sm"
-                                                   placeholder="# of times" value="1000"/>
+                                                   placeholder="# of times" value="1000"
+                                                   title="# of classifiers in ensemble"/>
                                         </div>
                                     </div>
                                 </div>
@@ -439,8 +473,12 @@
                     <img src="../static/images/data_validation.svg"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 5: Validation">
                     <div class="card-body">
-                        <h5 class="card-title card-title-cust">STEP 6: VALIDATION SCHEME</h5>
+                        <h5 class="card-title card-title-cust">STEP 5: VALIDATION SCHEME</h5>
                         <div class="card-text">
+
+                            <button type="button" class="btn btn-light btn-info-cust" title="Search Database">
+                                <h6><b>Cross Validation</b></h6>
+                            </button>
 
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="cv_3fold_flg" id="cv_3fold_flg"
@@ -459,6 +497,18 @@
                                 <label class="form-check-label" for="cv_loocv_flg">Leave One Out Cross
                                     Validation </label>
                             </div>
+
+
+                            <button type="button" class="btn btn-light btn-info-cust" title="Search Database">
+                                <h6><b>Classification Explanation</b></h6>
+                            </button>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" name="exp_lime_flg"
+                                       id="exp_lime_flg">
+                                <label class="form-check-label" for="exp_lime_flg">Local Interpretable
+                                    Model-Agnostic Explanations (LIME)</label>
+                            </div>
                         </div>
 
                     </div>
@@ -467,7 +517,7 @@
                     <img src="../static/images/databases.svg"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 6: Test Set Generation">
                     <div class="card-body">
-                        <h5 class="card-title card-title-cust">STEP 7: TEST SET GENERATION</h5>
+                        <h5 class="card-title card-title-cust">STEP 6: TEST SET GENERATION</h5>
                         <button type="button" class="btn btn-light btn-info-cust" title="Search Database">
                             <h6><b>Search Database</b></h6>
                         </button>
@@ -483,7 +533,7 @@
                             <div class="form-check form-check-inline">
                                 <input type="checkbox" class="form-check-input" id="db_foodb_flg" name="db_foodb_flg"
                                        onclick="show_simililarity_measures()">
-                                <label class="form-check-label" for="db_foodb_flg">FOODB</label>
+                                <label class="form-check-label" for="db_foodb_flg">FooDB</label>
                             </div>
 
                             <div class="form-check form-check-inline">
@@ -495,7 +545,7 @@
                             <div class="form-check form-check-inline">
                                 <input type="checkbox" class="form-check-input" id="db_chebi_flg" name="db_chebi_flg"
                                        onclick="show_simililarity_measures()">
-                                <label class="form-check-label" for="db_chebi_flg">CHEBI</label>
+                                <label class="form-check-label" for="db_chebi_flg">ChEBI</label>
                             </div>
 
                             <div class="form-check form-check-inline">
@@ -503,11 +553,28 @@
                                        name="db_pubchem_flg"
                                        onclick="show_simililarity_measures()">
                                 <label class="form-check-label" for="db_pubchem_flg">PubChem</label>
+                                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                                   data-container="body" data-placement="bottom" data-html="true" data-content="PubChem is a very large database. It is thus not directly available with the app.
+                                 Please visit <a href='{{ url_for('view_all_dbs') }}'>View All Databases</a> page for detailed guidelines for downloading and using the PubChem database."><img
+                                        class="info-class"
+                                        src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" id="db_custom_flg"
+                                       name="db_custom_flg"
+                                       onclick="show_simililarity_measures()">
+                                <label class="form-check-label" for="db_custom_flg">Custom</label>
+                                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                                   data-container="body" data-placement="bottom" data-html="true" data-content="Custom uploaded database.
+                                 Please visit <a href='{{ url_for('view_all_dbs') }}'>View All Databases</a> page for detailed guidelines on uploading and using custom database."><img
+                                        class="info-class"
+                                        src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
                             </div>
 
                         </div>
 
-                        <div id="sim_msrs_div" style="display:none;">
+                        <div id="sim_msrs_div">
 
                             <button type="button" class="btn btn-light btn-info-cust" title="Similarity Measure">
                                 <h6><b>Choose Similarity Measure</b></h6>
