@@ -4,15 +4,11 @@
     <list default="true" id="5308871d-b1e4-47cf-90d7-70b3581c610f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/model/FeatureGeneration.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/FeatureGeneration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/MLJobConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/MLJobConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/TestSetPrediction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/model/ValidateConfig.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/static/css/ml_sft.css" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/css/ml_sft.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/static/js/ml_sft.js" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/static/js/ml_sft.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/autoindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/autoindex.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/create_job.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/create_job.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/view_all_databases.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_pipeline/utils/Logging.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/utils/Logging.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_pipeline/templates/macros.html" beforeDir="false" afterPath="$PROJECT_DIR$/ml_pipeline/templates/macros.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -221,38 +217,38 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="649" y="286" key="FileChooserDialogImpl/55.24.1311.744@55.24.1311.744" timestamp="1586956485099" />
-    <state width="1288" height="265" key="GridCell.Tab.0.bottom" timestamp="1590970851667">
+    <state width="1288" height="390" key="GridCell.Tab.0.bottom" timestamp="1590979676874">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="265" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590970851667" />
-    <state width="1288" height="265" key="GridCell.Tab.0.center" timestamp="1590970851666">
+    <state width="1288" height="390" key="GridCell.Tab.0.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590979676874" />
+    <state width="1288" height="390" key="GridCell.Tab.0.center" timestamp="1590979676871">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="265" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1590970851666" />
-    <state width="1288" height="265" key="GridCell.Tab.0.left" timestamp="1590970851665">
+    <state width="1288" height="390" key="GridCell.Tab.0.center/55.24.1311.744@55.24.1311.744" timestamp="1590979676871" />
+    <state width="1288" height="390" key="GridCell.Tab.0.left" timestamp="1590979676870">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="265" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1590970851665" />
-    <state width="1288" height="265" key="GridCell.Tab.0.right" timestamp="1590970851666">
+    <state width="1288" height="390" key="GridCell.Tab.0.left/55.24.1311.744@55.24.1311.744" timestamp="1590979676870" />
+    <state width="1288" height="390" key="GridCell.Tab.0.right" timestamp="1590979676872">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="265" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1590970851666" />
-    <state width="1288" height="265" key="GridCell.Tab.1.bottom" timestamp="1590970851669">
+    <state width="1288" height="390" key="GridCell.Tab.0.right/55.24.1311.744@55.24.1311.744" timestamp="1590979676872" />
+    <state width="1288" height="265" key="GridCell.Tab.1.bottom" timestamp="1590979473842">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="265" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590970851669" />
-    <state width="1288" height="265" key="GridCell.Tab.1.center" timestamp="1590970851668">
+    <state width="1288" height="265" key="GridCell.Tab.1.bottom/55.24.1311.744@55.24.1311.744" timestamp="1590979473842" />
+    <state width="1288" height="265" key="GridCell.Tab.1.center" timestamp="1590979473840">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="265" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1590970851668" />
-    <state width="1288" height="265" key="GridCell.Tab.1.left" timestamp="1590970851668">
+    <state width="1288" height="265" key="GridCell.Tab.1.center/55.24.1311.744@55.24.1311.744" timestamp="1590979473840" />
+    <state width="1288" height="265" key="GridCell.Tab.1.left" timestamp="1590979473839">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="265" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1590970851668" />
-    <state width="1288" height="265" key="GridCell.Tab.1.right" timestamp="1590970851669">
+    <state width="1288" height="265" key="GridCell.Tab.1.left/55.24.1311.744@55.24.1311.744" timestamp="1590979473839" />
+    <state width="1288" height="265" key="GridCell.Tab.1.right" timestamp="1590979473841">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state width="1288" height="265" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590970851669" />
+    <state width="1288" height="265" key="GridCell.Tab.1.right/55.24.1311.744@55.24.1311.744" timestamp="1590979473841" />
     <state x="55" y="24" width="1311" height="744" key="SettingsEditor" timestamp="1590219283300">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
@@ -273,10 +269,10 @@
       <screen x="55" y="24" width="1311" height="744" />
     </state>
     <state x="265" y="71" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/55.24.1311.744@55.24.1311.744" timestamp="1590768773385" />
-    <state x="55" y="24" width="746" height="744" key="find.popup" timestamp="1590951219317">
+    <state x="55" y="24" width="746" height="744" key="find.popup" timestamp="1590978179774">
       <screen x="55" y="24" width="1311" height="744" />
     </state>
-    <state x="55" y="24" width="746" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590951219317" />
+    <state x="55" y="24" width="746" height="744" key="find.popup/55.24.1311.744@55.24.1311.744" timestamp="1590978179774" />
     <state x="460" y="26" key="refactoring.ChangeSignatureDialog" timestamp="1589549223098">
       <screen x="55" y="24" width="1311" height="744" />
     </state>

@@ -5,11 +5,11 @@
     <div class="sft-form-btns-div">
         <button type="button" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-success"
                 title="Create Job!">
-            <b><img class="btn-icon" src="../static/images/create_job.svg"
+            <b><img class="btn-icon" src="{{ url_for('static',filename='images/create_job.svg') }}"
                     alt="Create Job"/><em>CREATE JOB</em></b>
         </button>
         <button type="button" class="btn btn-danger" title="Reset Job" onclick="reset_ml_job_form()">
-            <b><img class="btn-icon" src="../static/images/reset_job.svg"
+            <b><img class="btn-icon" src="{{ url_for('static',filename='images/reset_job.svg') }}"
                     alt="Reset Job"/><em>RESET JOB</em></b>
         </button>
     </div>
@@ -40,7 +40,7 @@
         <div class="row">
             <div class="card-group">
                 <div class="card card-cust border-primary mb-3">
-                    <img src="../static/images/upload_data.svg"
+                    <img src="{{ url_for('static',filename='images/upload_data.svg') }}"
                          class="card-img-top card-img-cust embed-responsive-item"
                          alt="STEP 1: Upload Dataset">
                     <div class="card-body">
@@ -86,7 +86,7 @@
                     </div>
                 </div>
                 <div class="card card-cust border-primary mb-3">
-                    <img src="../static/images/feature_generation.svg"
+                    <img src="{{ url_for('static',filename='images/feature_generation.svg') }}"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 2: Feature Generation">
                     <div class="card-body">
                         <h5 class="card-title card-title-cust">STEP 2: FEATURE GENERATION</h5>
@@ -217,7 +217,7 @@
                     </div>
                 </div>
                 <div class="card card-cust border-primary mb-3">
-                    <img src="../static/images/feature_reduction.svg"
+                    <img src="{{ url_for('static',filename='images/feature_reduction.svg') }}"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 3: Feature Reduction">
                     <div class="card-body">
                         <h5 class="card-title card-title-cust">STEP 3: FEATURE REDUCTION </h5>
@@ -255,7 +255,7 @@
         <div class="row">
             <div class="card-group">
                 <div class="card card-cust border-primary mb-3">
-                    <img src="../static/images/classification.svg"
+                    <img src="{{ url_for('static',filename='images/classification.svg') }}"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 4: Classification">
                     <div class="card-body">
                         <h5 class="card-title card-title-cust">STEP 4: CLASSIFICATION</h5>
@@ -283,7 +283,8 @@
                                     <div class="col">
                                         <div id="dv_bag_svm_n" class="form-group input-tb">
                                             <label for="clf_bag_svm_n" class="sr-only">SVM Bagging</label>
-                                            <input type="number" min="2" max="1000" id="clf_bag_svm_n" name="clf_bag_svm_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_svm_n"
+                                                   name="clf_bag_svm_n"
                                                    class="form-control form-control-sm"
                                                    placeholder="# of times" value="1000"
                                                    title="# of classifiers in ensemble"/>
@@ -312,7 +313,8 @@
                                     <div class="col">
                                         <div id="dv_bag_et_n" class="form-group input-tb">
                                             <label for="clf_bag_et_n" class="sr-only">ET Bagging</label>
-                                            <input type="number" min="2" max="1000" id="clf_bag_et_n" name="clf_bag_et_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_et_n"
+                                                   name="clf_bag_et_n"
                                                    class="form-control form-control-sm"
                                                    placeholder="# of times" value="1000"
                                                    title="# of classifiers in ensemble"/>
@@ -342,7 +344,8 @@
                                     <div class="col">
                                         <div id="dv_bag_lr_n" class="form-group input-tb">
                                             <label for="clf_bag_lr_n" class="sr-only">LR Bagging</label>
-                                            <input required type="number" min="2" max="1000" id="clf_bag_lr_n" name="clf_bag_lr_n"
+                                            <input required type="number" min="2" max="1000" id="clf_bag_lr_n"
+                                                   name="clf_bag_lr_n"
                                                    class="form-control form-control-sm"
                                                    placeholder="# of times" value="1000"
                                                    title="# of classifiers in ensemble"/>
@@ -371,7 +374,8 @@
                                     <div class="col">
                                         <div id="dv_bag_gnb_n" class="form-group input-tb">
                                             <label for="clf_bag_gnb_n" class="sr-only">GNB Bagging</label>
-                                            <input required type="number" min="2" max="1000" id="clf_bag_gnb_n" name="clf_bag_gnb_n"
+                                            <input required type="number" min="2" max="1000" id="clf_bag_gnb_n"
+                                                   name="clf_bag_gnb_n"
                                                    class="form-control form-control-sm"
                                                    placeholder="# of times" value="1000"
                                                    title="# of classifiers in ensemble"/>
@@ -400,7 +404,8 @@
                                     <div class="col">
                                         <div id="dv_bag_gbm_n" class="form-group input-tb">
                                             <label for="clf_bag_gbm_n" class="sr-only">GBM Bagging</label>
-                                            <input type="number" min="2" max="1000" id="clf_bag_gbm_n" name="clf_bag_gbm_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_gbm_n"
+                                                   name="clf_bag_gbm_n"
                                                    class="form-control form-control-sm"
                                                    placeholder="# of times" value="1000"
                                                    title="# of classifiers in ensemble"/>
@@ -429,7 +434,8 @@
                                     <div class="col">
                                         <div id="dv_bag_rf_n" class="form-group input-tb">
                                             <label for="clf_bag_rf_n" class="sr-only">RF Bagging</label>
-                                            <input type="number" min="2" max="1000" id="clf_bag_rf_n" name="clf_bag_rf_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_rf_n"
+                                                   name="clf_bag_rf_n"
                                                    class="form-control form-control-sm"
                                                    placeholder="# of times" value="1000"
                                                    title="# of classifiers in ensemble"/>
@@ -457,7 +463,8 @@
                                     <div class="col">
                                         <div id="dv_bag_mlp_n" class="form-group input-tb">
                                             <label for="clf_bag_mlp_n" class="sr-only">MLP Bagging</label>
-                                            <input type="number" min="2" max="1000" id="clf_bag_mlp_n" name="clf_bag_mlp_n"
+                                            <input type="number" min="2" max="1000" id="clf_bag_mlp_n"
+                                                   name="clf_bag_mlp_n"
                                                    class="form-control form-control-sm"
                                                    placeholder="# of times" value="1000"
                                                    title="# of classifiers in ensemble"/>
@@ -470,7 +477,7 @@
                     </div>
                 </div>
                 <div class="card card-cust border-primary mb-3">
-                    <img src="../static/images/data_validation.svg"
+                    <img src="{{ url_for('static',filename='images/data_validation.svg') }}"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 5: Validation">
                     <div class="card-body">
                         <h5 class="card-title card-title-cust">STEP 5: VALIDATION SCHEME</h5>
@@ -514,7 +521,7 @@
                     </div>
                 </div>
                 <div class="card card-cust border-primary mb-3">
-                    <img src="../static/images/databases.svg"
+                    <img src="{{ url_for('static',filename='images/databases.svg') }}"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 6: Test Set Generation">
                     <div class="card-body">
                         <h5 class="card-title card-title-cust">STEP 6: TEST SET GENERATION</h5>

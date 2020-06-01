@@ -7,13 +7,14 @@
         {% endif %}
     </td>
     <td class="name">
-        <a href="{{ url_for(endpoint, path=ent.path) }}">
+        <a href="{{ url_for(endpoint, path=ent.path) }}"  {% if ent.size %} target="_blank" {%- endif -%}>
             {%- if ent.name == ".." -%}
             Parent folder
             {%- else -%}
             {{ ent.name }}
             {%- endif -%}
-        </a></td>
+        </a>
+    </td>
     <td class="modified">
         <time datetime="{{ ent.modified }}">{{ ent.modified }}</time>
     </td>
