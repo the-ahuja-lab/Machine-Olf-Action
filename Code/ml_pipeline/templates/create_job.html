@@ -91,7 +91,8 @@
                     <div class="card-body">
                         <h5 class="card-title card-title-cust">STEP 2: FEATURE GENERATION</h5>
                         <div class="card-text">
-                            <button type="button" class="btn btn-light btn-info-cust" title="Generate Descriptors">
+                            <button type="button" class="btn btn-light btn-info-cust"
+                                    title="Generate Chemical Descriptors">
                                 <h6><b>I. Chemical Descriptors</b></h6>
                             </button>
 
@@ -221,7 +222,7 @@
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 3: Feature Reduction">
                     <div class="card-body">
                         <h5 class="card-title card-title-cust">STEP 3: FEATURE REDUCTION </h5>
-                        <button type="button" class="btn btn-light btn-info-cust" title="Pre processing Steps">
+                        <button type="button" class="btn btn-light btn-info-cust" title="Feature Selection">
                             <h6><b>I. Feature Selection</b></h6>
                         </button>
 
@@ -231,7 +232,7 @@
                             <label class="form-check-label" for="fs_boruta_flg">Boruta</label>
                         </div>
 
-                        <button type="button" class="btn btn-light btn-info-cust" title="Pre processing Steps">
+                        <button type="button" class="btn btn-light btn-info-cust" title="Feature Extraction">
                             <h6><b>II. Feature Extraction</b></h6>
                         </button>
 
@@ -258,7 +259,13 @@
                     <img src="{{ url_for('static',filename='images/classification.svg') }}"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 4: Classification">
                     <div class="card-body">
-                        <h5 class="card-title card-title-cust">STEP 4: CLASSIFICATION</h5>
+                        <h5 class="card-title card-title-cust">STEP 4: CLASSIFICATION
+                            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                               data-container="body" data-placement="bottom" data-html="true"
+                               data-content="For all chosen classification models, hyper-parameters are selected using grid search cross validation with 5-fold cross validation and f1-score scoring.">
+                                <img class="info-class"
+                                     src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
+                        </h5>
                         <div class="card-text">
                             <!--                            <button type="button" class="btn btn-light btn-info-cust"-->
                             <!--                                    title="Choose Classification Model">-->
@@ -483,7 +490,7 @@
                         <h5 class="card-title card-title-cust">STEP 5: VALIDATION SCHEME</h5>
                         <div class="card-text">
 
-                            <button type="button" class="btn btn-light btn-info-cust" title="Search Database">
+                            <button type="button" class="btn btn-light btn-info-cust" title="Cross Validation">
                                 <h6><b>Cross Validation</b></h6>
                             </button>
 
@@ -502,7 +509,12 @@
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="cv_loocv_flg" id="cv_loocv_flg">
                                 <label class="form-check-label" for="cv_loocv_flg">Leave One Out Cross
-                                    Validation </label>
+                                    Validation</label>
+                                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                                   data-container="body" data-placement="bottom" data-html="true" data-content="Please be advised that Leave One Out Cross
+                                    Validation takes a lot of time to complete. It may take upto 12 hours for around 400 data points in the input dataset, select it only if you can really keep it running for this long.">
+                                    <img class="info-class"
+                                         src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
                             </div>
 
 
@@ -524,35 +536,43 @@
                     <img src="{{ url_for('static',filename='images/databases.svg') }}"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 6: Test Set Generation">
                     <div class="card-body">
-                        <h5 class="card-title card-title-cust">STEP 6: TEST SET GENERATION</h5>
+                        <h5 class="card-title card-title-cust">STEP 6: TEST SET GENERATION AND PREDICTION</h5>
                         <button type="button" class="btn btn-light btn-info-cust" title="Search Database">
                             <h6><b>Search Database</b></h6>
                         </button>
+                        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                           data-container="body" data-placement="bottom" data-html="true" data-content="
+                                 Please visit <a href='{{ url_for('view_all_dbs') }}'>View All Databases</a> page for more information on all databases"><img
+                                class="info-class"
+                                src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
 
                         <div class="form-group">
 
                             <div class="form-check form-check-inline">
                                 <input type="checkbox" class="form-check-input" id="db_hmdb_flg" name="db_hmdb_flg"
                                        onclick="show_simililarity_measures()">
-                                <label class="form-check-label" for="db_hmdb_flg">HMDB</label>
+                                <label class="form-check-label" for="db_hmdb_flg"
+                                       title="Human Metabolome Database">HMDB</label>
                             </div>
 
                             <div class="form-check form-check-inline">
                                 <input type="checkbox" class="form-check-input" id="db_foodb_flg" name="db_foodb_flg"
                                        onclick="show_simililarity_measures()">
-                                <label class="form-check-label" for="db_foodb_flg">FooDB</label>
+                                <label class="form-check-label" for="db_foodb_flg" title="Food Database">FooDB</label>
                             </div>
 
                             <div class="form-check form-check-inline">
                                 <input type="checkbox" class="form-check-input" id="db_imppat_flg" name="db_imppat_flg"
                                        onclick="show_simililarity_measures()" checked>
-                                <label class="form-check-label" for="db_imppat_flg">IMMPAT</label>
+                                <label class="form-check-label" for="db_imppat_flg"
+                                       title="Indian Medicinal Plants, Phytochemistry And Therapeutics">IMMPAT</label>
                             </div>
 
                             <div class="form-check form-check-inline">
                                 <input type="checkbox" class="form-check-input" id="db_chebi_flg" name="db_chebi_flg"
                                        onclick="show_simililarity_measures()">
-                                <label class="form-check-label" for="db_chebi_flg">ChEBI</label>
+                                <label class="form-check-label" for="db_chebi_flg"
+                                       title="Chemical Entities of Biological Interest">ChEBI</label>
                             </div>
 
                             <div class="form-check form-check-inline">
@@ -583,7 +603,7 @@
 
                         <div id="sim_msrs_div">
 
-                            <button type="button" class="btn btn-light btn-info-cust" title="Similarity Measure">
+                            <button type="button" class="btn btn-light btn-info-cust" title="Choose Similarity Measure">
                                 <h6><b>Choose Similarity Measure</b></h6>
                             </button>
 

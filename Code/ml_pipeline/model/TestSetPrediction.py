@@ -156,47 +156,47 @@ class TestSetPrediction:
         if self.ml_pipeline.config.clf_gnb_flg:
             self.fetch_model_save_predictions("gnb")
 
-        if self.ml_pipeline.config.clf_bagging_gnb:
-            self.fetch_model_save_predictions("gnb_bagging")
+            if self.ml_pipeline.config.clf_bagging_gnb:
+                self.fetch_model_save_predictions("gnb_bagging")
 
     def apply_gbm(self):
         if self.ml_pipeline.config.clf_gbm_flg:
             self.fetch_model_save_predictions("gbm")
 
-        if self.ml_pipeline.config.clf_bagging_gbm:
-            self.fetch_model_save_predictions("gbm_bagging")
+            if self.ml_pipeline.config.clf_bagging_gbm:
+                self.fetch_model_save_predictions("gbm_bagging")
 
     def apply_svm(self):
         if self.ml_pipeline.config.clf_svm_flg:
             self.fetch_model_save_predictions("svm")
 
-        if self.ml_pipeline.config.clf_bagging_svm:
-            self.fetch_model_save_predictions("svm_bagging")
+            if self.ml_pipeline.config.clf_bagging_svm:
+                self.fetch_model_save_predictions("svm_bagging")
 
     def apply_lr(self):
         if self.ml_pipeline.config.clf_lr_flg:
             self.fetch_model_save_predictions("lr")
 
-        if self.ml_pipeline.config.clf_bagging_lr:
-            self.fetch_model_save_predictions("lr_bagging")
+            if self.ml_pipeline.config.clf_bagging_lr:
+                self.fetch_model_save_predictions("lr_bagging")
 
     def apply_rf(self):
         if self.ml_pipeline.config.clf_rf_flg:
             self.fetch_model_save_predictions("rf")
 
-        if self.ml_pipeline.config.clf_bagging_rf:
-            self.fetch_model_save_predictions("rf_bagging")
+            if self.ml_pipeline.config.clf_bagging_rf:
+                self.fetch_model_save_predictions("rf_bagging")
 
     def apply_et(self):
         if self.ml_pipeline.config.clf_et_flg:
             self.fetch_model_save_predictions("et")
 
-        if self.ml_pipeline.config.clf_bagging_et:
-            self.fetch_model_save_predictions("et_bagging")
+            if self.ml_pipeline.config.clf_bagging_et:
+                self.fetch_model_save_predictions("et_bagging")
 
     def apply_mlp(self):
         if self.ml_pipeline.config.clf_mlp_flg:
             self.fetch_model_save_predictions("mlp")
 
-        if self.ml_pipeline.config.clf_bagging_mlp:
-            self.fetch_model_save_predictions("mlp_bagging")
+            if self.ml_pipeline.config.clf_bagging_mlp:
+                self.fetch_model_save_predictions("mlp_bagging")
