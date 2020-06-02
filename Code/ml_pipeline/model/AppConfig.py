@@ -60,6 +60,7 @@ STEP4_STATUS = "feature_extraction"
 STEP5_STATUS = "classification"
 STEP6_STATUS = "test_set_generation"
 STEP6_1_STATUS = "test_set_preprocessing"
+STEPS_COMPLETED_STATUS = "job_completed"
 
 FG_FLD_NAME = "step1"
 FG_FLD_PREFIX = "FG"

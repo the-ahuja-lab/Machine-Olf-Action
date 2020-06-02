@@ -11,26 +11,6 @@ import ml_pipeline.utils.Helper as helper
 
 DATA_FLD_NAME = app_config.TSG_FLD_NAME
 
-
-# TEST_FLD_NAME = app_config.TSG_TEST_FLD_NAME
-#
-# PADEL_FLD_RAW_NAME = app_config.TSG_RAW_FLD_NAME
-# PADEL_FLD_PP_NAME = app_config.TSG_PP_FLD_NAME
-# PADEL_FLD_PP_LIME_NAME = "pp_lime"
-
-# TEST_CMPNDS_FLD_NAME = app_config.TSG_CMPND_FLD_NAME
-#
-# PP_FLD = app_config.PP_FLD_NAME
-# PP_FIN_NAME = app_config.PP_FIN_XTRAIN_FNAME
-# PP_NORM_NAME = app_config.PP_NORM_DUMP_NAME
-#
-# BORUTA_FLD = app_config.FS_FLD_NAME
-# BORUTA_FS_NAME = app_config.FS_XTRAIN_FNAME
-#
-# PCA_FLD = app_config.FE_FLD_NAME
-# PCA_MODEL = app_config.FE_PCA_DUMP_FNAME
-
-
 class TestSetPreprocessing:
 
     def __init__(self, ml_pipeline: MLPipeline):

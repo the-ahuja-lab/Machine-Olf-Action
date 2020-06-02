@@ -5,18 +5,12 @@ import pickle
 
 import MLPipeline
 import AppConfig as app_config
+import ml_pipeline.utils.Helper as helper
 
 import LIMEExplanation
 
+
 DATA_FLD_NAME = app_config.TSG_FLD_NAME
-# TEST_FLD_NAME = app_config.TSG_TEST_FLD_NAME
-# PADEL_FLD_NAME = app_config.FG_PADEL_FLD_NAME
-# PADEL_FLD_PP_NAME = app_config.TSG_PP_FLD_NAME
-# TEST_CMPNDS_FLD_NAME = app_config.TSG_CMPND_FLD_NAME
-#
-# RESULTS_FLD_NAME = app_config.NOVEL_RESULTS_FLD_NAME
-#
-# MODEL_FLD = app_config.CLF_FLD_NAME
 
 ALL_TEST_DF = {}
 ALL_TEST_COMPOUNDS = {}
@@ -47,6 +41,15 @@ class TestSetPrediction:
             self.fg_fld_name = app_config.FG_MORDRED_FLD_NAME
             self.initialize_lime_explanation()
             self.apply_classification_models()
+
+        updated_status = app_config.STEPS_COMPLETED_STATUS
+
+        job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
+        helper.update_job_status(job_oth_config_fp, updated_status)
+
+        self.ml_pipeline.status = updated_status
+
+        self.jlogger.info("Generated test set preprocessing completed successfully")
 
     def initialize_lime_explanation(self):
         if self.ml_pipeline.config.exp_lime_flg:
@@ -143,16 +146,11 @@ class TestSetPrediction:
             novel_compounds_predictions.to_csv(novel_pred_fp, index=False)
 
             if self.ml_pipeline.config.exp_lime_flg:
-                lime_exp_f_name = "lime_exp_" + model_name + "_" + self.change_ext(padel_fname, ".csv", ".pdf")
+                lime_exp_f_name = "lime_exp_" + model_name + "_" + helper.change_ext(padel_fname, ".csv", ".pdf")
                 lime_exp_pdf_fp = os.path.join(novel_pred_fld_p, lime_exp_f_name)
 
                 self.lime_exp.exp_preds_using_lime(model, test_compounds, padel_fname, lime_exp_pdf_fp)
 
-    def change_ext(self, fname, ext_init, ext_fin):
-        if fname.endswith(ext_init):
-            return fname.replace(ext_init, ext_fin)
-        else:
-            return fname + ext_fin
 
     def apply_gnb(self):
         if self.ml_pipeline.config.clf_gnb_flg:
