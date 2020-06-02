@@ -4,6 +4,11 @@ import math
 from rdkit import Chem
 from rdkit.Chem import DataStructs
 from rdkit.Chem.Fingerprints import FingerprintMols
+from tqdm import tqdm
+
+import ml_pipeline.utils.Logging as logging
+
+logger = logging.logger
 
 
 # TODO clean this code
@@ -15,6 +20,7 @@ class CompoundSimilarity:
     def __init__(self, pos_user_df, db_df):
         self.pos_user_df = pos_user_df
         self.db_df = db_df
+        tqdm.pandas()
 
     def smile_to_fingerprints(self, smile):
         fps = None
@@ -45,8 +51,9 @@ class CompoundSimilarity:
                         fps_matches[db_cntr].append((u_fps_cntr, sim))
                     else:
                         fps_matches[db_cntr] = [(u_fps_cntr, sim)]
-            except:
-                print("Error measuring similarity")
+            except Exception as e:
+                print(e)
+                logger.exception("Error measuring similarity of compound db_cntr {} and u_fps_cntr {}".format(db_cntr, u_fps_cntr))
                 pass
             u_fps_cntr += 1
 
@@ -70,8 +77,9 @@ class CompoundSimilarity:
                         fps_matches[db_cntr].append((u_fps_cntr, sim))
                     else:
                         fps_matches[db_cntr] = [(u_fps_cntr, sim)]
-            except:
-                print("Error measuring similarity")
+            except Exception as e:
+                print(e)
+                logger.exception("Error measuring similarity")
                 pass
             u_fps_cntr += 1
 
@@ -155,15 +163,21 @@ class CompoundSimilarity:
         global user_ip_fps
         global db_cntr
 
-        user_ip_fps = None
+        # user_ip_fps = None
         fps_matches = {}
         db_cntr = 0
 
         self.db_df = self.db_df[['CNAME', 'SMILES']]
 
-        # get fingerprints from smile
-        user_ip_fps = self.pos_user_df['SMILES'].apply(self.smile_to_fingerprints)
-        db_fps = self.db_df['SMILES'].apply(self.smile_to_fingerprints)
+        # get fingerprints from smile for both user uploaded dataset and app database
+
+        # calculating only the first time
+        if not "user_ip_fps" in globals():
+            print("Calculating user dataset fingerprints for the first time as it is not calculated yet")
+
+            user_ip_fps = self.pos_user_df['SMILES'].progress_apply(self.smile_to_fingerprints)
+
+        db_fps = self.db_df['SMILES'].progress_apply(self.smile_to_fingerprints)
 
         print("Done generating fingerprints, starting to measure similarity")
 
@@ -193,7 +207,7 @@ class CompoundSimilarity:
 
         fin_novel_df = novel_df[["DB_Compound", "DB_SMILES"]].drop_duplicates(subset='DB_Compound', keep='first')
 
-        #TODO change name Ligand to Compound everywhere
+        # TODO change name Ligand to Compound everywhere
         fin_novel_df = fin_novel_df.rename(columns={'DB_Compound': 'CNAME', 'DB_SMILES': 'SMILES'})
         fin_novel_df = fin_novel_df.reset_index(drop=True)
         fin_novel_df = fin_novel_df.sort_values('CNAME')
@@ -204,4 +218,4 @@ class CompoundSimilarity:
 
         return novel_df, fin_novel_df
 
-        #TODO handle prints here
+        # TODO handle prints here

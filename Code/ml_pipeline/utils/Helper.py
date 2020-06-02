@@ -3,7 +3,7 @@ from collections import namedtuple
 
 
 def update_job_status(job_status_fp, status):
-    with open(job_status_fp,mode='r') as f:
+    with open(job_status_fp, mode='r') as f:
         othr_config = json.load(f)
 
         othr_config['status'] = status
@@ -24,3 +24,9 @@ def create_job_config_object(str):
     config = json2obj(str)
     return config
 
+
+def change_ext(fname, ext_init, ext_fin):
+    if fname.endswith(ext_init):
+        return fname.replace(ext_init, ext_fin)
+    else:
+        return fname + ext_fin

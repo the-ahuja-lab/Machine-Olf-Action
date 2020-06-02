@@ -44,6 +44,8 @@ class TestSetGeneration:
         self.search_foodb()
         self.search_chebi()
         self.search_hmdb()
+        self.search_pubchem()
+        self.search_custom_db()
 
         updated_status = app_config.STEP6_STATUS
 
@@ -111,6 +113,76 @@ class TestSetGeneration:
             user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
 
             self.calculate_all_similarities(c_sim_obj, db_fps, "hmdb")
+
+    def search_pubchem(self):
+
+        if self.ml_pipeline.config.db_pubchem_flg:
+            compound_db_fld = "/home/mohit/Downloads/PUBCHEM"
+
+            fld_path = self.ml_pipeline.job_data['job_data_path']
+            fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, TEST_FLD_NAME])
+
+            res_fld_path = os.path.join(fld_path, "pubchem")
+
+            if not os.path.exists(res_fld_path):
+                os.makedirs(res_fld_path, exist_ok=True)
+
+            i = 0
+            for file in os.listdir(compound_db_fld):
+                print(file)
+                pucbchem_db_part_fp = os.path.join(compound_db_fld, file)
+                self.jlogger.info("Pubchem Part DB File Path {}".format(pucbchem_db_part_fp))
+
+                db_df = pd.read_csv(pucbchem_db_part_fp, encoding="ISO-8859-1")
+
+                c_sim_obj = CompoundSimilarity(self.pos_df, db_df)
+                user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
+
+                db_part_name = helper.change_ext(file, "csv", "")
+
+                self.calculate_db_part_similarity(c_sim_obj, db_fps, db_part_name, res_fld_path)
+
+                if i == 2:
+                    break
+
+                i += 1
+
+    def calculate_db_part_similarity(self, c_sim_obj, db_fps, db_name, res_fld_path):
+        if self.ml_pipeline.config.sim_tanimoto_flg:
+            self.calculate_db_part_sim_results(c_sim_obj, db_fps, db_name, "tanimoto", 0.8, res_fld_path)
+
+    def calculate_db_part_sim_results(self, c_sim_obj, db_fps, db_name, sim_metric, sim_threshold, res_fld_path):
+        all_novel_df, shortlisted_novel_df = c_sim_obj.check_similarity_using_fps(db_fps, sim_metric,
+                                                                                  sim_threshold)
+        self.jlogger.info("Found {} similar compounds in {} using sim_metric {} and sim_threshold {}".format(
+            len(shortlisted_novel_df), db_name, sim_metric, sim_threshold))
+
+        all_novel_fname = "all_matching_" + db_name + "_" + sim_metric + str(sim_threshold) + ".csv"
+        shorlisted_novel_fname = "shortlisted_compounds_" + db_name + "_" + sim_metric + str(sim_threshold) + ".csv"
+
+        all_novel_file_path = os.path.join(*[res_fld_path, sim_metric, all_novel_fname])
+        shortlisted_file_path = os.path.join(*[res_fld_path, sim_metric, shorlisted_novel_fname])
+
+        all_novel_df.to_csv(all_novel_file_path, index=False)
+        shortlisted_novel_df.to_csv(shortlisted_file_path,
+                                    index=False)
+
+    def search_custom_db(self):
+
+        # if self.ml_pipeline.config.db_custom_flg:
+        #     compound_db_fld = os.path.join(APP_STATIC, "compound_dbs")
+        #     hmdb_db_fp = os.path.join(compound_db_fld, "hmdb-2020-05-30.csv")
+        #
+        #     self.jlogger.info("HMDB DB File Path {}".format(hmdb_db_fp))
+        #
+        #     db_df = pd.read_csv(hmdb_db_fp, encoding="ISO-8859-1")
+        #
+        #     c_sim_obj = CompoundSimilarity(self.pos_df, db_df)
+        #     user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
+        #
+        #     self.calculate_all_similarities(c_sim_obj, db_fps, "hmdb")
+
+        pass
 
     def calculate_all_similarities(self, c_sim_obj, db_fps, db_name):
         # TODO calculate threshold automatically

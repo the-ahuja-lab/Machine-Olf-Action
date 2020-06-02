@@ -14,28 +14,6 @@ import lime
 from lime.lime_tabular import LimeTabularExplainer
 
 DATA_FLD_NAME = app_config.TSG_FLD_NAME
-# TEST_FLD_NAME = "test"
-# PADEL_FLD_NAME = "fg_padel"
-# PADEL_FLD_PP_NAME = "preprocessed"
-# PADEL_FLD_PP_LIME_NAME = "pp_lime"
-#
-# TEST_CMPNDS_FLD_NAME = "test_compounds"
-# TEST_CMPNDS_FILE_NAME = "test_compounds.csv"
-#
-# RESULTS_FLD_NAME = "novel_predictions"
-#
-# MODEL_FLD = "step5"
-
-# TEST_FLD_NAME = app_config.TSG_TEST_FLD_NAME
-# PADEL_FLD_NAME = app_config.FG_PADEL_FLD_NAME
-# PADEL_FLD_PP_NAME = app_config.TSG_PP_FLD_NAME
-# TEST_CMPNDS_FLD_NAME = app_config.TSG_CMPND_FLD_NAME
-#
-# RESULTS_FLD_NAME = app_config.NOVEL_RESULTS_FLD_NAME
-#
-# MODEL_FLD = app_config.CLF_FLD_NAME
-#
-# PADEL_FLD_PP_LIME_NAME = app_config.TSG_PP_LIME_FLD_NAME
 
 ALL_TEST_DF = {}
 ALL_TEST_COMPOUNDS = {}
