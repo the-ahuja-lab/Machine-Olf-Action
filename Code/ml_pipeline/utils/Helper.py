@@ -30,3 +30,8 @@ def change_ext(fname, ext_init, ext_fin):
         return fname.replace(ext_init, ext_fin)
     else:
         return fname + ext_fin
+
+def infer_th_from_file_name(fname, sim_metric, ext):
+    sm_end_index = fname.index(sim_metric) + len(sim_metric)
+    ext_start_index = fname.index(ext)
+    return fname[sm_end_index: ext_start_index]
