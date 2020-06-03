@@ -8,6 +8,7 @@ from ListAllJobs import ListAllJobs
 
 from ManageJob import create_job as createjob
 from ValidateConfig import check_if_valid_job_config, allowed_file
+from UpdateAppConfig import check_if_valid_app_config, update_app_config, get_app_config
 from MLPipeline import MLPipeline
 
 from ml_pipeline.settings import APP_STATIC
@@ -113,7 +114,15 @@ def view_all_jobs():
 
 @app.route("/view-all-dbs")
 def view_all_dbs():
-    return render_template('view_all_databases.html', title="View All Databases")
+    db_paths_config = {}
+    all_app_configs = get_app_config()
+    if not all_app_configs is None:
+        db_paths_config['pubchem_db_fld_path'] = all_app_configs['pubchem_db_fld_path']
+        db_paths_config['user_db_fld_path'] = all_app_configs['user_db_fld_path']
+    else:
+        db_paths_config['pubchem_db_fld_path'] = ""
+        db_paths_config['user_db_fld_path'] = ""
+    return render_template('view_all_databases.html', title="View All Databases", all_app_configs=all_app_configs)
 
 
 @app.route('/download_db/<path:filename>', methods=['GET', 'POST'])
@@ -126,3 +135,31 @@ def download_db(filename):
     else:
         flash("404: File you requested for download does not  exists", "danger")
         return redirect(url_for("create_job"))
+
+
+@app.route("/update_db_paths", methods=['POST'])
+def update_db_paths():
+    if request.method == 'POST':
+        print("Inside update_db_paths")
+        db_paths_form = request.form
+        db_paths_form_json = db_paths_form.to_dict()
+        print(db_paths_form_json)
+
+        error, app_config_dict = check_if_valid_app_config(db_paths_form_json)
+
+        if not error:
+            success = update_app_config(db_paths_form_json)
+            if success:
+                flash("Folder paths updated successfully", "success")
+            else:
+                flash("An error occurred while updating folder paths, please try again later", "danger")
+        else:
+            flash_err_op = ""
+
+            flash_err_op += "<ul>"
+            for e in app_config_dict:
+                flash_err_op += "<li>" + str(e) + "</li>"
+            flash_err_op += "</ul>"
+            flash(flash_err_op, "danger")
+
+        return redirect(url_for("view_all_dbs"))

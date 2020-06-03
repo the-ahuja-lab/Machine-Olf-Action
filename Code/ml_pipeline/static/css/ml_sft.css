@@ -126,3 +126,12 @@ vertical-align:top !important
 .breadcrumb-sft-cust{
 display:table-cell !important
 }
+
+.db_paths_form{
+color:white !important;
+margin: 10px;
+}
+
+.update_paths_btn{
+margin-top:32px;
+}
