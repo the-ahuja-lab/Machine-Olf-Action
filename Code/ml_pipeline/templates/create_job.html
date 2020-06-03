@@ -102,7 +102,8 @@
                                 <label class="form-check-label" for="fg_padelpy_flg">PaDEL</label>
                                 <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
                                    data-container="body" data-placement="bottom" data-html="true"
-                                   data-content="Details of all PaDEL features can be downloaded <a target='_blank', href='{{ url_for('static', filename='fg_descriptors/PaDEL_Descriptors.xls') }}'>here</a>."><img
+                                   data-content="Details of all PaDEL features can be downloaded <a target='_blank', href='{{ url_for('static', filename='fg_descriptors/PaDEL_Descriptors.xls') }}'>here</a>.
+                                                 Please be advised, it may sometimes take hours to generate padel features. In worst case, it can take upto 1 hour for around 400 compounds in input dataset. Please be patient."><img
                                         class="info-class"
                                         src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
                             </div>
@@ -527,6 +528,11 @@
                                        id="exp_lime_flg">
                                 <label class="form-check-label" for="exp_lime_flg">Local Interpretable
                                     Model-Agnostic Explanations (LIME)</label>
+<!--                                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"-->
+<!--                                   data-container="body" data-placement="bottom" data-html="true"-->
+<!--                                   data-content="Please be advised that LIME explanation generation can take a couple of hours to complete. It depends on the number of novel compounds found. For a 100 novel compounds, it can take an hour to complete, select it only if you can really keep it running for this long.">-->
+<!--                                    <img class="info-class"-->
+<!--                                         src="{{ url_for('static', filename='images/info-16.png') }}"/></a>-->
                             </div>
                         </div>
 
@@ -582,7 +588,8 @@
                                 <label class="form-check-label" for="db_pubchem_flg">PubChem</label>
                                 <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
                                    data-container="body" data-placement="bottom" data-html="true" data-content="PubChem is a very large database. It is thus not directly available with the app.
-                                 Please visit <a href='{{ url_for('view_all_dbs') }}'>View All Databases</a> page for detailed guidelines for downloading and using the PubChem database."><img
+                                 Please visit <a href='{{ url_for('view_all_dbs') }}'>View All Databases</a> page for detailed guidelines for downloading and using the PubChem database.
+                                  Also, please be advised that searching similar compounds in Pubchem can be very time consuming considering its size. It may take upto 100 hours to complete, select it only if you can really keep it running for this long."><img
                                         class="info-class"
                                         src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
                             </div>
