@@ -7,6 +7,7 @@ from CompoundSimilarity import CompoundSimilarity
 from ml_pipeline.settings import APP_STATIC
 import AppConfig as app_config
 import ml_pipeline.utils.Helper as helper
+from UpdateAppConfig import get_app_config
 
 DATA_FLD_NAME = app_config.TSG_FLD_NAME
 TEST_FLD_NAME = app_config.TSG_TEST_FLD_NAME
@@ -65,7 +66,7 @@ class TestSetGeneration:
 
             db_df = pd.read_csv(imppat_db_fp, encoding="ISO-8859-1")
 
-            c_sim_obj = CompoundSimilarity(self.pos_df, db_df)
+            c_sim_obj = CompoundSimilarity(self.pos_df, db_df, self.jlogger)
             user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
 
             self.calculate_all_similarities(c_sim_obj, db_fps, "imppat")
@@ -80,7 +81,7 @@ class TestSetGeneration:
 
             db_df = pd.read_csv(food_db_fp, encoding="ISO-8859-1")
 
-            c_sim_obj = CompoundSimilarity(self.pos_df, db_df)
+            c_sim_obj = CompoundSimilarity(self.pos_df, db_df, self.jlogger)
             user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
 
             self.calculate_all_similarities(c_sim_obj, db_fps, "foodb")
@@ -94,7 +95,7 @@ class TestSetGeneration:
 
             db_df = pd.read_csv(chebi_db_fp, encoding="ISO-8859-1")
 
-            c_sim_obj = CompoundSimilarity(self.pos_df, db_df)
+            c_sim_obj = CompoundSimilarity(self.pos_df, db_df, self.jlogger)
             user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
 
             self.calculate_all_similarities(c_sim_obj, db_fps, "chebi")
@@ -109,47 +110,99 @@ class TestSetGeneration:
 
             db_df = pd.read_csv(hmdb_db_fp, encoding="ISO-8859-1")
 
-            c_sim_obj = CompoundSimilarity(self.pos_df, db_df)
+            c_sim_obj = CompoundSimilarity(self.pos_df, db_df, self.jlogger)
             user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
 
             self.calculate_all_similarities(c_sim_obj, db_fps, "hmdb")
 
+    def search_custom_db(self):
+
+        if self.ml_pipeline.config.db_custom_flg:
+            self.jlogger.info("Inside search_custom_db")
+            db_path_found = False
+            all_app_configs = get_app_config()
+            if not all_app_configs is None:
+                custom_db_path = all_app_configs['user_db_fld_path']
+                if not custom_db_path is None:
+                    self.jlogger.info("Found custom DB path {}".format(custom_db_path))
+                    db_path_found = True
+                    compound_db_fld = custom_db_path
+
+                    for file in os.listdir(compound_db_fld):
+                        custom_db_fp = os.path.join(compound_db_fld, file)
+                        self.jlogger.info("Custom DB File Name {}".format(file))
+
+                        db_df = pd.read_csv(custom_db_fp, encoding="ISO-8859-1")
+
+                        c_sim_obj = CompoundSimilarity(self.pos_df, db_df, self.jlogger)
+                        user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
+
+                        custom_db_name = helper.change_ext(file, ".csv", "")
+
+                        self.calculate_all_similarities(c_sim_obj, db_fps, custom_db_name)
+
+            if not db_path_found:
+                self.jlogger.error(
+                    "Custom DB folder path not found, unable to proceed with search on custom database")
+
     def search_pubchem(self):
 
         if self.ml_pipeline.config.db_pubchem_flg:
-            compound_db_fld = "/home/mohit/Downloads/PUBCHEM"
+            self.jlogger.info("Inside search_pubchem")
+            db_path_found = False
+            all_app_configs = get_app_config()
+            if not all_app_configs is None:
+                pubchem_db_path = all_app_configs['pubchem_db_fld_path']
+                if not pubchem_db_path is None:
+                    self.jlogger.info("Found PubChem DB path {}".format(pubchem_db_path))
+                    db_path_found = True
+                    compound_db_fld = pubchem_db_path
 
-            fld_path = self.ml_pipeline.job_data['job_data_path']
-            fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, TEST_FLD_NAME])
+                    fld_path = self.ml_pipeline.job_data['job_data_path']
+                    fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, TEST_FLD_NAME])
 
-            res_fld_path = os.path.join(fld_path, "pubchem")
+                    res_fld_path = os.path.join(fld_path, "pubchem")
 
-            if not os.path.exists(res_fld_path):
-                os.makedirs(res_fld_path, exist_ok=True)
+                    if not os.path.exists(res_fld_path):
+                        os.makedirs(res_fld_path, exist_ok=True)
 
-            i = 0
-            for file in os.listdir(compound_db_fld):
-                print(file)
-                pucbchem_db_part_fp = os.path.join(compound_db_fld, file)
-                self.jlogger.info("Pubchem Part DB File Path {}".format(pucbchem_db_part_fp))
+                    for file in os.listdir(compound_db_fld):
+                        pucbchem_db_part_fp = os.path.join(compound_db_fld, file)
+                        self.jlogger.info("Pubchem Part DB File Name {}".format(file))
 
-                db_df = pd.read_csv(pucbchem_db_part_fp, encoding="ISO-8859-1")
+                        db_df = pd.read_csv(pucbchem_db_part_fp, encoding="ISO-8859-1")
 
-                c_sim_obj = CompoundSimilarity(self.pos_df, db_df)
-                user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
+                        c_sim_obj = CompoundSimilarity(self.pos_df, db_df, self.jlogger)
+                        user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
 
-                db_part_name = helper.change_ext(file, "csv", "")
+                        db_part_name = helper.change_ext(file, ".csv", "")
 
-                self.calculate_db_part_similarity(c_sim_obj, db_fps, db_part_name, res_fld_path)
+                        self.calculate_db_part_similarity(c_sim_obj, db_fps, db_part_name, res_fld_path)
 
-                if i == 2:
-                    break
+                    self.combine_db_parts("pubchem", res_fld_path)
 
-                i += 1
+        if not db_path_found:
+            self.jlogger.error(
+                "Custom DB folder path not found, unable to proceed with search on custom database")
 
     def calculate_db_part_similarity(self, c_sim_obj, db_fps, db_name, res_fld_path):
         if self.ml_pipeline.config.sim_tanimoto_flg:
             self.calculate_db_part_sim_results(c_sim_obj, db_fps, db_name, "tanimoto", 0.8, res_fld_path)
+
+        if self.ml_pipeline.config.sim_dice_flg:
+            self.calculate_db_part_sim_results(c_sim_obj, db_fps, db_name, "dice", 0.9, res_fld_path)
+        #
+        if self.ml_pipeline.config.sim_cosine_flg:
+            self.calculate_db_part_sim_results(c_sim_obj, db_fps, db_name, "cosine", 0.8, res_fld_path)
+
+        if self.ml_pipeline.config.sim_euclidean_flg:
+            self.calculate_db_part_sim_results(c_sim_obj, db_fps, db_name, "euclidean", 0.8, res_fld_path)
+
+        if self.ml_pipeline.config.sim_manhattan_flg:
+            self.calculate_db_part_sim_results(c_sim_obj, db_fps, db_name, "manhattan", 0.8, res_fld_path)
+
+        if self.ml_pipeline.config.sim_soergel_flg:
+            self.calculate_db_part_sim_results(c_sim_obj, db_fps, db_name, "soergel", 0.95, res_fld_path)
 
     def calculate_db_part_sim_results(self, c_sim_obj, db_fps, db_name, sim_metric, sim_threshold, res_fld_path):
         all_novel_df, shortlisted_novel_df = c_sim_obj.check_similarity_using_fps(db_fps, sim_metric,
@@ -157,57 +210,134 @@ class TestSetGeneration:
         self.jlogger.info("Found {} similar compounds in {} using sim_metric {} and sim_threshold {}".format(
             len(shortlisted_novel_df), db_name, sim_metric, sim_threshold))
 
+        all_novel_res_fld_path = os.path.join(*[res_fld_path, sim_metric, "all_novel"])
+        shortlisted_novel_res_fld_path = os.path.join(*[res_fld_path, sim_metric, "shortlisted"])
+
+        if not os.path.exists(all_novel_res_fld_path):
+            os.makedirs(all_novel_res_fld_path, exist_ok=True)
+
+        if not os.path.exists(shortlisted_novel_res_fld_path):
+            os.makedirs(shortlisted_novel_res_fld_path, exist_ok=True)
+
         all_novel_fname = "all_matching_" + db_name + "_" + sim_metric + str(sim_threshold) + ".csv"
         shorlisted_novel_fname = "shortlisted_compounds_" + db_name + "_" + sim_metric + str(sim_threshold) + ".csv"
 
-        all_novel_file_path = os.path.join(*[res_fld_path, sim_metric, all_novel_fname])
-        shortlisted_file_path = os.path.join(*[res_fld_path, sim_metric, shorlisted_novel_fname])
+        all_novel_file_path = os.path.join(all_novel_res_fld_path, all_novel_fname)
+        shortlisted_file_path = os.path.join(shortlisted_novel_res_fld_path, shorlisted_novel_fname)
 
         all_novel_df.to_csv(all_novel_file_path, index=False)
         shortlisted_novel_df.to_csv(shortlisted_file_path,
                                     index=False)
 
-    def search_custom_db(self):
+    def combine_db_parts(self, db_name, parts_fld_path):
+        if self.ml_pipeline.config.sim_tanimoto_flg:
+            sim_metric = "tanimoto"
+            sim_th, all_novel_df, shortlisted_novel_df = self.combine_calculated_db_parts_sims(sim_metric,
+                                                                                               parts_fld_path)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_th)
 
-        # if self.ml_pipeline.config.db_custom_flg:
-        #     compound_db_fld = os.path.join(APP_STATIC, "compound_dbs")
-        #     hmdb_db_fp = os.path.join(compound_db_fld, "hmdb-2020-05-30.csv")
-        #
-        #     self.jlogger.info("HMDB DB File Path {}".format(hmdb_db_fp))
-        #
-        #     db_df = pd.read_csv(hmdb_db_fp, encoding="ISO-8859-1")
-        #
-        #     c_sim_obj = CompoundSimilarity(self.pos_df, db_df)
-        #     user_ip_fps, db_fps = c_sim_obj.calculate_fps_of_all_compounds()
-        #
-        #     self.calculate_all_similarities(c_sim_obj, db_fps, "hmdb")
+        if self.ml_pipeline.config.sim_dice_flg:
+            sim_metric = "dice"
+            sim_th, all_novel_df, shortlisted_novel_df = self.combine_calculated_db_parts_sims(sim_metric,
+                                                                                               parts_fld_path)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_th)
 
-        pass
+        if self.ml_pipeline.config.sim_cosine_flg:
+            sim_metric = "cosine"
+            sim_th, all_novel_df, shortlisted_novel_df = self.combine_calculated_db_parts_sims(sim_metric,
+                                                                                               parts_fld_path)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_th)
+
+        if self.ml_pipeline.config.sim_euclidean_flg:
+            sim_metric = "euclidean"
+            sim_th, all_novel_df, shortlisted_novel_df = self.combine_calculated_db_parts_sims(sim_metric,
+                                                                                               parts_fld_path)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_th)
+
+        if self.ml_pipeline.config.sim_manhattan_flg:
+            sim_metric = "manhattan"
+            sim_th, all_novel_df, shortlisted_novel_df = self.combine_calculated_db_parts_sims(sim_metric,
+                                                                                               parts_fld_path)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_th)
+
+        if self.ml_pipeline.config.sim_soergel_flg:
+            sim_metric = "soergel"
+            sim_th, all_novel_df, shortlisted_novel_df = self.combine_calculated_db_parts_sims(sim_metric,
+                                                                                               parts_fld_path)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_th)
+
+    def combine_calculated_db_parts_sims(self, sim_metric, res_fld_path):
+        all_novel_fld_path = os.path.join(res_fld_path, sim_metric, "all_novel")
+        shortlisted_fld_path = os.path.join(res_fld_path, sim_metric, "shortlisted")
+
+        fname = None
+
+        df_all_novel_arr = []
+        for file in os.listdir(all_novel_fld_path):
+            fp = os.path.join(all_novel_fld_path, file)
+            fname = file
+            fl_df = pd.read_csv(fp)
+            df_all_novel_arr.append(fl_df)
+
+        sim_th = helper.infer_th_from_file_name(fname, sim_metric, ".csv")
+        all_novel_df = pd.concat(df_all_novel_arr)
+
+        df_all_shortlisted_arr = []
+        for file in os.listdir(shortlisted_fld_path):
+            fp = os.path.join(shortlisted_fld_path, file)
+            fl_df = pd.read_csv(fp)
+            df_all_shortlisted_arr.append(fl_df)
+
+        shortlisted_novel_df = pd.concat(df_all_shortlisted_arr)
+
+        return sim_th, all_novel_df, shortlisted_novel_df
 
     def calculate_all_similarities(self, c_sim_obj, db_fps, db_name):
         # TODO calculate threshold automatically
         if self.ml_pipeline.config.sim_tanimoto_flg:
-            self.calculate_and_save_sim_results(c_sim_obj, db_fps, db_name, "tanimoto", 0.8)
+            sim_metric = "tanimoto"
+            sim_threshold = 0.8
+            all_novel_df, shortlisted_novel_df = c_sim_obj.check_similarity_using_fps(db_fps, sim_metric,
+                                                                                      sim_threshold)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_threshold)
 
         if self.ml_pipeline.config.sim_dice_flg:
-            self.calculate_and_save_sim_results(c_sim_obj, db_fps, db_name, "dice", 0.9)
+            sim_metric = "dice"
+            sim_threshold = 0.9
+            all_novel_df, shortlisted_novel_df = c_sim_obj.check_similarity_using_fps(db_fps, sim_metric,
+                                                                                      sim_threshold)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_threshold)
         #
         if self.ml_pipeline.config.sim_cosine_flg:
-            self.calculate_and_save_sim_results(c_sim_obj, db_fps, db_name, "cosine", 0.8)
+            sim_metric = "cosine"
+            sim_threshold = 0.8
+            all_novel_df, shortlisted_novel_df = c_sim_obj.check_similarity_using_fps(db_fps, sim_metric,
+                                                                                      sim_threshold)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_threshold)
 
         if self.ml_pipeline.config.sim_euclidean_flg:
-            self.calculate_and_save_sim_results(c_sim_obj, db_fps, db_name, "euclidean", 0.8)
+            sim_metric = "euclidean"
+            sim_threshold = 0.8
+            all_novel_df, shortlisted_novel_df = c_sim_obj.check_similarity_using_fps(db_fps, sim_metric,
+                                                                                      sim_threshold)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_threshold)
 
         if self.ml_pipeline.config.sim_manhattan_flg:
-            self.calculate_and_save_sim_results(c_sim_obj, db_fps, db_name, "manhattan", 0.8)
+            sim_metric = "manhattan"
+            sim_threshold = 0.8
+            all_novel_df, shortlisted_novel_df = c_sim_obj.check_similarity_using_fps(db_fps, sim_metric,
+                                                                                      sim_threshold)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_threshold)
 
         if self.ml_pipeline.config.sim_soergel_flg:
-            self.calculate_and_save_sim_results(c_sim_obj, db_fps, db_name, "soergel", 0.95)
+            sim_metric = "soergel"
+            sim_threshold = 0.95
+            all_novel_df, shortlisted_novel_df = c_sim_obj.check_similarity_using_fps(db_fps, sim_metric,
+                                                                                      sim_threshold)
+            self.save_results_generate_features(all_novel_df, shortlisted_novel_df, db_name, sim_metric, sim_threshold)
 
-    def calculate_and_save_sim_results(self, c_sim_obj, db_fps, db_name, sim_metric, sim_threshold):
-
-        all_novel_df, shortlisted_novel_df = c_sim_obj.check_similarity_using_fps(db_fps, sim_metric,
-                                                                                  sim_threshold)
+    def save_results_generate_features(self, all_novel_df, shortlisted_novel_df, db_name, sim_metric,
+                                       sim_threshold):
 
         fld_path = self.ml_pipeline.job_data['job_data_path']
         fld_path = os.path.join(*[fld_path, DATA_FLD_NAME, TEST_FLD_NAME])

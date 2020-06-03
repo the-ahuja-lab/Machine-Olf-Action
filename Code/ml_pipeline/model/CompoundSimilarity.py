@@ -17,9 +17,10 @@ logger = logging.logger
 
 class CompoundSimilarity:
 
-    def __init__(self, pos_user_df, db_df):
+    def __init__(self, pos_user_df, db_df, logger):
         self.pos_user_df = pos_user_df
         self.db_df = db_df
+        self.jlogger = logger
         tqdm.pandas()
 
     def smile_to_fingerprints(self, smile):
@@ -27,10 +28,9 @@ class CompoundSimilarity:
         try:
             mol = Chem.MolFromSmiles(smile)
             fps = FingerprintMols.FingerprintMol(mol)
-        except:
-            print("Error from rdkit, skipping this smile")
-        #     print(type(fps))
-
+        except Exception as e:
+            self.jlogger.debug(
+                "Error from rdkit while calculating fingerprint from smile, skipping this smile {}".format(smile))
         return fps
 
     def measure_similarity(self, db_fps, sim_metric=DataStructs.TanimotoSimilarity, th=0.8):
@@ -39,25 +39,35 @@ class CompoundSimilarity:
         global fps_matches
 
         if db_cntr % 10000 == 0:
-            print("Completed checking similarity with ", db_cntr, " compound of db")
+            self.jlogger.info("Completed checking similarity with {} compound of db".format(db_cntr))
 
         u_fps_cntr = 0
 
-        for u_fps in user_ip_fps:
-            try:
-                sim = DataStructs.FingerprintSimilarity(u_fps, db_fps, metric=sim_metric)
-                if sim >= th:
-                    if db_cntr in fps_matches:
-                        fps_matches[db_cntr].append((u_fps_cntr, sim))
+        if not db_fps is None:
+            for u_fps in user_ip_fps:
+                try:
+                    if not u_fps is None:
+                        sim = DataStructs.FingerprintSimilarity(u_fps, db_fps, metric=sim_metric)
+                        if sim >= th:
+                            if db_cntr in fps_matches:
+                                fps_matches[db_cntr].append((u_fps_cntr, sim))
+                            else:
+                                fps_matches[db_cntr] = [(u_fps_cntr, sim)]
                     else:
-                        fps_matches[db_cntr] = [(u_fps_cntr, sim)]
-            except Exception as e:
-                print(e)
-                logger.exception("Error measuring similarity of compound db_cntr {} and u_fps_cntr {}".format(db_cntr, u_fps_cntr))
-                pass
-            u_fps_cntr += 1
+                        self.jlogger.debug(
+                            "User Finger print is unavailable, skipping this compound {}".format(u_fps_cntr))
+                except Exception as e:
+                    logger.exception(
+                        "Error measuring similarity of compound db_cntr {} and u_fps_cntr {}".format(db_cntr,
+                                                                                                     u_fps_cntr))
+                    self.jlogger.debug(
+                        "Error measuring similarity of compound db_cntr {} and u_fps_cntr {}".format(db_cntr,
+                                                                                                     u_fps_cntr))
+                u_fps_cntr += 1
 
-        db_cntr += 1
+            db_cntr += 1
+        else:
+            self.jlogger.debug("DB Finger print is unavailable, skipping this compound {}".format(db_cntr))
 
     def measure_similarity_custom(self, db_fps, sim_metric=DataStructs.TanimotoSimilarity, th=0.8):
         global user_ip_fps
@@ -65,25 +75,35 @@ class CompoundSimilarity:
         global fps_matches
 
         if db_cntr % 10000 == 0:
-            print("Completed checking similarity with ", db_cntr, " metabolites of hmdb")
+            self.jlogger.info("Completed checking similarity with {} compound of db".format(db_cntr))
 
         u_fps_cntr = 0
 
-        for u_fps in user_ip_fps:
-            try:
-                sim = sim_metric(u_fps, db_fps)
-                if sim >= th:
-                    if db_cntr in fps_matches:
-                        fps_matches[db_cntr].append((u_fps_cntr, sim))
+        if not db_fps is None:
+            for u_fps in user_ip_fps:
+                try:
+                    if not u_fps is None:
+                        sim = sim_metric(u_fps, db_fps)
+                        if sim >= th:
+                            if db_cntr in fps_matches:
+                                fps_matches[db_cntr].append((u_fps_cntr, sim))
+                            else:
+                                fps_matches[db_cntr] = [(u_fps_cntr, sim)]
                     else:
-                        fps_matches[db_cntr] = [(u_fps_cntr, sim)]
-            except Exception as e:
-                print(e)
-                logger.exception("Error measuring similarity")
-                pass
-            u_fps_cntr += 1
+                        self.jlogger.debug(
+                            "User Finger print is unavailable, skipping this compound {}".format(u_fps_cntr))
+                except Exception as e:
+                    logger.exception(
+                        "Error measuring similarity of compound db_cntr {} and u_fps_cntr {}".format(db_cntr,
+                                                                                                     u_fps_cntr))
+                    self.jlogger.debug(
+                        "Error measuring similarity of compound db_cntr {} and u_fps_cntr {}".format(db_cntr,
+                                                                                                     u_fps_cntr))
+                u_fps_cntr += 1
 
-        db_cntr += 1
+            db_cntr += 1
+        else:
+            self.jlogger.debug("DB Finger print is unavailable, skipping this compound {}".format(db_cntr))
 
     def get_vars_for_sim_calc(self, fp1, fp2):
         # ref: https://github.com/rdkit/rdkit-orig/blob/master/rdkit/DataStructs/__init__.py
@@ -127,7 +147,7 @@ class CompoundSimilarity:
         elif metric == "tanimoto":
             return DataStructs.TanimotoSimilarity
         else:
-            print("Matching none of the similarity measure present, falling back to tanimoto similarity")
+            self.jlogger.error("Matching none of the similarity measure present, falling back to tanimoto similarity")
             return DataStructs.TanimotoSimilarity
 
     def get_sim_metric_custom_mapping(self, metric):
@@ -163,23 +183,16 @@ class CompoundSimilarity:
         global user_ip_fps
         global db_cntr
 
-        # user_ip_fps = None
+        user_ip_fps = None
         fps_matches = {}
         db_cntr = 0
 
         self.db_df = self.db_df[['CNAME', 'SMILES']]
 
-        # get fingerprints from smile for both user uploaded dataset and app database
-
-        # calculating only the first time
-        if not "user_ip_fps" in globals():
-            print("Calculating user dataset fingerprints for the first time as it is not calculated yet")
-
-            user_ip_fps = self.pos_user_df['SMILES'].progress_apply(self.smile_to_fingerprints)
-
+        user_ip_fps = self.pos_user_df['SMILES'].progress_apply(self.smile_to_fingerprints)
         db_fps = self.db_df['SMILES'].progress_apply(self.smile_to_fingerprints)
 
-        print("Done generating fingerprints, starting to measure similarity")
+        self.jlogger.info("Done generating fingerprints, starting to measure similarity")
 
         return user_ip_fps, db_fps
 
