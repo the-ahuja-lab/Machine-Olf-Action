@@ -12,7 +12,17 @@ def fetch_all_jobs_path():
     :return: return all jobs folder path
     """
     prnt_fld = Path.home()
-    fld_path = os.path.join(prnt_fld, "all_jobs")
+    fld_path = os.path.join(prnt_fld, "ml_olfa", "all_jobs")
+
+    if not os.path.exists(fld_path):
+        os.makedirs(fld_path, exist_ok=True)
+
+    return fld_path
+
+
+def fetch_app_config_path():
+    prnt_fld = Path.home()
+    fld_path = os.path.join(prnt_fld, "ml_olfa", ".app_config")
 
     if not os.path.exists(fld_path):
         os.makedirs(fld_path, exist_ok=True)
