@@ -51,10 +51,14 @@ def validate_error_form_fields(config_form_dict):
 
     ALL_VALID_ERRORS = []
 
-    if not os.path.exists(config_form_dict.get("pubchem_db_fld_path")):
+    if not config_form_dict.get("pubchem_db_fld_path") is None \
+            and config_form_dict.get("pubchem_db_fld_path").strip() != "" \
+            and not os.path.exists(config_form_dict.get("pubchem_db_fld_path")):
         ALL_VALID_ERRORS.append("Pubchem folder path is not valid. Please provide a valid PubChem folder path.")
 
-    if not os.path.exists(config_form_dict.get("user_db_fld_path")):
+    if not config_form_dict.get("user_db_fld_path") is None \
+            and config_form_dict.get("user_db_fld_path").strip() != "" \
+            and not os.path.exists(config_form_dict.get("user_db_fld_path")):
         ALL_VALID_ERRORS.append(
             "Custom Database folder path is not valid. Please provide a valid custom database folder path.")
 

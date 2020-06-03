@@ -123,7 +123,7 @@ class TestSetGeneration:
             all_app_configs = get_app_config()
             if not all_app_configs is None:
                 custom_db_path = all_app_configs['user_db_fld_path']
-                if not custom_db_path is None:
+                if not custom_db_path is None and custom_db_path.strip() != "":
                     self.jlogger.info("Found custom DB path {}".format(custom_db_path))
                     db_path_found = True
                     compound_db_fld = custom_db_path
@@ -153,7 +153,7 @@ class TestSetGeneration:
             all_app_configs = get_app_config()
             if not all_app_configs is None:
                 pubchem_db_path = all_app_configs['pubchem_db_fld_path']
-                if not pubchem_db_path is None:
+                if not pubchem_db_path is None and pubchem_db_path.strip() != "":
                     self.jlogger.info("Found PubChem DB path {}".format(pubchem_db_path))
                     db_path_found = True
                     compound_db_fld = pubchem_db_path
@@ -183,7 +183,7 @@ class TestSetGeneration:
 
         if not db_path_found:
             self.jlogger.error(
-                "Custom DB folder path not found, unable to proceed with search on custom database")
+                "PubChem DB folder path not found, unable to proceed with search on pubchem database")
 
     def calculate_db_part_similarity(self, c_sim_obj, db_fps, db_name, res_fld_path):
         if self.ml_pipeline.config.sim_tanimoto_flg:

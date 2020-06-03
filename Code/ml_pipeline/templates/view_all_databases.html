@@ -38,17 +38,18 @@
                         <td><a href="{{ url_for('download_db', filename='hmdb-2020-05-30.csv') }}">Download</a></td>
                     </tr>
                     <tr>
-                        <td><a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank">PubChem</a></td>
-                        <td>PubChem
+                        <td><a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank">PubChem
                             <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
                                data-container="body" data-placement="bottom" data-html="true" data-content="In-order to use PubChem database in application follow below steps.
                                        <ol>
                                         <li>Download the zip file using 'Download' link. The download is of approximately 2.1 GB</li>
                                         <li>On completion of download, extract the zip at a folder location of your choice. It will take around 15 GB of disk space</li>
-                                        <li>Finally update the PubChem dataset Folder Path location by copying and pasting the location of extracted PubChem dataset inside <b><em>'Configure folder paths of databases'</em></b> section</li>
+                                        <li>Finally update the PubChem dataset Folder Path location by copying and pasting the location of extracted PubChem dataset inside <b><em>'Configure folder paths of databases'</em></b> section of this page.</li>
                                        </ol>"><img
                                     class="info-class"
                                     src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
+                        </a></td>
+                        <td>PubChem
                         </td>
                         <td>102,705,611</td>
                         <td>27th May 2020</td>
@@ -101,11 +102,11 @@
                                        </ol>"><img
                                             class="info-class"
                                             src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
-                                    <input required type="text" id="user_db_fld_path"
+                                    <input type="text" id="user_db_fld_path"
                                            name="user_db_fld_path" class="form-control"
                                            value="{{ all_app_configs.user_db_fld_path }}"
-                                           placeholder="Local folder path for custom databases"
-                                           title="Local folder path for custom databases">
+                                           placeholder="Local folder path for Custom databases"
+                                           title="Local folder path for Custom databases">
                                 </div>
                             </div>
                             <div class="col">
@@ -121,7 +122,7 @@
                                        </ol>"><img
                                             class="info-class"
                                             src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
-                                    <input required type="text" id="pubchem_db_fld_path"
+                                    <input type="text" id="pubchem_db_fld_path"
                                            name="pubchem_db_fld_path" class="form-control"
                                            value="{{ all_app_configs.pubchem_db_fld_path }}"
                                            placeholder="Local folder path for PubChem database"
