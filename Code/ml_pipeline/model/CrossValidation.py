@@ -300,47 +300,47 @@ class CrossValidation:
         if self.ml_pipeline.config.clf_gnb_flg:
             self.fetch_and_store_model("gnb")
 
-        if self.ml_pipeline.config.clf_bagging_gnb:
-            self.fetch_and_store_model("gnb_bagging")
+            if self.ml_pipeline.config.clf_bagging_gnb:
+                self.fetch_and_store_model("gnb_bagging")
 
     def apply_lr(self):
         if self.ml_pipeline.config.clf_lr_flg:
             self.fetch_and_store_model("lr")
 
-        if self.ml_pipeline.config.clf_bagging_lr:
-            self.fetch_and_store_model("lr_bagging")
+            if self.ml_pipeline.config.clf_bagging_lr:
+                self.fetch_and_store_model("lr_bagging")
 
     def apply_svm(self):
         if self.ml_pipeline.config.clf_svm_flg:
             self.fetch_and_store_model("svm")
 
-        if self.ml_pipeline.config.clf_bagging_svm:
-            self.fetch_and_store_model("svm_bagging")
+            if self.ml_pipeline.config.clf_bagging_svm:
+                self.fetch_and_store_model("svm_bagging")
 
     def apply_rf(self):
         if self.ml_pipeline.config.clf_rf_flg:
             self.fetch_and_store_model("rf")
 
-        if self.ml_pipeline.config.clf_bagging_rf:
-            self.fetch_and_store_model("rf_bagging")
+            if self.ml_pipeline.config.clf_bagging_rf:
+                self.fetch_and_store_model("rf_bagging")
 
     def apply_mlp(self):
         if self.ml_pipeline.config.clf_mlp_flg:
             self.fetch_and_store_model("mlp")
 
-        if self.ml_pipeline.config.clf_bagging_mlp:
-            self.fetch_and_store_model("mlp_bagging")
+            if self.ml_pipeline.config.clf_bagging_mlp:
+                self.fetch_and_store_model("mlp_bagging")
 
     def apply_et(self):
         if self.ml_pipeline.config.clf_et_flg:
             self.fetch_and_store_model("et")
 
-        if self.ml_pipeline.config.clf_bagging_et:
-            self.fetch_and_store_model("et_bagging")
+            if self.ml_pipeline.config.clf_bagging_et:
+                self.fetch_and_store_model("et_bagging")
 
     def apply_gbm(self):
         if self.ml_pipeline.config.clf_gbm_flg:
             self.fetch_and_store_model("gbm")
 
-        if self.ml_pipeline.config.clf_bagging_gbm:
-            self.fetch_and_store_model("gbm_bagging")
+            if self.ml_pipeline.config.clf_bagging_gbm:
+                self.fetch_and_store_model("gbm_bagging")

@@ -252,8 +252,8 @@ class FeatureGeneration:
             calc = Calculator(descriptors, ignore_3D=True)
             mols = [Chem.MolFromSmiles(smi) for smi in data["SMILES"]]
             df = calc.pandas(mols)  ## All features
-            df["CNAME"] = data["CNAME"]
-            df["Activation Status"] = data["Activation Status"]
+            df["CNAME"] = data["CNAME"].values
+            df["Activation Status"] = data["Activation Status"].values
 
             mordred_df = df.copy()
             self.ml_pipeline.data = mordred_df
