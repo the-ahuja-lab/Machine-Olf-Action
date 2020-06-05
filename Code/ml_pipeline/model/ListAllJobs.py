@@ -98,6 +98,4 @@ class ListAllJobs:
                 else:
                     run_status = job_run_status
 
-        print("@@@ ", job_id, job_last_status, run_status)
-
         return run_status
