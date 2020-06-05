@@ -181,9 +181,9 @@ class TestSetGeneration:
 
                     self.combine_db_parts("pubchem", res_fld_path)
 
-        if not db_path_found:
-            self.jlogger.error(
-                "PubChem DB folder path not found, unable to proceed with search on pubchem database")
+            if not db_path_found:
+                self.jlogger.error(
+                    "PubChem DB folder path not found, unable to proceed with search on pubchem database")
 
     def calculate_db_part_similarity(self, c_sim_obj, db_fps, db_name, res_fld_path):
         if self.ml_pipeline.config.sim_tanimoto_flg:

@@ -112,6 +112,7 @@ class FeatureGeneration:
                 padeldescriptor(
                     mol_dir=smiles_dir,
                     d_file=output_csv,
+                    log=True,
                     convert3d=True,
                     retain3d=True,
                     d_2d=descriptors,
@@ -186,7 +187,8 @@ class FeatureGeneration:
 
         mrg_fin_df = None
         # TODO handle harcoded path
-        temp_smi_fld_path = os.path.join("C:/ml_olfa_padel_temp/", "SMI_Files")
+        temp_smi_fld = "C:/ml_olfa_padel_temp/"
+        temp_smi_fld_path = os.path.join(temp_smi_fld, "SMI_Files")
 
         try:
             if os.path.exists(temp_smi_fld_path):
@@ -199,7 +201,7 @@ class FeatureGeneration:
 
             df["File_Names"] = df['SMILES'].apply(self.padel_desc_from_smile, temp_smi_fld_path=temp_smi_fld_path)
 
-            temp_op_padel_path = os.path.join(temp_smi_fld_path, "temp_op_padel.csv")
+            temp_op_padel_path = os.path.join(temp_smi_fld, "temp_op_padel.csv")
 
             desc = self.from_smiles_dir(temp_smi_fld_path, output_csv=temp_op_padel_path,
                                         timeout=timeout)  # 30 mins timeout
@@ -249,7 +251,7 @@ class FeatureGeneration:
         if self.ml_pipeline.config.fg_mordered_flg:
             self.jlogger.info("Inside generate_features_using_mordered method")
             data = self.ml_pipeline.data
-            calc = Calculator(descriptors, ignore_3D=True)
+            calc = Calculator(descriptors)
             mols = [Chem.MolFromSmiles(smi) for smi in data["SMILES"]]
             df = calc.pandas(mols)  ## All features
             df["CNAME"] = data["CNAME"].values

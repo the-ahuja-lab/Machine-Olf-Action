@@ -6,6 +6,7 @@
     <th>Job Description</th>
     <th>Job Created Time</th>
     <th>Last Completed Job Stage</th>
+    <th> Job Running Status</th>
     <th>Action</th>
     </thead>
     <tbody>
@@ -14,11 +15,17 @@
         <td>{{ job.job_id }}</td>
         <td>{{ job.job_desc }}</td>
         <td>{{ job.job_created_time }}</td>
-        <td>{{ job.job_status }}</td>
+        <td>{{ job.job_last_status }}</td>
+        <td>{{ job.job_run_status }}</td>
         <td>
             <a href="{{ url_for('view_job_files', path=job.job_id) }}">View Details</a>
-            <a href="{{ url_for('start_or_resume_job', job_id=job.job_id) }}">Start / Stop</a>
-<!--            <a href="{{ url_for('start_or_resume_job', job_id=job.job_id) }}">View Logs</a>-->
+            {% if not job.job_run_status == 'Running' and not job.job_last_status == 'job_completed' %}
+                <a href="{{ url_for('start_or_resume_job', job_id=job.job_id) }}">Start Job</a>
+            {% endif %}
+            {% if job.job_run_status == 'Running' %}
+                <a href="{{ url_for('stop_running_job', job_id=job.job_id) }}">Stop Job</a>
+            {% endif %}
+            <!--            <a href="{{ url_for('start_or_resume_job', job_id=job.job_id) }}">View Logs</a>-->
         </td>
     </tr>
     {% endfor %}

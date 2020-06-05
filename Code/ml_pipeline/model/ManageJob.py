@@ -93,6 +93,7 @@ def create_job(job_config_json, user_file, is_example_job):
     othr_job_config['jd_text'] = job_config_json["job_description"]  # TODO consider removing job description from here
     othr_job_config['job_pid'] = ""  # TODO set it later when spwanning new process from job
     othr_job_config['status'] = init_status
+    othr_job_config['job_run_status'] = ""
 
     oth_config_file_path = os.path.join(config_fld_path, app_config['job_other_config_fname'])
     with open(oth_config_file_path, 'w', encoding='utf-8') as f:

@@ -1,8 +1,8 @@
 import multiprocessing
-
-from ml_pipeline import app
 import random, threading, webbrowser
 import os
+
+from ml_pipeline import app
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
