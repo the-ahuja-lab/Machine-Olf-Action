@@ -1,7 +1,12 @@
 from flask import render_template, url_for, flash, redirect, request, send_from_directory
 from werkzeug.utils import secure_filename
 
-from ml_pipeline import app
+from pebble import concurrent
+from concurrent.futures._base import CancelledError
+
+from ml_pipeline import app, running_jobs_details
+import ml_pipeline.utils.Helper as helper
+
 from flask_autoindex import AutoIndex
 from AppConfig import app_config
 from ListAllJobs import ListAllJobs
@@ -68,24 +73,107 @@ def create_job():
 def start_or_resume_job():
     job_id = request.args.get('job_id')
 
-    # TODO create a new process or thread here and update its details to job folder, if already started don't adhere request
+    error = None
+
+    print("inside start_or_resume_job, before running_jobs_details ", running_jobs_details)
+
+    if job_id in running_jobs_details.keys():
+        if running_jobs_details[job_id][0] == "Running":
+            error = "Job already in running queue, cannot start it again."
+        else:
+            print("Status is not running, start job again")
+            error = None
+    elif len(running_jobs_details) >= 2:
+        running_jobs = ""
+        for job_id, job_details in running_jobs_details.items():
+            running_jobs += job_id + ", "
+            error = "Cannot run more than two jobs in parallel. Jobs with job ids {} are already running".format(
+                running_jobs)
+    else:
+        running_jobs_details[job_id] = ("Added", None)
+
+    print("inside start_or_resume_job, after running_jobs_details ", running_jobs_details)
+
+    if not error is None:
+        flash(error, "danger")
+        redirect(url_for("view_all_jobs"))
+    else:
+        for job_id, job_details in running_jobs_details.items():
+            if job_details[0] == 'Added':
+                future = start_ml_job(job_id)
+                future.add_done_callback(job_done_callback)
+                running_jobs_details[job_id] = ("Running", future)
+                flash(
+                    "Request to start job {} sent successfully. It can take many hours to complete the job based on job configuration you selected while creating job. Visit \"View Details\" page of the job to get more information about job like its current status, result files and logs.".format(
+                        job_id),
+                    "success")
+
+    return redirect(url_for("view_all_jobs"))
+
+
+def job_done_callback(future):
+    print("Inside job_done_callback")
+    print("job_done_callback Running status ", future.running())
+
+    try:
+        job_id, job_success_status = future.result()
+        print("Future result inside job_done_callback ", job_id, job_success_status)
+
+        if job_id in running_jobs_details:
+            del running_jobs_details[job_id]
+    except CancelledError as ce:
+        print("CancelledError Exception inside job_done_callback ", ce)
+    except Exception as e:
+        print("Exception inside job_done_callback ", e)
+
+@concurrent.process(daemon=False)
+def start_ml_job(job_id):
+    print('[pid:%s] performing calculation on %s' % (os.getpid(), job_id))
     ml = MLPipeline(job_id)
     job_success_status = ml.start()
+    return job_id, job_success_status
 
-    if job_success_status:
-        flash("Job with job id {} completed successfully".format(job_id), "success")
+
+@app.route("/stop_running_job", methods=['GET'])
+def stop_running_job():
+    job_id = request.args.get('job_id')
+
+    error = None
+
+    if job_id in running_jobs_details.keys():
+        job_status, job_future = running_jobs_details[job_id]
+
+        print("@@@@@ ", job_status, job_future)
+        if not job_future is None:
+            job_run_status = job_future.running()
+        print("Inside stop_running_job with job id {} and job_run_status {}".format(job_id, job_run_status))
+
+        if job_run_status:
+            job_future.cancel()
+            flash(
+                "Request to stop job {} sent successfully. You can resume this job at some later point in time.".format(
+                    job_id),
+                "success")
+
+            # regardless of errored or sucess or failure or whatever reason, remove it from running_jobs_details map
+            if job_id in running_jobs_details:
+                del running_jobs_details[job_id]
+
+                print("Updating status to file")
+                helper.update_running_job_status(job_id, "Stopped")
+                # TODO write stopped status here in job_status file
+        else:
+            error = "Job is not running, cannot stop it."
     else:
-        flash(
-            "An exception occurred while processing job with job id {}. Please check job logs for details related to exception".format(
-                job_id), "danger")
+        error = "Job is not running, cannot stop it."
 
-    # TODO add check job status
-    # TODO return something meaningful here instead of a blank page with just success message
+    if not error is None:
+        flash(error, "danger")
+
     return redirect(url_for("view_all_jobs"))
 
 
 job_files_index = AutoIndex(app, app_config['jobs_folder'])
-
 
 @app.route("/view-job-files")
 @app.route('/view-job-files/<path:path>')

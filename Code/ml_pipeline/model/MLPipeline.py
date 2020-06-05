@@ -10,6 +10,8 @@ import TestSetPreprocessing as tspp
 import TestSetPrediction as tsprd
 import CrossValidation as cv
 
+import ml_pipeline.utils.Helper as helper
+
 import ml_pipeline.utils.Logging as logging
 
 logger = logging.logger
@@ -51,7 +53,9 @@ class MLPipeline(BaseMLJob):
             job_success_status = True
         except:
             job_success_status = False
+            helper.update_running_job_status(self.job_id, "Errored")
             self.jlogger.exception("Exception occurred in ML Job {} ".format(self.job_id))
+
 
         return job_success_status
 
