@@ -1,0 +1,27 @@
+{% if show_logs %}
+<div>
+    <script src="{{ url_for('static', filename='js/log_viewer.js') }}"></script>
+    <div class="card card-cust border-primary">
+        <div class="card-body card-cust-jd ">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="mb-8">
+                        <div id="job_log_title"></div>
+                    </h5>
+                </div>
+                <div class="col-md-6" style="text-align:right">
+                    <label for="log_type_sel"> Show Log Type:  </label>
+                    <select id="log_type_sel" onchange="change_log_level(this);">-->
+                        <option value="info">Info</option>
+                        <option value="error">Error</option>
+                        <option value="debug">Debug</option>
+                    </select>
+                </div>
+            </div>
+            <div id="card-log-body" class="log_scroll">
+                <div id="log_data" class="log_viewer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

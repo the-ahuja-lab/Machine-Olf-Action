@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+<script src="{{ url_for('static', filename='js/create_job.js') }}"></script>
 <input type="hidden" id="job_type" name="job_type" value="user_uploaded" form="ml_job_frm">
 <form method="POST" id="ml_job_frm" enctype=multipart/form-data>
     <div class="sft-form-btns-div">

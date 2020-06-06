@@ -15,5 +15,6 @@ app = Flask(__name__, static_folder=os.path.join(base_dir, 'static'),
 app.config['SECRET_KEY'] = '69a4924601418746dc6c4d536339b5b3'
 
 running_jobs_details = {}
+log_viewer_app = {}
 
 from ml_pipeline import routes

@@ -25,7 +25,7 @@
             {% if job.job_run_status == 'Running' %}
                 <a href="{{ url_for('stop_running_job', job_id=job.job_id) }}">Stop Job</a>
             {% endif %}
-            <!--            <a href="{{ url_for('start_or_resume_job', job_id=job.job_id) }}">View Logs</a>-->
+            <a href="{{ url_for('view_job_details', job_id=job.job_id, lt='info') }}">View Logs</a>
         </td>
     </tr>
     {% endfor %}

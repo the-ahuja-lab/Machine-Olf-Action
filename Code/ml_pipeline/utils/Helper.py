@@ -13,6 +13,7 @@ def update_job_status(job_status_fp, status):
     with open(job_status_fp, mode='w') as f:
         json.dump(othr_config, f, ensure_ascii=False, indent=4)
 
+
 def update_running_job_status(job_id, status):
     jobs_fld = app_config['jobs_folder']
     job_id_fld = os.path.join(jobs_fld, job_id)
@@ -29,10 +30,9 @@ def update_running_job_status(job_id, status):
 
 
 def get_job_status_detail(job_id, detail_type):
-    jobs_fld = app_config['jobs_folder']
-    job_id_fld = os.path.join(jobs_fld, job_id)
-    job_oth_config_fp = os.path.join(*[job_id_fld, app_config['job_config_fld_name'],
-                                       app_config['job_other_config_fname']])
+    job_config_fld_path = get_job_config_fld_path(job_id)
+    job_oth_config_fp = os.path.join(job_config_fld_path,
+                                     app_config['job_other_config_fname'])
 
     with open(job_oth_config_fp, mode='r') as f:
         othr_config = json.load(f)
@@ -41,6 +41,15 @@ def get_job_status_detail(job_id, detail_type):
             return othr_config[detail_type]
 
     return None
+
+
+def get_job_config_fld_path(job_id):
+    jobs_fld = app_config['jobs_folder']
+    job_id_fld = os.path.join(jobs_fld, job_id)
+    job_config_fld_path = os.path.join(job_id_fld, app_config['job_config_fld_name'])
+
+    return job_config_fld_path
+
 
 def _json_object_hook(d):
     return namedtuple('x', d.keys())(*d.values())
@@ -60,6 +69,7 @@ def change_ext(fname, ext_init, ext_fin):
         return fname.replace(ext_init, ext_fin)
     else:
         return fname + ext_fin
+
 
 def infer_th_from_file_name(fname, sim_metric, ext):
     sm_end_index = fname.index(sim_metric) + len(sim_metric)
