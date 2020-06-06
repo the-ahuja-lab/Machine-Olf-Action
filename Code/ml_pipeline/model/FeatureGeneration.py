@@ -236,12 +236,13 @@ class FeatureGeneration:
         if self.ml_pipeline.config.fg_padelpy_flg:
             self.jlogger.info("Inside generate_features_using_padel method")
 
-            # TODO temporary fix, try parallel first if fails, fall back to serial
-            self.jlogger.info("Trying generating padel features parallelly first")
-            df = self.generate_padel_features_parallely(600)  # 10 mins timeout
-            if df is None:  # if error while generating parallely
-                self.jlogger.info("Trying generating padel features serially now")
-                df = self.generate_padel_features_serially()
+            # # TODO temporary fix, try parallel first if fails, fall back to serial
+            # self.jlogger.info("Trying generating padel features parallelly first")
+            # df = self.generate_padel_features_parallely(600)  # 10 mins timeout
+            # if df is None:  # if error while generating parallely
+            #     self.jlogger.info("Trying generating padel features serially now")
+
+            df = self.generate_padel_features_serially()
 
             return df
         else:

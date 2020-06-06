@@ -1,11 +1,18 @@
-from flask import render_template, url_for, flash, redirect, request, send_from_directory
+from flask import render_template, url_for, flash, redirect, request, send_from_directory, jsonify
 from werkzeug.utils import secure_filename
 
 from pebble import concurrent
 from concurrent.futures._base import CancelledError
 
-from ml_pipeline import app, running_jobs_details
+from ml_pipeline import app, running_jobs_details, log_viewer_app
 import ml_pipeline.utils.Helper as helper
+
+# import subprocess
+from subprocess import Popen, PIPE, STDOUT
+import psutil
+import signal
+
+from ml_pipeline.utils.WSLogViewer import start_log_viewer
 
 from flask_autoindex import AutoIndex
 from AppConfig import app_config
@@ -126,6 +133,7 @@ def job_done_callback(future):
     except Exception as e:
         print("Exception inside job_done_callback ", e)
 
+
 @concurrent.process(daemon=False)
 def start_ml_job(job_id):
     print('[pid:%s] performing calculation on %s' % (os.getpid(), job_id))
@@ -180,15 +188,6 @@ job_files_index = AutoIndex(app, app_config['jobs_folder'])
 def view_job_files(path='.'):
     print("Path ", path)
     return job_files_index.render_autoindex(path=path)
-
-
-@app.route("/view-job-details")
-@app.route('/view-job-details/<path:path>')
-def view_job_details(path='.'):
-    print("Path ", path)
-    # return job_files_index.render_autoindex(path=path)
-    job = None
-    return render_template('view_job_detail.html', title="View Job Detail", job=job)
 
 
 @app.route("/view-all-jobs")
@@ -251,3 +250,91 @@ def update_db_paths():
             flash(flash_err_op, "danger")
 
         return redirect(url_for("view_all_dbs"))
+
+
+@app.route('/show_job_logs', methods=['GET'])
+def show_job_logs():
+    job_id = request.args.get('job_id')
+    log_type = request.args.get('lt')
+
+    if not job_id is None:
+
+        all_jobs_fld = app_config['jobs_folder']
+
+        if log_type == "debug":
+            fn = "run_debug.log"
+            job_log_title = "Job Debug Log"
+        elif log_type == "info":
+            fn = "run_info.log"
+            job_log_title = "Job Info Log"
+        elif log_type == "error":
+            fn = "run_error.log"
+            job_log_title = "Job Error Log"
+        else:
+            fn = None
+
+        if not fn is None:
+            create_log_viewer_process(all_jobs_fld)
+            return render_template("log_viewer.html", show_logs=True, job_log_title=job_log_title)
+
+        else:
+            flash("Invalid log type, cannot show logs of {} log type".format(log_type), "danger")
+            return render_template("log_viewer.html", show_logs=False)
+    else:
+        flash("A valid job id is needed to view logs", "danger")
+        return render_template("log_viewer.html", show_logs=False)
+
+
+@app.route('/view_job_details', methods=['GET'])
+def view_job_details():
+    return render_template("view_job_details.html")
+
+
+@app.route('/fetch_job_details', methods=['GET'])
+def fetch_job_details():
+    job_id = request.args.get('job_id')
+    # print("Inside fetch_job_details")
+    if not job_id is None:
+        job_status = helper.get_job_status_detail(job_id, "status")
+        job_desc = helper.get_job_status_detail(job_id, "jd_text")
+
+        all_jobs = ListAllJobs()
+        job_run_status = all_jobs.get_job_run_status(job_id, job_status)
+
+        job_details = {}
+        job_details['job_id'] = job_id
+        job_details['job_run_status'] = job_run_status
+        job_details['job_last_status'] = job_status
+        job_details['job_desc'] = job_desc
+
+        # return jsonify(error=False, job_details=job_details)
+        return render_template("job_detail.html", job_details=job_details)
+    else:
+        flash("A valid job id is needed to view job details", "danger")
+        return render_template("log_viewer.html", show_logs=False)
+
+
+def create_log_viewer_process(log_fld):
+    if not len(log_viewer_app) == 0 and "pid" in log_viewer_app.keys():
+        pid = log_viewer_app['pid']
+        if not pid is None:
+            if psutil.pid_exists(pid):
+                process = psutil.Process(pid)
+
+                process_name = process.name()
+                print("pid ", pid, process.cmdline(), process.status())
+                print("Process already exists")
+
+                if process.status() == "zombie":
+                    os.kill(pid, signal.SIGTERM)
+                else:
+                    return False
+
+    print("Log Viewer Process does not exist, creating new proccess ")
+    proc = Popen(['python', 'ml_pipeline/utils/WSLogViewer.py', '--log_fld', log_fld], stdout=None, stderr=None,
+                 stdin=None
+                 )
+    # print(proc.stdout.readline())
+    print("process id ", proc.pid)
+    log_viewer_app['pid'] = proc.pid
+    return True

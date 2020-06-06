@@ -1,0 +1,23 @@
+<div class="card card-cust border-primary">
+    <div id="card-details-body" class="card-body card-cust-jd ">
+        <h5 class="mb-8">
+            Job Details
+        </h5>
+        <table class="table table-dark table-bordered table-hover" align="center">
+            <thead class="thead-dark">
+            <th>Job ID</th>
+            <th>Job Description</th>
+            <th>Last Completed Job Stage</th>
+            <th>Job Running Status</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ job_details.job_id }}</td>
+                <td>{{ job_details.job_desc }}</td>
+                <td>{{ job_details.job_last_status }}</td>
+                <td><div id="jrs_div">{{ job_details.job_run_status }}</div></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -29,6 +29,7 @@ padding:10px;
 }
 
 .sft-main-content{
+color: white !important;
 min-height: 100vh
 }
 
@@ -135,3 +136,20 @@ margin: 10px;
 .update_paths_btn{
 margin-top:32px;
 }
+
+.log_scroll{
+  width:100%;
+  height: 400px;
+  float:left;
+  overflow-y:scroll;
+}
+
+.log_viewer{
+white-space: pre-line;
+margin: 0 0.25rem;
+}
+
+.card-cust-jd{
+padding:0.5rem 2rem !important
+}
+
