@@ -49,7 +49,7 @@ function create_ws(job_id, lt) {
 
     ws.onerror = function(event) {
         console.log("Inside onerror event of websocket")
-        $('#log_data').html("Error retrieving logs, try refreshing page to see if it fixes the problem.");
+        $('#log_data').html("Please wait while logs are being fetched. In case they don't show up at all, try refreshing page to see if it fixes the problem.");
     };
 
     ws.onclose = function() {

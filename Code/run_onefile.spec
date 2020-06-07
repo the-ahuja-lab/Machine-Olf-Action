@@ -10,8 +10,7 @@ added_files =[
     ('ml_pipeline/templates', 'templates'),
     ('ml_pipeline/static', 'static'),
 	('ml_pipeline/static', 'ml_pipeline/static'),
-	(os.path.join(site_packages,'mordred'), 'mordred')
-    ]
+	(os.path.join(site_packages,'mordred'), 'mordred')    ]
 
 print("Add folders/files", 	added_files)
 
@@ -41,15 +40,14 @@ all_hiddenimports.extend(padel_py_hiddenimports)
 all_hiddenimports.extend(networkx_py_hiddenimports)
 all_hiddenimports.extend(rdkitchem_py_hiddenimports)
 
-
 added_files.extend(flask_autoindex_datafiles)
 added_files.extend(flask_silk_datafiles)
 added_files.extend(padel_py_datafiles)
 #added_files.extend(mordred_py_datafiles)
 
 
-#print("@@ all_data_files ", added_files)
-#print("@@ all_hiddenimports ", all_hiddenimports)
+#print("all_data_files ", added_files)
+#print("all_hiddenimports ", all_hiddenimports)
 
 a = Analysis(['run.py'],
              pathex=['.', 'ml_pipeline/model'],
@@ -71,11 +69,12 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='run',
+          name='molfa',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=True,
+		  icon='ml_pipeline/static/images/ml_olfa_logo.ico')

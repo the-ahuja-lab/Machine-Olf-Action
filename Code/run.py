@@ -15,7 +15,5 @@ if __name__ == '__main__':
     if 'WERKZEUG_RUN_MAIN' not in os.environ:
         threading.Timer(1.25, lambda: webbrowser.open(url)).start()
 
+    print("Starting application at url {}".format(url))
     app.run(port=port, debug=False)
-
-    # to allow change in css and js to reflect immediately
-    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
