@@ -29,7 +29,7 @@ log_folder = ""
 
 @asyncio.coroutine
 def view_log(websocket, path):
-    logging.info('Connected, remote={}, path={}'.format(websocket.remote_address, path))
+    logging.debug('Connected, remote={}, path={}'.format(websocket.remote_address, path))
 
     try:
         try:
@@ -131,9 +131,12 @@ def view_log(websocket, path):
 
 def log_close(websocket, path, exception=None):
     message = 'Closed, remote={}, path={}'.format(websocket.remote_address, path)
-    if exception is not None:
+    if exception is not None and str(exception) != "Ping error":
         message += ', exception={}'.format(exception)
-    logging.info(message)
+        logging.info(message)
+    else:
+        message += ', exception={}'.format(exception)
+        logging.debug(message)
 
 
 def main():
@@ -161,6 +164,7 @@ def start_log_viewer(log_fld, host, port):
     start_server = websockets.serve(view_log, host, port)
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()
+
 
 if __name__ == '__main__':
     main()

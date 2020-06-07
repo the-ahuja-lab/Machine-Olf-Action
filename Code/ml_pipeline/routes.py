@@ -183,6 +183,7 @@ def stop_running_job():
 
 job_files_index = AutoIndex(app, app_config['jobs_folder'])
 
+
 @app.route("/view-job-files")
 @app.route('/view-job-files/<path:path>')
 def view_job_files(path='.'):
@@ -314,27 +315,75 @@ def fetch_job_details():
         return render_template("log_viewer.html", show_logs=False)
 
 
+# def create_log_viewer_process(log_fld):
+#     if not len(log_viewer_app) == 0 and "pid" in log_viewer_app.keys():
+#         pid = log_viewer_app['pid']
+#         if not pid is None:
+#             if psutil.pid_exists(pid):
+#                 process = psutil.Process(pid)
+#
+#                 process_name = process.name()
+#                 print("pid ", pid, process.cmdline(), process.status())
+#                 print("Process already exists")
+#
+#                 if process.status() == "zombie":
+#                     os.kill(pid, signal.SIGTERM)
+#                 else:
+#                     return False
+#
+#     print("Log Viewer Process does not exist, creating new proccess ")
+#     print("sysexecutable path ", sys.executable)
+#     proc = Popen(['python', 'ml_pipeline/utils/WSLogViewer.py', '--log_fld', log_fld], stdout=None, stderr=None,
+#                  stdin=None, close_fds=True
+#                  )
+#     # print(proc.stdout.readline())
+#     print("process id ", proc.pid)
+#     log_viewer_app['pid'] = proc.pid
+#
+#     # print("Communicate from process", proc.communicate())
+#     # while (True):
+#     #     if proc.poll() is not None:
+#     #         print("Inside poll communicate")
+#     #         print(proc.communicate())
+#     #     else:
+#     #         print("Killing process")
+#     #         # proc.kill()
+#     #         # log_viewer_app['pid'] = None
+#     #         break
+#     return True
+
 def create_log_viewer_process(log_fld):
-    if not len(log_viewer_app) == 0 and "pid" in log_viewer_app.keys():
-        pid = log_viewer_app['pid']
-        if not pid is None:
-            if psutil.pid_exists(pid):
-                process = psutil.Process(pid)
+    if not len(log_viewer_app) == 0 and "lv_future" in log_viewer_app.keys():
+        future = log_viewer_app['lv_future']
+        if not future is None:
+            if future.running():
+                print("Inside create_log_viewer_process, log viewer process already exists, doing nothing")
+                return False
 
-                process_name = process.name()
-                print("pid ", pid, process.cmdline(), process.status())
-                print("Process already exists")
+    print("Log Viewer Process does not exist, creating new proccess")
+    future = run_log_viewer(log_fld)
+    log_viewer_app['lv_future'] = future
 
-                if process.status() == "zombie":
-                    os.kill(pid, signal.SIGTERM)
-                else:
-                    return False
+    future.add_done_callback(log_viewer_callback)
 
-    print("Log Viewer Process does not exist, creating new proccess ")
-    proc = Popen(['python', 'ml_pipeline/utils/WSLogViewer.py', '--log_fld', log_fld], stdout=None, stderr=None,
-                 stdin=None
-                 )
-    # print(proc.stdout.readline())
-    print("process id ", proc.pid)
-    log_viewer_app['pid'] = proc.pid
     return True
+
+@concurrent.process(daemon=False)
+def run_log_viewer(log_fld):
+    print('Starting log viewer process in process [pid:%s]' % (os.getpid()))
+    pid = os.getpid()
+    start_log_viewer(log_fld, "127.0.0.1", 8765)
+    return pid
+
+
+def log_viewer_callback(future):
+    print("Inside log_viewer_callback")
+    print("log_viewer_callback Running status ", future.running())
+
+    try:
+        pid = future.result()
+        print("Future result inside log_viewer_callback from pid ", pid)
+    except CancelledError as ce:
+        print("CancelledError Exception inside log_viewer_callback ", ce)
+    except Exception as e:
+        print("Exception inside log_viewer_callback ", e)
