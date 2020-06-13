@@ -32,7 +32,7 @@ def _popen_timeout(command: str, timeout: int) -> tuple:
     Returns:
         tuple: (stdout of process, stderr of process)
     '''
-
+    # print("command.split() ", command, command.split())
     p = Popen(command.split(), stdout=PIPE, stderr=PIPE)
     if timeout is not None:
         for t in range(timeout):
@@ -107,7 +107,7 @@ def padeldescriptor(maxruntime: int=-1, waitingjobs: int=-1, threads: int=-1,
     else:
         command = '{} -jar {}'.format(java_path, _PADEL_PATH)
 
-    print("Java jar command ", command)
+    # print("Java jar command ", command)
 
     # command = 'java -jar {}'.format(_PADEL_PATH)
     command += ' -maxruntime {}'.format(maxruntime)
