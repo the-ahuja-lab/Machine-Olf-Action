@@ -146,14 +146,15 @@ class FeatureGeneration:
         name = str_name[8:]
         return name
 
-    def generate_padel_features_serially(self):
+    def generate_padel_features_serially(self, java_path):
         self.jlogger.info("Inside generate_padel_features_serial")
+
         test1 = self.ml_pipeline.data
         for i in range(len(test1)):
             self.jlogger.debug("Genertaing Padel Features for datapoint {}".format(i))
             try:
                 temp = test1["SMILES"][i]
-                descriptors = from_smiles(temp, timeout=60)
+                descriptors = from_smiles(temp, timeout=60, java_path=java_path)
             except RuntimeError:
                 self.jlogger.error(
                     "Padel feature generation failed with timeout of 60 secs, datapoint {}".format(
@@ -237,13 +238,26 @@ class FeatureGeneration:
         if self.ml_pipeline.config.fg_padelpy_flg:
             self.jlogger.info("Inside generate_features_using_padel method")
 
+            os_type = helper.get_os_type()
+
+            if os_type.startswith("windows"):
+                java_path = "jre8/win/bin/java.exe"
+            elif os_type.startswith("darwin"):
+                java_path = "jre8/mac/Contents/Home/bin/java"
+            elif os_type.startswith("linux"):
+                java_path = "jre8/linux/bin/java"
+            else:
+                java_path = None
+
+            self.jlogger.info("Inside generate_features_using_padel method, os type is {}".format(os_type))
+
             # # TODO temporary fix, try parallel first if fails, fall back to serial
             # self.jlogger.info("Trying generating padel features parallelly first")
             # df = self.generate_padel_features_parallely(600)  # 10 mins timeout
             # if df is None:  # if error while generating parallely
             #     self.jlogger.info("Trying generating padel features serially now")
 
-            df = self.generate_padel_features_serially()
+            df = self.generate_padel_features_serially(java_path)
 
             return df
         else:

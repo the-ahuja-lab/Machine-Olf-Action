@@ -1,6 +1,16 @@
 # -*- mode: python ; coding: utf-8 -*-
 import sys
 from os import path
+import platform
+
+def get_os_type():
+    os = platform.system()
+    os_lower = os.lower()
+    print("OS is {}".format(os))
+    return os_lower
+
+os_type = get_os_type()
+ico_path = "ml_pipeline/static/images/ml_olfa_logo.ico"
 
 site_packages = next(p for p in sys.path if 'site-packages' in p)
 print("site_packages",site_packages)
@@ -10,7 +20,20 @@ added_files =[
     ('ml_pipeline/templates', 'templates'),
     ('ml_pipeline/static', 'static'),
 	('ml_pipeline/static', 'ml_pipeline/static'),
-	(os.path.join(site_packages,'mordred'), 'mordred')    ]
+	(os.path.join(site_packages,'mordred'), 'mordred'),
+    ('padelpy', 'padelpy')
+	]
+
+if os_type.startswith("windows"):
+    added_files.append(("jre8/win","jre8/win"))
+    ico_path = "ml_pipeline/static/images/ml_olfa_logo.ico"
+elif os_type.startswith("darwin"):
+    added_files.append(("jre8/mac","jre8/mac"))
+    ico_path = "ml_pipeline/static/images/ml_olfa_logo.icns"
+elif os_type.startswith("linux"):
+    added_files.append(("jre8/linux","jre8/linux"))
+    ico_path = "ml_pipeline/static/images/ml_olfa_logo.png"
+
 
 print("Add folders/files", 	added_files)
 
@@ -19,7 +42,7 @@ from PyInstaller.utils.hooks import collect_submodules
 
 #flask_autoindex_hiddenimports = collect_submodules('flask_autoindex')
 #flask_silk_hiddenimports = collect_submodules('flask_silk')
-padel_py_hiddenimports = collect_submodules('padelpy')
+#padel_py_hiddenimports = collect_submodules('padelpy')
 #mordred_py_hiddenimports = collect_submodules('mordred')
 
 # imports for making mordred work
@@ -28,21 +51,21 @@ rdkitchem_py_hiddenimports = collect_submodules('rdkit.Chem')
 
 flask_autoindex_datafiles = collect_data_files('flask_autoindex')
 flask_silk_datafiles = collect_data_files('flask_silk')
-padel_py_datafiles = collect_data_files('padelpy')
+#padel_py_datafiles = collect_data_files('padelpy')
 #mordred_py_datafiles = collect_data_files('mordred')
 
 
 all_hiddenimports = ['pkg_resources.py2_warn','sklearn.utils._cython_blas','sklearn.neighbors.typedefs','sklearn.neighbors.quad_tree','sklearn.tree._utils']
 #all_hiddenimports.extend(flask_autoindex_hiddenimports)
 #all_hiddenimports.extend(flask_silk_hiddenimports)
-all_hiddenimports.extend(padel_py_hiddenimports)
+#all_hiddenimports.extend(padel_py_hiddenimports)
 #all_hiddenimports.extend(mordred_py_hiddenimports)
 all_hiddenimports.extend(networkx_py_hiddenimports)
 all_hiddenimports.extend(rdkitchem_py_hiddenimports)
 
 added_files.extend(flask_autoindex_datafiles)
 added_files.extend(flask_silk_datafiles)
-added_files.extend(padel_py_datafiles)
+#added_files.extend(padel_py_datafiles)
 #added_files.extend(mordred_py_datafiles)
 
 
@@ -50,7 +73,7 @@ added_files.extend(padel_py_datafiles)
 #print("all_hiddenimports ", all_hiddenimports)
 
 a = Analysis(['run.py'],
-             pathex=['.', 'ml_pipeline/model'],
+             pathex=['.', 'ml_pipeline/model','padelpy'],
              binaries=[],
              datas=added_files,
              hiddenimports=all_hiddenimports,
@@ -77,4 +100,4 @@ exe = EXE(pyz,
           upx_exclude=[],
           runtime_tmpdir=None,
           console=True,
-		  icon='ml_pipeline/static/images/ml_olfa_logo.ico')
+		  icon=ico_path)
