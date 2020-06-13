@@ -39,8 +39,7 @@ def update_app_config(all_app_configs):
 
 
 def check_if_valid_app_config(app_config_dict):
-    # TODO - Perfrom validations on config like Validate if atleast one feature selection technique present
-    print("Config ", app_config_dict)
+    # print("Config ", app_config_dict)
 
     error, app_config_dict = validate_error_form_fields(app_config_dict)
     return error, app_config_dict

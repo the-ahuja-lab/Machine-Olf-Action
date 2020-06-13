@@ -1,7 +1,7 @@
 import json
 from collections import namedtuple
 import os
-from AppConfig import app_config
+import AppConfig as app_config
 
 
 def update_job_status(job_status_fp, status):
@@ -15,10 +15,10 @@ def update_job_status(job_status_fp, status):
 
 
 def update_running_job_status(job_id, status):
-    jobs_fld = app_config['jobs_folder']
+    jobs_fld = app_config.ALL_JOBS_FOLDER
     job_id_fld = os.path.join(jobs_fld, job_id)
-    job_oth_config_fp = os.path.join(*[job_id_fld, app_config['job_config_fld_name'],
-                                       app_config['job_other_config_fname']])
+    job_oth_config_fp = os.path.join(*[job_id_fld, app_config.JOB_CONFIG_FLD_NAME,
+                                       app_config.JOB_OTHER_CONFIG_FNAME])
 
     with open(job_oth_config_fp, mode='r') as f:
         othr_config = json.load(f)
@@ -32,7 +32,7 @@ def update_running_job_status(job_id, status):
 def get_job_status_detail(job_id, detail_type):
     job_config_fld_path = get_job_config_fld_path(job_id)
     job_oth_config_fp = os.path.join(job_config_fld_path,
-                                     app_config['job_other_config_fname'])
+                                     app_config.JOB_OTHER_CONFIG_FNAME)
 
     with open(job_oth_config_fp, mode='r') as f:
         othr_config = json.load(f)
@@ -44,9 +44,9 @@ def get_job_status_detail(job_id, detail_type):
 
 
 def get_job_config_fld_path(job_id):
-    jobs_fld = app_config['jobs_folder']
+    jobs_fld = app_config.ALL_JOBS_FOLDER
     job_id_fld = os.path.join(jobs_fld, job_id)
-    job_config_fld_path = os.path.join(job_id_fld, app_config['job_config_fld_name'])
+    job_config_fld_path = os.path.join(job_id_fld, app_config.JOB_CONFIG_FLD_NAME)
 
     return job_config_fld_path
 

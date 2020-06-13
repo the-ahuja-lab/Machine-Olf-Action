@@ -220,7 +220,6 @@ class CompoundSimilarity:
 
         fin_novel_df = novel_df[["DB_Compound", "DB_SMILES"]].drop_duplicates(subset='DB_Compound', keep='first')
 
-        # TODO change name Ligand to Compound everywhere
         fin_novel_df = fin_novel_df.rename(columns={'DB_Compound': 'CNAME', 'DB_SMILES': 'SMILES'})
         fin_novel_df = fin_novel_df.reset_index(drop=True)
         fin_novel_df = fin_novel_df.sort_values('CNAME')
@@ -230,5 +229,3 @@ class CompoundSimilarity:
         #                     index=False)
 
         return novel_df, fin_novel_df
-
-        # TODO handle prints here

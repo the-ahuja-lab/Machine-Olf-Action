@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 from shutil import copy
 
-from AppConfig import app_config
+import AppConfig as app_config
 from ml_pipeline.settings import APP_ROOT
 import ml_pipeline.utils.Helper as helper
 
@@ -23,7 +23,7 @@ def create_job(job_config_json, user_file, is_example_job):
     """
 
     logger.debug("Inside create job with is_example_job flag as: {}".format(is_example_job))
-    all_jobs_fld = app_config['jobs_folder']
+    all_jobs_fld = app_config.ALL_JOBS_FOLDER
     logger.debug("All jobs folder location: {}".format(all_jobs_fld))
 
     # create a job id here
@@ -34,68 +34,38 @@ def create_job(job_config_json, user_file, is_example_job):
     job_fld = os.path.join(all_jobs_fld, job_id)
     os.makedirs(job_fld, exist_ok=True)
 
-    config_fld_path = os.path.join(job_fld, app_config['job_config_fld_name'])
-    log_fld_path = os.path.join(*[job_fld, app_config['job_config_fld_name'], app_config['job_logs_fld_name']])
-    data_fld_path = os.path.join(job_fld, app_config['job_data_fld_name'])
-    results_fld_path = os.path.join(job_fld, app_config['job_results_fld_name'])
+    config_fld_path = os.path.join(job_fld, app_config.JOB_CONFIG_FLD_NAME)
+    log_fld_path = os.path.join(*[job_fld, app_config.JOB_CONFIG_FLD_NAME, app_config.JOB_LOGS_FLD_NAME])
+    data_fld_path = os.path.join(job_fld, app_config.JOB_DATA_FLD_NAME)
+    results_fld_path = os.path.join(job_fld, app_config.JOB_RESULTS_FLD_NAME)
 
-    step0 = os.path.join(data_fld_path, app_config['user_ip_fld_name'])
+    step0 = os.path.join(data_fld_path, app_config.USER_IP_FLD_NAME)
     os.makedirs(step0, exist_ok=True)
 
-    # user_data_csv = os.path.join(APP_ROOT, *["static", "user_data.csv"])
-    # copy(user_data_csv, step0)
-
     if not is_example_job:
-        user_file.save(os.path.join(step0, app_config['user_ip_fname']))
+        user_file.save(os.path.join(step0, app_config.USER_IP_FNAME))
     else:
-        user_data_csv = os.path.join(APP_ROOT, *["static", "user_ip", "or1a1", app_config['user_ip_fname']])
+        user_data_csv = os.path.join(APP_ROOT, *["static", "user_ip", "or1a1", app_config.USER_IP_FNAME])
         copy(user_data_csv, step0)
-
-    # TODO remove this from here and add it to respective stage start location
-    # step1 = os.path.join(data_fld_path, "step1")
-    # os.makedirs(step1, exist_ok=True)
-
-    # padel_csv = os.path.join(APP_ROOT, *["static", "FG_Padel.csv"])
-    # copy(padel_csv, step1)
-
-    # step2 = os.path.join(data_fld_path, "step2")
-    # os.makedirs(step2, exist_ok=True)
-
-    # step3 = os.path.join(data_fld_path, "step3")
-    # os.makedirs(step3, exist_ok=True)
-
-    # step4 = os.path.join(data_fld_path, "step4")
-    # os.makedirs(step4, exist_ok=True)
-
-    # step5 = os.path.join(data_fld_path, "step5")
-    # os.makedirs(step5, exist_ok=True)
-
-    # step6 = os.path.join(data_fld_path, "step6")
-    # os.makedirs(step6, exist_ok=True)
 
     os.makedirs(config_fld_path, exist_ok=True)
     os.makedirs(log_fld_path, exist_ok=True)
     os.makedirs(data_fld_path, exist_ok=True)
     os.makedirs(results_fld_path, exist_ok=True)
 
-    json_config_file_path = os.path.join(config_fld_path, app_config['job_config_fname'])
+    json_config_file_path = os.path.join(config_fld_path, app_config.JOB_CONFIG_FNAME)
     with open(json_config_file_path, 'w', encoding='utf-8') as f:
         json.dump(job_config_json, f, ensure_ascii=False, indent=4)
 
-    init_status = app_config["job_init_status"]  # TODO change it to "job created" instead of "read_data"
-
-    # status_file_path = os.path.join(config_fld_path, app_config['job_status_fname'])
-    # with open(status_file_path, 'w', encoding='utf-8') as f:
-    #     f.write(init_status)
+    init_status = app_config.JOB_INIT_STATUS
 
     othr_job_config = {}
     othr_job_config['job_id'] = job_id
-    othr_job_config['jd_text'] = job_config_json["job_description"]  # TODO consider removing job description from here
-    othr_job_config['job_pid'] = ""  # TODO set it later when spwanning new process from job
+    othr_job_config['jd_text'] = job_config_json["job_description"]
     othr_job_config['status'] = init_status
     othr_job_config['job_run_status'] = ""
 
-    oth_config_file_path = os.path.join(config_fld_path, app_config['job_other_config_fname'])
+    oth_config_file_path = os.path.join(config_fld_path, app_config.JOB_OTHER_CONFIG_FNAME)
     with open(oth_config_file_path, 'w', encoding='utf-8') as f:
         json.dump(othr_job_config, f, ensure_ascii=False, indent=4)
 
@@ -112,20 +82,19 @@ def get_job_details(job_id):
     job_config - dictionary from user uploaded json, job_details - map with other job folder related params
     """
     job_details = {}
-    jobs_fld = app_config['jobs_folder']
+    jobs_fld = app_config.ALL_JOBS_FOLDER
     job_id_fld = os.path.join(jobs_fld, job_id)
 
     job_details['job_fld_path'] = job_id_fld
-    job_details['job_config_path'] = os.path.join(job_id_fld, app_config['job_config_fld_name'])
-    job_details['job_data_path'] = os.path.join(job_id_fld, app_config['job_data_fld_name'])
-    job_details['job_results_path'] = os.path.join(job_id_fld, app_config['job_results_fld_name'])
+    job_details['job_config_path'] = os.path.join(job_id_fld, app_config.JOB_CONFIG_FLD_NAME)
+    job_details['job_data_path'] = os.path.join(job_id_fld, app_config.JOB_DATA_FLD_NAME)
+    job_details['job_results_path'] = os.path.join(job_id_fld, app_config.JOB_RESULTS_FLD_NAME)
     job_details['job_log_path'] = os.path.join(
-        *[job_id_fld, app_config['job_config_fld_name'], app_config['job_logs_fld_name']])
-    job_details['job_oth_config_path'] = os.path.join(*[job_id_fld, app_config['job_config_fld_name'],
-                                                        app_config['job_other_config_fname']])
+        *[job_id_fld, app_config.JOB_CONFIG_FLD_NAME, app_config.JOB_LOGS_FLD_NAME])
+    job_details['job_oth_config_path'] = os.path.join(*[job_id_fld, app_config.JOB_CONFIG_FLD_NAME,
+                                                        app_config.JOB_OTHER_CONFIG_FNAME])
 
-    config_fp = os.path.join(job_id_fld, app_config['job_config_fld_name'], app_config['job_config_fname'])
-    # status_fp = os.path.join(job_id_fld, app_config['job_config_fld_name'], app_config['job_status_fname'])
+    config_fp = os.path.join(job_id_fld, app_config.JOB_CONFIG_FLD_NAME, app_config.JOB_CONFIG_FNAME)
     status_fp = job_details['job_oth_config_path']
 
     # TODO consider adding user_config validation here too
@@ -133,7 +102,6 @@ def get_job_details(job_id):
         json_str = f.read()
         job_config = helper.create_job_config_object(json_str)
 
-    # TODO consider read status from otherconfig json instead of status.txt file
     with open(status_fp) as f:
         other_configs = json.load(f)
         status = other_configs['status']

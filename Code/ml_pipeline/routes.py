@@ -12,7 +12,7 @@ import ml_pipeline.utils.Helper as helper
 
 from ml_pipeline.utils.WSLogViewer import start_log_viewer
 
-from AppConfig import app_config
+import AppConfig as app_config
 from ListAllJobs import ListAllJobs
 from ManageJob import create_job as createjob
 from ValidateConfig import check_if_valid_job_config, allowed_file
@@ -82,7 +82,7 @@ def start_or_resume_job():
         if running_jobs_details[job_id][0] == "Running":
             error = "Job already in running queue, cannot start it again."
         else:
-            print("Status is not running, start job again")
+            # print("Status is not running, start job again")
             error = None
     elif len(running_jobs_details) >= 2:
         running_jobs = ""
@@ -162,7 +162,7 @@ def stop_running_job():
             if job_id in running_jobs_details:
                 del running_jobs_details[job_id]
 
-                print("Updating status to file")
+                # print("Updating status to file")
                 helper.update_running_job_status(job_id, "Stopped")
         else:
             error = "Job is not running, cannot stop it."
@@ -175,13 +175,13 @@ def stop_running_job():
     return redirect(url_for("view_all_jobs"))
 
 
-job_files_index = AutoIndex(app, app_config['jobs_folder'])
+job_files_index = AutoIndex(app, app_config.ALL_JOBS_FOLDER)
 
 
 @app.route("/view-job-files")
 @app.route('/view-job-files/<path:path>')
 def view_job_files(path='.'):
-    print("Path ", path)
+    # print("Path ", path)
     return job_files_index.render_autoindex(path=path)
 
 
@@ -222,10 +222,10 @@ def download_db(filename):
 @app.route("/update_db_paths", methods=['POST'])
 def update_db_paths():
     if request.method == 'POST':
-        print("Inside update_db_paths")
+        # print("Inside update_db_paths")
         db_paths_form = request.form
         db_paths_form_json = db_paths_form.to_dict()
-        print(db_paths_form_json)
+        # print(db_paths_form_json)
 
         error, app_config_dict = check_if_valid_app_config(db_paths_form_json)
 
@@ -254,7 +254,7 @@ def show_job_logs():
 
     if not job_id is None:
 
-        all_jobs_fld = app_config['jobs_folder']
+        all_jobs_fld = app_config.ALL_JOBS_FOLDER
 
         if log_type == "debug":
             fn = "run_debug.log"
@@ -299,7 +299,7 @@ def fetch_job_details():
         job_details = {}
         job_details['job_id'] = job_id
         job_details['job_run_status'] = job_run_status
-        job_details['job_last_status'] = job_status
+        job_details['job_last_status'] = app_config.JOB_STATUS_LABELS[job_status]
         job_details['job_desc'] = job_desc
 
         # return jsonify(error=False, job_details=job_details)

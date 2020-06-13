@@ -16,10 +16,10 @@ from rdkit import Chem
 
 from ml_pipeline.settings import APP_STATIC
 import MLPipeline
-from AppConfig import app_config
+import AppConfig as app_config
 import ml_pipeline.utils.Helper as helper
 
-DATA_FLD_NAME = app_config['fg_fld_name']
+DATA_FLD_NAME = app_config.FG_FLD_NAME
 
 
 class FeatureGeneration:
@@ -39,11 +39,11 @@ class FeatureGeneration:
             step1 = os.path.join(self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME)
             os.makedirs(step1, exist_ok=True)
 
-            if self.ml_pipeline.status == app_config["step0_status"]:  # resuming at step 1
+            if self.ml_pipeline.status == app_config.STEP0_STATUS:  # resuming at step 1
                 if self.ml_pipeline.data is None:  # resuming from stop
                     self.jlogger.info("Resuming from step 1 of read user data")
-                    user_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], app_config['user_ip_fld_name'],
-                                                app_config['user_ip_fname'])
+                    user_data_fp = os.path.join(ml_pipeline.job_data['job_data_path'], app_config.USER_IP_FLD_NAME,
+                                                app_config.USER_IP_FNAME)
 
                     # Assuming data is already validated
                     data = pd.read_csv(user_data_fp)
@@ -69,7 +69,7 @@ class FeatureGeneration:
             self.write_mordred_features_to_csv(mordred_df)
 
         if self.is_train:
-            updated_status = app_config["step1_status"]
+            updated_status = app_config.STEP1_STATUS
 
             job_oth_config_fp = self.ml_pipeline.job_data['job_oth_config_path']
             helper.update_job_status(job_oth_config_fp, updated_status)
@@ -153,19 +153,20 @@ class FeatureGeneration:
             self.jlogger.debug("Genertaing Padel Features for datapoint {}".format(i))
             try:
                 temp = test1["SMILES"][i]
-                descriptors = from_smiles(temp, timeout=30)
+                descriptors = from_smiles(temp, timeout=60)
             except RuntimeError:
                 self.jlogger.error(
-                    "Padel feature generation failed, trying again with increased timeout of 60 secs, datapoint {}".format(
+                    "Padel feature generation failed with timeout of 60 secs, datapoint {}".format(
                         i))
-                try:
-                    temp = test1["SMILES"][i]
-                    descriptors = from_smiles(temp, timeout=60)
-                except RuntimeError:
-                    self.jlogger.exception(
-                        "Padel feature generation failed on 2nd retry of 60secs, ignoring this datapoint {}".format(
-                            i))
-                    continue
+                continue
+                # try:
+                #     temp = test1["SMILES"][i]
+                #     descriptors = from_smiles(temp, timeout=60)
+                # except RuntimeError:
+                #     self.jlogger.exception(
+                #         "Padel feature generation failed on 2nd retry of 60secs, ignoring this datapoint {}".format(
+                #             i))
+                #     continue
 
             if i == 0:
                 df = pd.DataFrame(descriptors, columns=descriptors.keys(), index=[0])
@@ -266,16 +267,16 @@ class FeatureGeneration:
 
     def write_padel_features_to_csv(self, df):
         padel_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
-                                        app_config["fg_padel_fld_name"]])
+                                        app_config.FG_PADEL_FLD_NAME])
         os.makedirs(padel_fld_path, exist_ok=True)
 
-        padel_file_path = os.path.join(padel_fld_path, app_config["fg_padel_fname"])
+        padel_file_path = os.path.join(padel_fld_path, app_config.FG_PADEL_FNAME)
         df.to_csv(padel_file_path, index=False)
 
     def write_mordred_features_to_csv(self, df):
         mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
-                                          app_config["fg_mordred_fld_name"]])
+                                          app_config.FG_MORDRED_FLD_NAME])
         os.makedirs(mordred_fld_path, exist_ok=True)
 
-        mordred_file_path = os.path.join(mordred_fld_path, app_config["fg_mordred_fname"])
+        mordred_file_path = os.path.join(mordred_fld_path, app_config.FG_MORDRED_FNAME)
         df.to_csv(mordred_file_path, index=False)

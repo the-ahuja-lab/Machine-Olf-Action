@@ -62,7 +62,7 @@ class Classification:
 
             # folder path to save output of preprocessed padel features classification data
             clf_padel_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
-                                               app_config.FG_PADEL_FLD_NAME])
+                                                app_config.FG_PADEL_FLD_NAME])
             self.ml_pipeline.fg_clf_fld_path = clf_padel_fld_path
             os.makedirs(self.ml_pipeline.fg_clf_fld_path, exist_ok=True)
 
@@ -89,7 +89,7 @@ class Classification:
 
             # folder path to save output of preprocessed mordred features classification data
             clf_mordred_fld_path = os.path.join(*[self.ml_pipeline.job_data['job_data_path'], DATA_FLD_NAME,
-                                                 app_config.FG_MORDRED_FLD_NAME])
+                                                  app_config.FG_MORDRED_FLD_NAME])
 
             self.ml_pipeline.fg_clf_fld_path = clf_mordred_fld_path
             os.makedirs(self.ml_pipeline.fg_clf_fld_path, exist_ok=True)
@@ -125,9 +125,11 @@ class Classification:
                 x_train = self.ml_pipeline.x_train
                 y_train = self.ml_pipeline.y_train
 
-                # TODO perform grid search here
-                clf = GradientBoostingClassifier(n_estimators=50, random_state=None, max_depth=2)
-                chosen_model = clf.fit(x_train, y_train)
+                # clf = GradientBoostingClassifier(n_estimators=50, random_state=None, max_depth=2)
+                grid_search_model = self.gbm_grid_search()
+                grid_search_model.fit(x_train, y_train)
+                chosen_model = grid_search_model.best_estimator_
+                self.jlogger.info(str(chosen_model))
             else:
                 manual_params = self.ml_pipeline.config.clf_gbm_manual
 
@@ -146,9 +148,11 @@ class Classification:
                 x_train = self.ml_pipeline.x_train
                 y_train = self.ml_pipeline.y_train
 
-                # TODO perform grid search here
-                clf = ExtraTreesClassifier(n_estimators=200, random_state=42, max_depth=10, n_jobs=-1)
-                chosen_model = clf.fit(x_train, y_train)
+                # clf = ExtraTreesClassifier(n_estimators=200, random_state=42, max_depth=10, n_jobs=-1)
+                grid_search_model = self.et_grid_search()
+                grid_search_model.fit(x_train, y_train)
+                chosen_model = grid_search_model.best_estimator_
+                self.jlogger.info(str(chosen_model))
             else:
                 manual_params = self.ml_pipeline.config.clf_gbm_manual
 
@@ -284,8 +288,8 @@ class Classification:
             'solver': ['sgd', 'adam'],
             'alpha': [0.0001, 0.05, 0.001, 0.01],
             'learning_rate': ['constant', 'adaptive']}
-        mlp = MLPClassifier(max_iter=1000, random_state=50)
-        clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=5, scoring='f1', verbose=2)
+        mlp = MLPClassifier(max_iter=1000, random_state=50, n_jobs=-1)
+        clf = GridSearchCV(mlp, parameter_space, cv=5, scoring='f1', verbose=2)
         return clf
 
     def RF_GridSearch(self):
@@ -304,5 +308,21 @@ class Classification:
                        'bootstrap': bootstrap}
         rf = RandomForestClassifier()
         rf_random = RandomizedSearchCV(estimator=rf, param_distributions=random_grid, n_iter=100, cv=5, verbose=2,
-                                       random_state=50, n_jobs=-1)
+                                       random_state=50, n_jobs=-1, scoring="f1")
         return rf_random
+
+    def gbm_grid_search(self):
+        n_estimators = [int(x) for x in np.arange(start=10, stop=510, step=10)]
+        max_depth = [int(x) for x in np.arange(start=2, stop=20, step=2)]
+        param_grid = {'n_estimators': n_estimators, 'max_depth': max_depth}
+        gbm = GradientBoostingClassifier(random_state=None)
+        clf = GridSearchCV(gbm, param_grid, cv=5, scoring='f1', verbose=3, n_jobs=-1)
+        return clf
+
+    def et_grid_search(self):
+        n_estimators = [int(x) for x in np.arange(start=10, stop=510, step=10)]
+        max_depth = [int(x) for x in np.arange(start=2, stop=20, step=2)]
+        param_grid = {'n_estimators': n_estimators, 'max_depth': max_depth}
+        et = ExtraTreesClassifier(random_state=42, n_jobs=-1)
+        clf = GridSearchCV(et, param_grid, cv=5, scoring='f1', verbose=3)
+        return clf

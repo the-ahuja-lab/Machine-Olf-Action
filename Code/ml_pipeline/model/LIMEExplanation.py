@@ -33,12 +33,6 @@ class LIMEExplanation:
         self.lime_explainer = None
         self.fg_fld_name = None
 
-        # # TODO change status from test_set_generation to test_set_prediction
-        # if self.ml_pipeline.status == app_config.STEP6_1_STATUS:  # resuming at step 6
-        #     self.fetch_train_data()
-        #
-        #     self.fg_fld_name = ""
-
     def fetch_train_data(self):
         if self.ml_pipeline.config.fs_boruta_flg:
             lime_data_fld_path = os.path.join(

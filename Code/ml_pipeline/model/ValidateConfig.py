@@ -35,9 +35,6 @@ def validate_error_form_fields(config_form_dict):
 
 
 def check_if_valid_job_config(config_user_dict):
-    # TODO - Perfrom validations on config like Validate if atleast one feature selection technique present
-    # print("Config ", config_user_dict)
-
     error, config_user_dict = validate_error_form_fields(config_user_dict)
     return error, config_user_dict
 
