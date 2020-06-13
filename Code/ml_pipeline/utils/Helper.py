@@ -2,6 +2,7 @@ import json
 from collections import namedtuple
 import os
 import AppConfig as app_config
+import platform
 
 
 def update_job_status(job_status_fp, status):
@@ -75,3 +76,10 @@ def infer_th_from_file_name(fname, sim_metric, ext):
     sm_end_index = fname.index(sim_metric) + len(sim_metric)
     ext_start_index = fname.index(ext)
     return fname[sm_end_index: ext_start_index]
+
+
+def get_os_type():
+    os = platform.system()
+    os_lower = os.lower()
+    print("OS is {}".format(os))
+    return os_lower
