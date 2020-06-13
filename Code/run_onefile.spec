@@ -2,6 +2,7 @@
 import sys
 from os import path
 import platform
+from pathlib import Path
 
 def get_os_type():
     os = platform.system()
@@ -31,6 +32,10 @@ elif os_type.startswith("darwin"):
     added_files.append(("jre8/mac","jre8/mac"))
     ico_path = "ml_pipeline/static/images/ml_olfa_logo.icns"
 elif os_type.startswith("linux"):
+    lib_abs_path = Path(site_packages).parent.parent
+    print("lib_abs_path linux ", lib_abs_path)
+    added_files.append((os.path.join(lib_abs_path,'libiomp5.so'), '.'))
+    added_files.append((os.path.join(lib_abs_path,'libpython3.6m.so'),'.'))
     added_files.append(("jre8/linux","jre8/linux"))
     ico_path = "ml_pipeline/static/images/ml_olfa_logo.png"
 

@@ -5,6 +5,7 @@ from collections import OrderedDict
 from csv import DictReader
 from datetime import datetime
 import shutil
+from pathlib import Path
 
 # PaDELPy imports
 from padelpy import from_smiles
@@ -18,6 +19,8 @@ from ml_pipeline.settings import APP_STATIC
 import MLPipeline
 import AppConfig as app_config
 import ml_pipeline.utils.Helper as helper
+
+from ml_pipeline.settings import APP_ROOT
 
 DATA_FLD_NAME = app_config.FG_FLD_NAME
 
@@ -240,12 +243,14 @@ class FeatureGeneration:
 
             os_type = helper.get_os_type()
 
+            app_temp_path = Path(APP_ROOT).parent
+
             if os_type.startswith("windows"):
-                java_path = "jre8/win/bin/java.exe"
+                java_path = os.path.join(*[app_temp_path, "jre8", "win", "bin", "java.exe"])
             elif os_type.startswith("darwin"):
-                java_path = "jre8/mac/Contents/Home/bin/java"
+                java_path = os.path.join(*[app_temp_path, "jre8", "mac", "Contents", "Home", "bin", "java"])
             elif os_type.startswith("linux"):
-                java_path = "jre8/linux/bin/java"
+                java_path = os.path.join(*[app_temp_path, "jre8", "linux", "bin", "java"])
             else:
                 java_path = None
 
