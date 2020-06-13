@@ -103,7 +103,7 @@ class Preprocessing:
         try:
             data = data.drop("SMILES", axis=1)
         except:
-            self.jlogger.error("Don't have Smile's Column")
+            self.jlogger.warning("Don't have Smile's Column")
         data = self.coerce_df_columns_to_numeric(data, data.columns)
         return data, data_labels
 

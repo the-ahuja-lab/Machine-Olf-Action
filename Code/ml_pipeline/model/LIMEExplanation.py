@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 import matplotlib.pyplot as plt
+plt.switch_backend("Agg")
 import matplotlib.backends.backend_pdf
 
 from sklearn.base import clone

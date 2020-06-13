@@ -29,7 +29,14 @@ $(function() {
 
 function create_ws(job_id, lt) {
 
-    ws_url = 'ws://127.0.0.1:8765/logview' + "?job_id=" + job_id + "&lt=" + lt
+    host = window.location.hostname
+    protocol = "ws"
+    port = "8765"
+    target = "/logview"
+
+    ws_host = protocol + "://" + host + ":" + port + target
+
+    ws_url = ws_host + "?job_id=" + job_id + "&lt=" + lt
 
     console.log("ws_url ", ws_url)
     console.log("lt ", lt)
