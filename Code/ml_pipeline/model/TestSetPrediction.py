@@ -49,7 +49,7 @@ class TestSetPrediction:
 
         self.ml_pipeline.status = updated_status
 
-        self.jlogger.info("Generated test set preprocessing completed successfully")
+        self.jlogger.info("Generated test set prediction completed successfully")
 
     def initialize_lime_explanation(self):
         if self.ml_pipeline.config.exp_lime_flg:

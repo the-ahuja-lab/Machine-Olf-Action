@@ -1,30 +1,24 @@
+import os
 from flask import render_template, url_for, flash, redirect, request, send_from_directory, jsonify
 from werkzeug.utils import secure_filename
 
 from pebble import concurrent
 from concurrent.futures._base import CancelledError
 
+from MLPipeline import MLPipeline
+from ml_pipeline.settings import APP_STATIC
 from ml_pipeline import app, running_jobs_details, log_viewer_app
 import ml_pipeline.utils.Helper as helper
 
-# import subprocess
-from subprocess import Popen, PIPE, STDOUT
-import psutil
-import signal
-
 from ml_pipeline.utils.WSLogViewer import start_log_viewer
 
-from flask_autoindex import AutoIndex
 from AppConfig import app_config
 from ListAllJobs import ListAllJobs
-
 from ManageJob import create_job as createjob
 from ValidateConfig import check_if_valid_job_config, allowed_file
 from UpdateAppConfig import check_if_valid_app_config, update_app_config, get_app_config
-from MLPipeline import MLPipeline
 
-from ml_pipeline.settings import APP_STATIC
-import os
+from flask_autoindex import AutoIndex
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -131,6 +125,7 @@ def job_done_callback(future):
     except CancelledError as ce:
         print("CancelledError Exception inside job_done_callback ", ce)
     except Exception as e:
+        helper.update_running_job_status(job_id, "Errored")
         print("Exception inside job_done_callback ", e)
 
 
@@ -151,7 +146,7 @@ def stop_running_job():
     if job_id in running_jobs_details.keys():
         job_status, job_future = running_jobs_details[job_id]
 
-        print("@@@@@ ", job_status, job_future)
+        print("Inside stop_running_job ", job_status, job_future)
         if not job_future is None:
             job_run_status = job_future.running()
         print("Inside stop_running_job with job id {} and job_run_status {}".format(job_id, job_run_status))
@@ -169,7 +164,6 @@ def stop_running_job():
 
                 print("Updating status to file")
                 helper.update_running_job_status(job_id, "Stopped")
-                # TODO write stopped status here in job_status file
         else:
             error = "Job is not running, cannot stop it."
     else:
@@ -315,43 +309,6 @@ def fetch_job_details():
         return render_template("log_viewer.html", show_logs=False)
 
 
-# def create_log_viewer_process(log_fld):
-#     if not len(log_viewer_app) == 0 and "pid" in log_viewer_app.keys():
-#         pid = log_viewer_app['pid']
-#         if not pid is None:
-#             if psutil.pid_exists(pid):
-#                 process = psutil.Process(pid)
-#
-#                 process_name = process.name()
-#                 print("pid ", pid, process.cmdline(), process.status())
-#                 print("Process already exists")
-#
-#                 if process.status() == "zombie":
-#                     os.kill(pid, signal.SIGTERM)
-#                 else:
-#                     return False
-#
-#     print("Log Viewer Process does not exist, creating new proccess ")
-#     print("sysexecutable path ", sys.executable)
-#     proc = Popen(['python', 'ml_pipeline/utils/WSLogViewer.py', '--log_fld', log_fld], stdout=None, stderr=None,
-#                  stdin=None, close_fds=True
-#                  )
-#     # print(proc.stdout.readline())
-#     print("process id ", proc.pid)
-#     log_viewer_app['pid'] = proc.pid
-#
-#     # print("Communicate from process", proc.communicate())
-#     # while (True):
-#     #     if proc.poll() is not None:
-#     #         print("Inside poll communicate")
-#     #         print(proc.communicate())
-#     #     else:
-#     #         print("Killing process")
-#     #         # proc.kill()
-#     #         # log_viewer_app['pid'] = None
-#     #         break
-#     return True
-
 def create_log_viewer_process(log_fld):
     if not len(log_viewer_app) == 0 and "lv_future" in log_viewer_app.keys():
         future = log_viewer_app['lv_future']
@@ -368,11 +325,12 @@ def create_log_viewer_process(log_fld):
 
     return True
 
+
 @concurrent.process(daemon=False)
 def run_log_viewer(log_fld):
     print('Starting log viewer process in process [pid:%s]' % (os.getpid()))
     pid = os.getpid()
-    start_log_viewer(log_fld, "127.0.0.1", 8765)
+    start_log_viewer(log_fld, "0.0.0.0", 8765)
     return pid
 
 

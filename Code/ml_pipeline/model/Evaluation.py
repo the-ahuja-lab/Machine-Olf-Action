@@ -12,6 +12,7 @@ from sklearn.metrics import roc_curve, auc
 from sklearn.ensemble import BaggingClassifier
 
 import matplotlib.pyplot as plt
+plt.switch_backend("Agg")
 import matplotlib.backends.backend_pdf
 
 import seaborn as sns
@@ -136,10 +137,10 @@ class Evaluation:
     def save_all_model_plots(self, np_ypreds, np_ytrues, np_yprobas, title):
         self.print_confusion_matrix(np_ytrues, np_ypreds, "Confusion Matrix - " + title)
 
-        gt = np_ytrues.tolist()
-        probs = np_yprobas[:, 1].tolist()
-        fpr, tpr = self.get_smoothened_fpr_tpr_from_pROC(gt, probs)
-        self.plot_r_smoothened_curve(fpr, tpr, "ROC Curve - " + title)
+        #gt = np_ytrues.tolist()
+        #probs = np_yprobas[:, 1].tolist()
+        # fpr, tpr = self.get_smoothened_fpr_tpr_from_pROC(gt, probs)
+        # self.plot_r_smoothened_curve(fpr, tpr, "ROC Curve - " + title)
 
         self.print_roc_curve(np_ytrues, np_ypreds, np_yprobas, "ROC Curve - " + title)
         res = self.evaluate_model(np_ypreds, np_ytrues, np_yprobas)

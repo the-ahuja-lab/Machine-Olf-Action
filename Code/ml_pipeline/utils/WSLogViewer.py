@@ -161,6 +161,7 @@ def start_log_viewer(log_fld, host, port):
 
     # allowed_prefixes.extend(args.prefix)
     log_folder = log_fld
+    asyncio.set_event_loop(asyncio.new_event_loop())
     start_server = websockets.serve(view_log, host, port)
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()

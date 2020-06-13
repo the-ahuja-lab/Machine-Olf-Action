@@ -221,8 +221,8 @@ class CrossValidation:
 
             gt = np_ytrues.tolist()
             probs = np_yprobas[:, 1].tolist()
-            fpr, tpr = evaluation.get_smoothened_fpr_tpr_from_pROC(gt, probs)
-            evaluation.plot_r_smoothened_curve(fpr, tpr, "ROC Curve - " + model_name)
+            # fpr, tpr = evaluation.get_smoothened_fpr_tpr_from_pROC(gt, probs)
+            # evaluation.plot_r_smoothened_curve(fpr, tpr, "ROC Curve - " + model_name)
 
             evaluation.print_roc_curve(np_ytrues, np_ypreds, np_yprobas, "ROC Curve - " + model_name)
             res = evaluation.evaluate_model(np_ypreds, np_ytrues, np_yprobas)
