@@ -134,13 +134,13 @@ class Preprocessing:
             data[data == np.inf] = np.nan
             data = data.replace(r'^\s*$', np.nan, regex=True)
 
-            na_sum_series = data.isna().sum()
+            na_sum_series = data.isna().mean()
             org_data = data.copy()
 
             NAN_data = pd.DataFrame({0: na_sum_series.index, 1: na_sum_series.values})
             dropped = []
             for i in range(len(NAN_data)):
-                if NAN_data.iloc[i][1] >= th:  # TODO check if sum or sum/length i.e. avg greater than threshold
+                if NAN_data.iloc[i][1] >= (th / 100):  # TODO check if sum or sum/length i.e. avg greater than threshold
                     dropped.append(NAN_data.iloc[i][0])
 
             data = data.drop(dropped, axis=1)
@@ -155,7 +155,7 @@ class Preprocessing:
 
                 NAN_fld_path = self.fg_pp_fld_path
                 NAN_file_path = os.path.join(NAN_fld_path, DATA_FILE_NAME_PRFX + "FeatureWise_NANs.csv")
-                org_data.isna().sum().to_csv(NAN_file_path,
+                org_data.isna().mean().to_csv(NAN_file_path,
                                              header=False)
 
                 # save also the dropped columns list

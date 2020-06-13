@@ -108,7 +108,7 @@ class TestSetPrediction:
         try:
             prob = model.predict_proba(padel_test_df)
         except:
-            print("This model does not support probability scores")
+            self.jlogger.warning("This model does not support probability scores")
             prob = []
         padel_test_df['CNAME'] = all_test_compounds
 

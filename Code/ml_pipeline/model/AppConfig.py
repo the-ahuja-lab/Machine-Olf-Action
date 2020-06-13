@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 """
-This file has global application specific configuration stored in a map call app_config
+This file has global application specific configuration stored as properties
 """
 
 
@@ -30,38 +30,9 @@ def fetch_app_config_path():
     return fld_path
 
 
-app_config = {
-    # TODO change key jobs_folder to all_jobs_folder
-    "jobs_folder": fetch_all_jobs_path(),
+ALL_JOBS_FOLDER = fetch_all_jobs_path()
 
-    "job_config_fld_name": ".config",
-    "job_data_fld_name": "data",
-    "job_results_fld_name": "results",
-    "job_logs_fld_name": "logs",
-    "job_config_fname": "ml_ip_config.json",
-
-    # TODO check if status needs to be moved to other_config instead of status.txt
-    "job_status_fname": "status.txt",
-    "job_other_config_fname": "other_config.json",
-
-    "user_ip_fld_name": "step0",
-    "user_ip_fname": "user_data.csv",
-
-    "fg_fld_name": "step1",
-    "fg_fld_prefix": "FG",
-    "fg_padel_fname": "FG_Padel.csv",
-    "fg_mordred_fname": "FG_Mordred.csv",
-    "fg_padel_fld_name": "PaDEL",
-    "fg_mordred_fld_name": "Mordred",
-
-    "pp_fld_name": "step2",
-    "pp_fld_prefix": "PP_",
-
-    "job_init_status": "job_created",
-    "step0_status": "read_data",
-    "step1_status": "feature_generation"
-}
-
+JOB_INIT_STATUS = "job_created"
 STEP0_STATUS = "read_data"
 STEP1_STATUS = "feature_generation"
 STEP2_STATUS = "preprocessing"
@@ -72,8 +43,30 @@ STEP6_STATUS = "test_set_generation"
 STEP6_1_STATUS = "test_set_preprocessing"
 STEPS_COMPLETED_STATUS = "job_completed"
 
+JOB_STATUS_LABELS = {
+    "job_created": "Job Created",
+    "read_data": "Read User Data",
+    "feature_generation": "Feature Generation",
+    "preprocessing": "Pre-Processing",
+    "feature_selection": "Feature Selection",
+    "feature_extraction": "Feature Extraction",
+    "classification": "Classification",
+    "test_set_generation": "Test Set Generation",
+    "test_set_preprocessing": "Test Set Pre-Processing",
+    "job_completed": "Job Completed"
+}
+
+JOB_CONFIG_FLD_NAME = ".config"
+JOB_DATA_FLD_NAME = "data"
+JOB_RESULTS_FLD_NAME = "results"
+JOB_LOGS_FLD_NAME = "logs"
+JOB_CONFIG_FNAME = "ml_ip_config.json"
+JOB_OTHER_CONFIG_FNAME = "other_config.json"
+
+USER_IP_FLD_NAME = "step0"
+USER_IP_FNAME = "user_data.csv"
+
 FG_FLD_NAME = "step1"
-FG_FLD_PREFIX = "FG"
 FG_PADEL_FNAME = "FG_Padel.csv"
 FG_MORDRED_FNAME = "FG_Mordred.csv"
 FG_PADEL_FLD_NAME = "PaDEL"
@@ -119,5 +112,3 @@ TEMP_XTRAIN_FNAME = "train.csv"
 TEMP_XTEST_FNAME = "test.csv"
 TEMP_YTRAIN_FNAME = "train_labels.csv"
 TEMP_YTEST_FNAME = "test_labels.csv"
-
-# TODO clean this file and all other references

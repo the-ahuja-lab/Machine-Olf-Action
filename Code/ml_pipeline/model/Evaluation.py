@@ -154,7 +154,7 @@ class Evaluation:
 
         for i in range(n):
             if i % 100 == 0:
-                print("Completed Iter: " + str(i))
+                self.jlogger.debug("Completed Bagging Iter: " + str(i))
 
             clf = bc.estimators_[i]
 
@@ -383,7 +383,6 @@ class Evaluation:
 
         # plt.show()
 
-    # TODO Box Plot for Bagging
     def plot_box_plot_results(self, results, title):
         # global figcount
         # global Figureset

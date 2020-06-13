@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 import json
 
-from AppConfig import app_config
+import AppConfig as app_config
 from ml_pipeline import running_jobs_details
 import ml_pipeline.utils.Helper as helper
 
@@ -19,7 +19,7 @@ class MLJob:
 class ListAllJobs:
 
     def __init__(self):
-        self.all_jobs_fld = app_config['jobs_folder']
+        self.all_jobs_fld = app_config.ALL_JOBS_FOLDER
 
     def get_all_jobs(self):
 
@@ -30,7 +30,7 @@ class ListAllJobs:
             if os.path.isdir(job_id_path):  # if directory
                 job_fld = os.path.join(self.all_jobs_fld, fld)
                 job_created_time = datetime.fromtimestamp(os.path.getctime(job_fld)).replace(microsecond=0)
-                job_last_status = self.get_job_status(fld)
+                job_last_status, job_last_status_label = self.get_job_status(fld)
                 job_desc = self.get_job_desc(fld)
 
                 job_run_status = self.get_job_run_status(fld, job_last_status)
@@ -41,7 +41,7 @@ class ListAllJobs:
                 # print("Job Status: ", job_status)
                 # print("Job Description : ", job_desc)
 
-                ml_job = MLJob(fld, job_last_status, job_desc, job_created_time, job_run_status)
+                ml_job = MLJob(fld, job_last_status_label, job_desc, job_created_time, job_run_status)
 
                 all_ml_jobs_listing.append(ml_job)
 
@@ -60,9 +60,11 @@ class ListAllJobs:
         job_status = helper.get_job_status_detail(job_id, "status")
 
         if job_status is None:
-            job_status = ""
+            job_status_label = ""
+        else:
+            job_status_label = app_config.JOB_STATUS_LABELS[job_status]
 
-        return job_status
+        return job_status, job_status_label
 
     def get_job_desc(self, job_id):
         job_description = helper.get_job_status_detail(job_id, "jd_text")
@@ -86,9 +88,9 @@ class ListAllJobs:
             else:
                 run_status = "Unknown"
         else:
-            if job_last_status == "job_created":
+            if job_last_status == app_config.JOB_INIT_STATUS:
                 run_status = "Not Started"
-            elif job_last_status == "job_completed":
+            elif job_last_status == app_config.STEPS_COMPLETED_STATUS:
                 run_status = "Completed"
             else:
                 job_run_status = helper.get_job_status_detail(job_id, "job_run_status")

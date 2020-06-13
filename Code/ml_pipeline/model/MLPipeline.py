@@ -30,7 +30,6 @@ class MLPipeline(BaseMLJob):
         self.y_train = None
         self.y_test = None
 
-        # TODO double -check is this right place to initialize job level logs
         self.jlogger = logging.get_job_logger(self.job_data['job_log_path'])
 
     def start(self):

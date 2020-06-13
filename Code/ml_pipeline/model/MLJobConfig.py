@@ -109,7 +109,7 @@ class MLJobConfig:
             self.fe_pca_flg = config.fe_pca_flg
             self.fe_pca_energy = config.fe_pca_energy
 
-            self.clf_gbm_flg = config.clf_svm_flg
+            self.clf_gbm_flg = config.clf_gbm_flg
             self.clf_gbm_auto = True
             self.clf_bagging_gbm = config.clf_bagging_gbm
             self.clf_bag_gbm_n = config.clf_bag_gbm_n
