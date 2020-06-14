@@ -2,6 +2,7 @@
 import sys
 from os import path
 import platform
+from pathlib import Path
 
 def get_os_type():
     os = platform.system()
