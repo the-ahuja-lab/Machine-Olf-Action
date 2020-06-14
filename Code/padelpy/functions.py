@@ -146,3 +146,4 @@ def from_mdl(mdl_file: str, output_csv: str=None, descriptors: bool=True,
     for row in rows:
         del row['Name']
     return rows
+
