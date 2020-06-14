@@ -32,6 +32,7 @@ def _popen_timeout(command: str, timeout: int) -> tuple:
     Returns:
         tuple: (stdout of process, stderr of process)
     '''
+
     # print("command.split() ", command, command.split())
     p = Popen(command.split(), stdout=PIPE, stderr=PIPE)
     if timeout is not None:
@@ -148,8 +149,6 @@ def padeldescriptor(maxruntime: int=-1, waitingjobs: int=-1, threads: int=-1,
         command += ' -tautomerlist {}'.format(tautomerlist)
     if usefilenameasmolname is True:
         command += ' -usefilenameasmolname'
-
-    # print("Command ", command)
 
     _, err = _popen_timeout(command, sp_timeout)
     if err != b'':
