@@ -11,8 +11,9 @@ from sklearn.metrics import roc_curve, auc
 
 from sklearn.ensemble import BaggingClassifier
 
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-plt.switch_backend("Agg")
 import matplotlib.backends.backend_pdf
 
 import seaborn as sns
