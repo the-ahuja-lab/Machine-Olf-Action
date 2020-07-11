@@ -230,7 +230,7 @@ class Evaluation:
         x_test = self.ml_pipeline.x_test
         y_test = self.ml_pipeline.y_test
 
-        bc = BaggingClassifier(base_estimator=clf, n_estimators=n, bootstrap=True, n_jobs=-1, random_state=42)
+        bc = BaggingClassifier(base_estimator=clf, n_estimators=n, bootstrap=True, random_state=42)
         bc.fit(x_train, y_train)
 
         clf_pkl_path = os.path.join(fld_path, DATA_FILE_NAME_PRFX + fld_name + ".pkl")
