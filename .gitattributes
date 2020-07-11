@@ -1,4 +1,6 @@
 Code/jre8/* linguist-vendored
 Code/ml_pipeline/static/js/bootstrap.min_4.3.1.js linguist-vendored
 Code/ml_pipeline/static/js/jquery.min_3.3.1.js linguist-vendored
-Code/ml_pipeline/static/js/jpopper.min_1.14.7.js linguist-vendored
+Code/ml_pipeline/static/js/popper.min_1.14.7.js linguist-vendored
+Code/ml_pipeline/static/css/jquery-ui_1.12.1.css linguist-vendored
+Code/ml_pipeline/static/css/bootstrap_4.3.1.css linguist-vendored
