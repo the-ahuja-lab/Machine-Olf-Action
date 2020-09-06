@@ -154,7 +154,7 @@ class FeatureGeneration:
 
         test1 = self.ml_pipeline.data
         for i in range(len(test1)):
-            self.jlogger.debug("Genertaing Padel Features for datapoint {}".format(i))
+            self.jlogger.debug("Generating Padel Features for datapoint {}".format(i))
             try:
                 temp = test1["SMILES"][i]
                 descriptors = from_smiles(temp, timeout=60, java_path=java_path)
