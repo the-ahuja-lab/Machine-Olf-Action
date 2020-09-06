@@ -288,8 +288,8 @@ class Classification:
             'solver': ['sgd', 'adam'],
             'alpha': [0.0001, 0.05, 0.001, 0.01],
             'learning_rate': ['constant', 'adaptive']}
-        mlp = MLPClassifier(max_iter=1000, random_state=50, n_jobs=-1)
-        clf = GridSearchCV(mlp, parameter_space, cv=5, scoring='f1', verbose=2)
+        mlp = MLPClassifier(max_iter=1000, random_state=50)
+        clf = GridSearchCV(mlp, parameter_space,  n_jobs=-1, cv=5, scoring='f1', verbose=2)
         return clf
 
     def RF_GridSearch(self):
