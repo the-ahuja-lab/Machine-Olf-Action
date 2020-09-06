@@ -1,0 +1,4 @@
+Code/jre8/* linguist-vendored
+Code/ml_pipeline/static/*/bootstrap* linguist-vendored
+Code/ml_pipeline/static/*/jquery* linguist-vendored
+Code/ml_pipeline/static/*/popper* linguist-vendored
