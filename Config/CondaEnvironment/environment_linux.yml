@@ -54,7 +54,6 @@ dependencies:
   - pandas=1.0.3=py36h0573a6f_0
   - patsy=0.5.1=py_0
   - pcre=8.43=he6710b0_0
-  - pillow=5.1.0=py36h3deb7b8_0
   - pip=20.0.2=py36_1
   - pixman=0.38.0=h7b6447c_0
   - pycrypto=2.6.1=py36h8c4c3a4_1004
@@ -85,9 +84,28 @@ dependencies:
   - zstd=1.3.7=h0b5b093_0
   - pip:
     - boruta==0.3
+    - chardet==3.0.4
+    - decorator==4.4.2
     - flask-autoindex==0.6.6
+    - flask-ngrok==0.0.25
     - flask-silk==0.2
     - future==0.18.2
+    - idna==2.9
+    - imagecodecs==2020.2.18
+    - imageio==2.8.0
+    - lime==0.2.0.0
+    - mordred==1.2.0
+    - networkx==2.4
     - padelpy==0.1.6
+    - pebble==4.5.3
+    - pillow==5.4.1
+    - psutil==5.7.0
+    - pywavelets==1.1.1
+    - requests==2.23.0
+    - scikit-image==0.17.2
+    - tifffile==2020.5.11
+    - tqdm==4.46.0
+    - urllib3==1.25.9
+    - websockets==6.0
 prefix: /home/mohit/anaconda3/envs/ip_soft_02
 

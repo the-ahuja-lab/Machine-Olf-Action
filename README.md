@@ -12,11 +12,11 @@ To run application using the source code
 1. Run "run.py" file to start the flask application server which then opens the application in your default browser.
 
 ### Config - contains confiuration files needed to run and buid the executables of application
-**environment.yml** - Conda environment file with list of packages to replicate environment on your machine  
-**Pyinstaller** - Details on how to create executable files of different platforms from the source code
+* **CondaEnvironment**- Contains OS specific conda environment file with list of packages to replicate environment on your machine  
+* **Pyinstaller** - Details on how to create executable files of different platforms from the source code
 
 ### Documents - documentation of the application
 Documentation related to the application
 
 ### Executables - executables of the application
-To directly run the application, go to Executables folder and download executable for the respective platform
+To directly run the application, go to Executables folder and download executable for the respective platform using the instructions provided in the "Download.md" file
