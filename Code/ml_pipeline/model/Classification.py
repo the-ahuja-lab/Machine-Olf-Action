@@ -1,9 +1,12 @@
 import os
 import pandas as pd
 import numpy as np
+from numpy import mean
+from numpy import std
 import random
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import KFold
 
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
@@ -12,8 +15,10 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import ExtraTreesClassifier
-
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
 import pickle
+import MLJobConfig as mlconfig
 
 import MLPipeline
 import AppConfig as app_config
@@ -120,19 +125,19 @@ class Classification:
     def apply_gbm(self):
 
         if self.ml_pipeline.config.clf_gbm_flg:
-
             if self.ml_pipeline.config.clf_gbm_auto:
                 x_train = self.ml_pipeline.x_train
                 y_train = self.ml_pipeline.y_train
-
+                cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
                 # clf = GradientBoostingClassifier(n_estimators=50, random_state=None, max_depth=2)
                 grid_search_model = self.gbm_grid_search()
+                grid_search_model.cv = cv_inner
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
+                scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
-            else:
-                manual_params = self.ml_pipeline.config.clf_gbm_manual
-
+                self.jlogger.info("MEAN F1 scores after nested CV ", mean(scores))
             evalclf = Evaluation.Evaluation(self.ml_pipeline)
             evalclf.evaluate_and_save_results(chosen_model, "gbm")
 
@@ -147,12 +152,16 @@ class Classification:
             if self.ml_pipeline.config.clf_et_auto:
                 x_train = self.ml_pipeline.x_train
                 y_train = self.ml_pipeline.y_train
-
+                cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
                 # clf = ExtraTreesClassifier(n_estimators=200, random_state=42, max_depth=10, n_jobs=-1)
                 grid_search_model = self.et_grid_search()
+                grid_search_model.cv = cv_inner
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
+                scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
+                self.jlogger.info("MEAN F1 scores after nested CV ", mean(scores))
             else:
                 manual_params = self.ml_pipeline.config.clf_gbm_manual
 
@@ -164,39 +173,41 @@ class Classification:
                 evalclf.evaluate_bagging_model(chosen_model, n, "et_bagging")
 
     def apply_svm(self):
-
         if self.ml_pipeline.config.clf_svm_flg:
-
             x_train = self.ml_pipeline.x_train
             y_train = self.ml_pipeline.y_train
-
+            cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+            cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
             if self.ml_pipeline.config.clf_svm_auto:
                 grid_search_model = self.SVM_GridSearch()
+                grid_search_model.cv = cv_inner
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
+                scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
-            else:
-                manual_params = self.ml_pipeline.config.clf_svm_manual
-
+                self.jlogger.info("MEAN F1 scores after nested CV ",mean(scores))
             evalclf = Evaluation.Evaluation(self.ml_pipeline)
             evalclf.evaluate_and_save_results(chosen_model, "svm")
-
             if self.ml_pipeline.config.clf_bagging_svm:
                 n = self.ml_pipeline.config.clf_bag_svm_n
                 evalclf.evaluate_bagging_model(chosen_model, n, "svm_bagging")
 
     def apply_rf(self):
-
         if self.ml_pipeline.config.clf_rf_flg:
 
             x_train = self.ml_pipeline.x_train
             y_train = self.ml_pipeline.y_train
 
             if self.ml_pipeline.config.clf_rf_auto:
+                cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
                 grid_search_model = self.RF_GridSearch()
+                grid_search_model.cv = cv_inner
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
+                scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
+                self.jlogger.info("MEAN F1 scores after nested CV ", mean(scores))
             else:
                 manual_params = self.ml_pipeline.config.clf_svm_manual
 
@@ -250,17 +261,20 @@ class Classification:
                 evalclf.evaluate_bagging_model(chosen_model, n, "gnb_bagging")
 
     def apply_mlp(self):
-
         if self.ml_pipeline.config.clf_mlp_flg:
-
             x_train = self.ml_pipeline.x_train
             y_train = self.ml_pipeline.y_train
 
             if self.ml_pipeline.config.clf_mlp_auto:
+                cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
                 grid_search_model = self.MLP_GridSearch()
+                grid_search_model.cv = cv_inner
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
+                scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
+                self.jlogger.info("MEAN F1 scores after nested CV ", mean(scores))
             else:
                 manual_params = self.ml_pipeline.config.clf_svm_manual
 
@@ -273,33 +287,80 @@ class Classification:
 
     def SVM_GridSearch(self):
         random.seed(50)
-        Cs = [0.0001, 0.001, 0.01, 0.1, 1, 10]
-        gammas = [0.000001, 0.0001, 0.001, 0.01, 0.1, 1, 10]
-        kernel = ['rbf', 'poly', 'linear']
+        if self.ml_pipeline.config.clf_hyp_man_c_svm:
+            Cs = self.ml_pipeline.config.svm_C
+        if self.ml_pipeline.config.clf_hyp_man_gamma_svm:
+            gammas = self.ml_pipeline.config.svm_gamma
+        if self.ml_pipeline.config.clf_hyp_man_kernel_svm:
+            kernel = self.ml_pipeline.config.svm_kernels
+        else:
+            Cs = [0.0001, 0.001, 0.01, 0.1, 1, 10]
+            gammas = [0.000001, 0.0001, 0.001, 0.01, 0.1, 1, 10]
+            kernel = ['rbf', 'poly', 'linear']
         param_grid = {'C': Cs, 'gamma': gammas, 'kernel': kernel}
         svm_clf = svm.SVC(probability=True)
         clf = GridSearchCV(svm_clf, param_grid, cv=5, n_jobs=-1, scoring='f1', verbose=3)
         return clf
 
     def MLP_GridSearch(self):
+        if self.ml_pipeline.config.clf_hyp_man_layers_mlp:
+            hidden_layers_mlp = self.ml_pipeline.config.mlp_hidden_layers_list
+        else:
+            hidden_layers_mlp = [(5, 5, 5), (20, 30, 50), (50, 50, 50), (50, 100, 50), (100,), (100, 100, 100),
+                                   (5, 2)]
+        if self.ml_pipeline.config.clf_hyp_man_activation_mlp:
+            activation_mlp = self.ml_pipeline.config.mlp_activation
+        else:
+            activation_mlp = ['tanh', 'relu']
+        if self.ml_pipeline.config.clf_hyp_man_solver_mlp:
+            solvers = self.ml_pipeline.config.mlp_solver
+        else:
+            solvers = ['sgd', 'adam']
+        if self.ml_pipeline.config.clf_hyp_man_alpha_mlp:
+            alphas = self.ml_pipeline.config.clf_hyp_alphas
+        else:
+            alphas = [0.0001, 0.05, 0.001, 0.01]
+        if self.ml_pipeline.config.clf_hyp_man_lr_rate_mlp:
+            learning_rates = self.ml_pipeline.config.mlp_lr
+        else:
+            learning_rates = ['constant', 'adaptive']
         parameter_space = {
-            'hidden_layer_sizes': [(5, 5, 5), (20, 30, 50), (50, 50, 50), (50, 100, 50), (100,), (100, 100, 100),
-                                   (5, 2)], 'activation': ['tanh', 'relu'],
-            'solver': ['sgd', 'adam'],
-            'alpha': [0.0001, 0.05, 0.001, 0.01],
-            'learning_rate': ['constant', 'adaptive']}
+            'hidden_layer_sizes': hidden_layers_mlp, 'activation': activation_mlp,
+            'solver': solvers,
+            'alpha': alphas,
+            'learning_rate': learning_rates}
         mlp = MLPClassifier(max_iter=1000, random_state=50)
         clf = GridSearchCV(mlp, parameter_space,  n_jobs=-1, cv=5, scoring='f1', verbose=2)
         return clf
 
     def RF_GridSearch(self):
-        n_estimators = [int(x) for x in np.linspace(start=2, stop=100, num=10)]
+        if self.ml_pipeline.config.clf_hyp_man_depth_oth_rf:
+            estimators = self.ml_pipeline.config.clf_hyp_man_estimate_oth_rf
+        else:
+            estimators = 100
+        if self.ml_pipeline.config.clf_hyp_man_estimate_oth_rf:
+            depth = self.ml_pipeline.config.clf_hyp_man_depth_oth_rf
+        else:
+            depth = 110
+        if self.ml_pipeline.config.clf_hyp_man_sample_split_rf:
+            sample_split_size = self.ml_pipeline.config.rf_sample_spit
+        else:
+            sample_split_size = [2, 5, 10]
+        if self.ml_pipeline.config.clf_hyp_man_sample_leaf_rf:
+            min_sample_leaf = self.ml_pipeline.config.rf_leaf
+        else:
+            min_sample_leaf = [1, 2, 4]
+        if self.ml_pipeline.config.clf_hyp_man_bootstrap_rf:
+            boot_strap = self.ml_pipeline.config.rf_bootstrap
+        else:
+            boot_strap = [True, False]
+        n_estimators = [int(x) for x in np.linspace(start=2, stop=estimators, num=10)]
         max_features = ['auto', 'sqrt']
-        max_depth = [int(x) for x in np.linspace(10, 110, num=11)]
+        max_depth = [int(x) for x in np.linspace(10, depth, num=11)]
         max_depth.append(None)
-        min_samples_split = [2, 5, 10]
-        min_samples_leaf = [1, 2, 4]
-        bootstrap = [True, False]
+        min_samples_split = sample_split_size
+        min_samples_leaf = min_sample_leaf
+        bootstrap = boot_strap
         random_grid = {'n_estimators': n_estimators,
                        'max_features': max_features,
                        'max_depth': max_depth,
@@ -312,16 +373,32 @@ class Classification:
         return rf_random
 
     def gbm_grid_search(self):
-        n_estimators = [int(x) for x in np.arange(start=10, stop=510, step=10)]
-        max_depth = [int(x) for x in np.arange(start=2, stop=20, step=2)]
+        if self.ml_pipeline.config.clf_hyp_man_estimate_oth_gbm:
+            estimators = self.ml_pipeline.config.clf_hyp_man_estimate_oth_gbm
+        else:
+            estimators = 510
+        if self.ml_pipeline.config.clf_hyp_man_depth_oth_gbm:
+            depth_param = self.ml_pipeline.config.clf_hyp_man_depth_oth_gbm
+        else:
+            depth_param = 20
+        n_estimators = [int(x) for x in np.arange(start=10, stop=estimators, step=10)]
+        max_depth = [int(x) for x in np.arange(start=2, stop=depth_param, step=2)]
         param_grid = {'n_estimators': n_estimators, 'max_depth': max_depth}
-        gbm = GradientBoostingClassifier(random_state=None)
+        gbm = GradientBoostingClassifier(random_state=50)
         clf = GridSearchCV(gbm, param_grid, cv=5, scoring='f1', verbose=3, n_jobs=-1)
         return clf
 
     def et_grid_search(self):
-        n_estimators = [int(x) for x in np.arange(start=10, stop=510, step=10)]
-        max_depth = [int(x) for x in np.arange(start=2, stop=20, step=2)]
+        if self.ml_pipeline.config.clf_hyp_man_estimate_params_et:
+            estimators = self.ml_pipeline.config.config.clf_hyp_man_estimate_params_et
+        else:
+            estimators = 510
+        if self.ml_pipeline.config.clf_hyp_man_depth_et:
+            depth = self.ml_pipeline.config.clf_hyp_man_depth_et
+        else:
+            depth = 20
+        n_estimators = [int(x) for x in np.arange(start=10, stop=estimators, step=10)]
+        max_depth = [int(x) for x in np.arange(start=2, stop=depth, step=2)]
         param_grid = {'n_estimators': n_estimators, 'max_depth': max_depth}
         et = ExtraTreesClassifier(random_state=42, n_jobs=-1)
         clf = GridSearchCV(et, param_grid, cv=5, scoring='f1', verbose=3)
