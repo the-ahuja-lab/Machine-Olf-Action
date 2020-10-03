@@ -128,7 +128,7 @@ class Classification:
             if self.ml_pipeline.config.clf_gbm_auto:
                 x_train = self.ml_pipeline.x_train
                 y_train = self.ml_pipeline.y_train
-                cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
                 cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
                 # clf = GradientBoostingClassifier(n_estimators=50, random_state=None, max_depth=2)
                 grid_search_model = self.gbm_grid_search()
@@ -152,7 +152,7 @@ class Classification:
             if self.ml_pipeline.config.clf_et_auto:
                 x_train = self.ml_pipeline.x_train
                 y_train = self.ml_pipeline.y_train
-                cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
                 cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
                 # clf = ExtraTreesClassifier(n_estimators=200, random_state=42, max_depth=10, n_jobs=-1)
                 grid_search_model = self.et_grid_search()
@@ -176,7 +176,7 @@ class Classification:
         if self.ml_pipeline.config.clf_svm_flg:
             x_train = self.ml_pipeline.x_train
             y_train = self.ml_pipeline.y_train
-            cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+            cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
             cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
             if self.ml_pipeline.config.clf_svm_auto:
                 grid_search_model = self.SVM_GridSearch()
@@ -199,7 +199,7 @@ class Classification:
             y_train = self.ml_pipeline.y_train
 
             if self.ml_pipeline.config.clf_rf_auto:
-                cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
                 cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
                 grid_search_model = self.RF_GridSearch()
                 grid_search_model.cv = cv_inner
@@ -266,7 +266,7 @@ class Classification:
             y_train = self.ml_pipeline.y_train
 
             if self.ml_pipeline.config.clf_mlp_auto:
-                cv_inner = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
                 cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
                 grid_search_model = self.MLP_GridSearch()
                 grid_search_model.cv = cv_inner
