@@ -42,6 +42,8 @@ class MLJobConfig:
         self.clf_rf_auto = None
         self.clf_bagging_rf = None
         self.rf_sample_spit = None
+        self.clf_hyp_man_features_p2_rf = None
+        self.clf_hyp_man_features_p1_rf = None
 
         self.clf_lr_flg = None
         self.clf_lr_auto = None
@@ -123,7 +125,7 @@ class MLJobConfig:
         self.rf_leaf = None
         self.rf_bootstrap = None
         self.clf_bagging_rf = None
-
+        self.clf_hyp_man_depth_oth_rf = None
         # Hyperparameters for Gradient Boosting Machine
         self.clf_hyp_man_depth_gbm = None
         self.clf_hyp_man_estimate_oth_rf = None
@@ -315,15 +317,22 @@ class MLJobConfig:
             self.clf_hyp_man_depth_rf = config.clf_hyp_man_depth_rf
 
             # Hyperparameters for Random Forest
+            self.max_feat_rf = []
+            self.clf_hyp_man_features_rf = config.clf_hyp_man_features_rf
+            self.clf_hyp_man_depth_oth_rf = config.clf_hyp_man_depth_oth_rf
+
+            if config.clf_hyp_man_features_p2_rf:
+                self.max_feat_rf.append("auto")
+            if config.clf_hyp_man_features_p1_rf:
+                self.max_feat_rf.append("sqrt")
+
             if config.clf_hyp_man_estimator_rf:
                 self.clf_hyp_man_estimate_oth_rf = config.clf_hyp_man_estimate_oth_rf
-            if config.clf_hyp_man_depth_rf:
-                self.clf_hyp_man_depth_oth_rf = config.clf_hyp_man_depth_oth_rf
-            if config.clf_hyp_man_features_rf:
-                self.clf_hyp_man_features_oth_rf = config.clf_hyp_man_features_oth_rf
+
 
             self.clf_hyp_man_sample_split_rf = config.clf_hyp_man_sample_split_rf
             self.clf_hyp_man_sample_leaf_rf = config.clf_hyp_man_sample_leaf_rf
+            self.clf_hyp_man_bootstrap_rf = config.clf_hyp_man_bootstrap_rf
             self.rf_sample_spit = []
             if config.clf_hyp_man_sample_split_rf:
                 self.clf_hyp_man_sample_split_p1_rf = 2
@@ -348,6 +357,8 @@ class MLJobConfig:
                 self.rf_bootstrap.append(True)
             if config.clf_hyp_man_bootstrap_p2_rf:
                 self.rf_bootstrap.append(False)
+
+
 
             # Hyperparameters for Gradient Boosting Machine
             self.clf_hyp_man_depth_gbm = config.clf_hyp_man_depth_gbm

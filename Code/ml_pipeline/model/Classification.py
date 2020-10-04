@@ -366,8 +366,11 @@ class Classification:
             boot_strap = self.ml_pipeline.config.rf_bootstrap
         else:
             boot_strap = [True, False]
+        if self.ml_pipeline.config.clf_hyp_man_features_rf:
+            max_features = self.ml_pipeline.config.max_feat_rf
+        else:
+            max_features = ['auto', 'sqrt']
         n_estimators = [int(x) for x in np.linspace(start=2, stop=estimators, num=10)]
-        max_features = ['auto', 'sqrt']
         max_depth = [int(x) for x in np.linspace(10, depth, num=11)]
         max_depth.append(None)
         min_samples_split = sample_split_size
