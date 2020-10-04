@@ -48,7 +48,7 @@
                         <h5 class="card-title card-title-cust">STEP 1: UPLOAD DATASET
                             <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
                                data-container="body" data-placement="bottom" data-html="true"
-                               data-content="Dataset should be a csv file containing exactly <strong><em>three columns namely CID, CNAME and SMILES</em></strong>. CID stands for Compound IDs, CNAME stands for Compound Names and SMILES stands for Compound SMILES representations. To have a look at a typical dataset, download our example dataset <a target='_blank', href='{{ url_for('static', filename='user_ip/or1a1/user_data.csv') }}'>here</a>."><img
+                               data-content="Dataset should be a csv file containing exactly <strong><em>three columns namely CNAME SMILES and Activation Status</em></strong>. CNAME stands for Compound Names and SMILES stands for Compound SMILES representations. Activation Status is a binary value. To have a look at a typical dataset, download our example dataset <a target='_blank', href='{{ url_for('static', filename='user_ip/or1a1/user_data.csv') }}'>here</a>."><img
                                     class="info-class"
                                     src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
                         </h5>
@@ -300,8 +300,185 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                 <div class="form-row bagging-div">
+                                    <div class="col">
+                                        <div class="form-group form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_hyp_man_svm"
+                                                   id="clf_hyp_man_svm">
+                                            <label class="form-check-label" for="clf_hyp_man_svm">Manual
+                                                hyper-parameters</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div id="dv_svm_hyp_man" class="form-row hyper-div" style="display:none">
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_c_svm"
+                                               id="clf_hyp_man_c_svm">
+                                        <label class="form-check-label" for="clf_hyp_man_c_svm">C</label>
+                                        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                                           data-container="body" data-placement="bottom" data-html="true"
+                                           data-content="The C parameter tells the SVM optimization how much you want to
+                                           avoid mis classifying each training example. For large values of C, the optimization
+                                           will choose a smaller-margin hyper plane does a better job of getting all the
+                                           training points classified correctly.">
+                                        <img class="info-class"
+                                            src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
+                                    </div>
+                                    <div id="clf_hyp_man_c_params_svm" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p1_svm"
+                                                   id="clf_hyp_man_c_p1_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p1_svm">10<sup>-4</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p2_svm"
+                                                   id="clf_hyp_man_c_p2_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p2_svm">10<sup>-3</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p3_svm"
+                                                   id="clf_hyp_man_c_p3_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p3_svm">10<sup>-2</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p4_svm"
+                                                   id="clf_hyp_man_c_p4_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p4_svm">10<sup>-1</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p5_svm"
+                                                   id="clf_hyp_man_c_p5_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p5_svm">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p6_svm"
+                                                   id="clf_hyp_man_c_p6_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p6_svm">10</label>
+                                        </div>
+                                        <div id="dv_hyp_svm_c_tb" class="form-group">
+                                            <label for="clf_hyp_man_oth_svm" class="sr-only">SVM Parameter C</label>
+                                            <input type="number" id="clf_hyp_man_oth_svm"
+                                                   name="clf_hyp_man_oth_svm"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Any other C value"
+                                                   title="Any other C"/>
+                                        </div>
+                                    </div>
 
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_gamma_svm"
+                                               id="clf_hyp_man_gamma_svm">
+                                        <label class="form-check-label" for="clf_hyp_man_gamma_svm">Gamma</label>
+                                        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                                        data-container="body" data-placement="bottom" data-html="true"
+                                        data-content="For all chosen classification models, hyper-parameters are selected using grid search cross validation with 5-fold cross validation and f1-score scoring.">
+                                        <img class="info-class"
+                                            src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
+                                    </div>
+                                    <div id="clf_hyp_man_gamma_params_svm" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_gamma_p1_svm"
+                                                   id="clf_hyp_man_gamma_p1_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_gamma_p1_svm">10<sup>-4</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_gamma_p2_svm"
+                                                   id="clf_hyp_man_gamma_p2_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_gamma_p2_svm">10<sup>-3</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_gamma_p3_svm"
+                                                   id="clf_hyp_man_gamma_p3_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_gamma_p3_svm">10<sup>-2</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_gamma_p4_svm"
+                                                   id="clf_hyp_man_gamma_p4_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_gamma_p4_svm">10<sup>-1</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_gamma_p5_svm"
+                                                   id="clf_hyp_man_gamma_p5_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_gamma_p5_svm">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_gamma_p6_svm"
+                                                   id="clf_hyp_man_gamma_p6_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_gamma_p6_svm">10</label>
+                                        </div>
+                                        <div id="dv_hyp_svm_gamma_tb" class="form-group">
+                                            <label for="clf_hyp_man_gamma_oth_svm" class="sr-only">SVM Parameter
+                                                Gamma</label>
+                                            <input type="number" id="clf_hyp_man_gamma_oth_svm"
+                                                   name="clf_hyp_man_gamma_oth_svm"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Any other gamma value"
+                                                   title="Any other gamma"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_kernel_svm"
+                                               id="clf_hyp_man_kernel_svm">
+                                        <label class="form-check-label" for="clf_hyp_man_kernel_svm">Kernel</label>
+                                        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                                        data-container="body" data-placement="bottom" data-html="true"
+                                        data-content=" Kernel function transforms the training set of data so that a
+                                        non-linear decision surface is able to transformed to a linear equation in a higher
+                                        number of dimension spaces.">
+                                        <img class="info-class"
+                                            src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
+
+                                    </div>
+                                    <div id="clf_hyp_man_kernel_params_svm" class="form-group" style="display:none">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_kernel_p1_svm"
+                                                   id="clf_hyp_man_kernel_p1_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_kernel_p1_svm">RBF</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_kernel_p2_svm"
+                                                   id="clf_hyp_man_kernel_p2_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_kernel_p2_svm">Poly</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_kernel_p3_svm"
+                                                   id="clf_hyp_man_kernel_p3_svm">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_kernel_p3_svm">Linear</sup></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="clf_et_flg" id="clf_et_flg">
@@ -330,22 +507,59 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="form-row bagging-div">
+                                    <div class="col">
+                                        <div class="form-group form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_hyp_man_et"
+                                                   id="clf_hyp_man_et">
+                                            <label class="form-check-label" for="clf_hyp_man_et">Manual
+                                                hyper-parameters</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div id="dv_et_hyp_man" class="form-row hyper-div" style="display:none">
 
+                                    <div class="form-group form-check form-check-inline">
+
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_estimator_et"
+                                               id="clf_hyp_man_estimator_et">
+                                        <label class="form-check-label" for="clf_hyp_man_estimate_oth_et">N Estimator</label>
+                                    </div>
+                                    <div id="clf_hyp_man_estimator_params_et" style="display:none" class="form-group">
+
+                                        <input type="number" id="clf_hyp_man_estimate_oth_et"
+                                                   name="clf_hyp_man_estimate_oth_et"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Estimator value"
+                                                   title="Estimator value"/>
+                                    </div>
+
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_depth_et"
+                                               id="clf_hyp_man_depth_et">
+                                        <label class="form-check-label" for="clf_hyp_man_depth_et">Maximum Depth</label>
+                                    </div>
+                                    <div id="clf_hyp_man_depth_params_et" style="display:none" class="form-group">
+
+                                        <input type="number" id="clf_hyp_man_depth_oth_et"
+                                                   name="clf_hyp_man_depth_oth_et"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Max. Depth"
+                                                   title="Maximum Depth value"/>
+                                    </div>
+                                 </div>
+                            </div>
 
                             <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" name="clf_lr_flg" id="clf_lr_flg"
-                                       checked>
+                                <input type="checkbox" class="form-check-input" name="clf_lr_flg" id="clf_lr_flg">
                                 <label class="form-check-label" for="clf_lr_flg">Logistic Regression (LR)</label>
                             </div>
-
                             <div id="LR">
-
                                 <div class="form-row bagging-div">
                                     <div class="col-7">
                                         <div class="form-group form-check">
                                             <input class="form-check-input" type="checkbox" name="clf_bagging_lr"
-                                                   id="clf_bagging_lr" checked>
+                                                   id="clf_bagging_lr">
                                             <label class="form-check-label" for="clf_bagging_lr">Bagging of
                                                 LR</label>
                                         </div>
@@ -361,6 +575,67 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-row bagging-div">
+                                    <div class="col">
+                                        <div class="form-group form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_hyp_man_lr"
+                                                   id="clf_hyp_man_lr">
+                                            <label class="form-check-label" for="clf_hyp_man_lr">Manual
+                                                hyper-parameters of LR: C value</label>
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <div class="form-group form-check form-check-inline">-->
+<!--                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_c_lr"-->
+<!--                                               id="clf_hyp_man_c_lr">-->
+<!--                                        <label class="form-check-label" for="clf_hyp_man_c_lr">C</label>-->
+<!--                                        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"-->
+<!--                                           data-container="body" data-placement="bottom" data-html="true"-->
+<!--                                           data-content="The C parameter tells the LR optimization how much you want to-->
+<!--                                           avoid mis classifying each training example. For large values of C, the optimization-->
+<!--                                           will choose a smaller-margin hyper plane does a better job of getting all the-->
+<!--                                           training points classified correctly.">-->
+<!--                                        <img class="info-class"-->
+<!--                                            src="{{ url_for('static', filename='images/info-16.png') }}"/></a>-->
+<!--                                    </div>-->
+                                    <div id="clf_hyp_man_c_params_lr" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p1_lr"
+                                                   id="clf_hyp_man_c_p1_lr">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p1_lr">10<sup>-4</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p3_lr"
+                                                   id="clf_hyp_man_c_p3_lr">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p3_lr">10<sup>-2</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p4_lr"
+                                                   id="clf_hyp_man_c_p4_lr">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p4_lr">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_c_p2_lr"
+                                                   id="clf_hyp_man_c_p2_lr">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_c_p2_lr">10</label>
+                                        </div>
+                                        <div id="dv_hyp_lr_c_tb" class="form-group">
+                                            <label for="clf_hyp_man_oth_lr" class="sr-only">LR Parameter C</label>
+                                            <input type="number" id="clf_hyp_man_oth_lr"
+                                                   name="clf_hyp_man_oth_lr"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Any other C value"
+                                                   title="Any other C"/>
+                                        </div>
+                                    </div>
                             </div>
 
                             <div class="form-group form-check">
@@ -400,7 +675,6 @@
                             </div>
 
                             <div id="gbm" style="display: none">
-
                                 <div class="form-row bagging-div">
                                     <div class="col-7">
                                         <div class="form-group form-check">
@@ -421,9 +695,48 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-row bagging-div">
+                                    <div class="col">
+                                        <div class="form-group form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_hyp_man_gbm"
+                                                   id="clf_hyp_man_gbm">
+                                            <label class="form-check-label" for="clf_hyp_man_gbm">Manual
+                                                hyper-parameters</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="dv_gbm_hyp_man" class="form-row hyper-div" style="display:none">
+
+                                    <div class="form-group form-check form-check-inline">
+
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_estimator_gbm"
+                                               id="clf_hyp_man_estimator_gbm">
+                                        <label class="form-check-label" for="clf_hyp_man_estimate_oth_gbm">N Estimator</label>
+                                    </div>
+                                    <div id="clf_hyp_man_estimator_params_gbm" style="display:none" class="form-group">
+
+                                        <input type="number" id="clf_hyp_man_estimate_oth_gbm"
+                                                   name="clf_hyp_man_estimate_oth_gbm"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Estimator value"
+                                                   title="Estimator value"/>
+                                    </div>
+
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_depth_gbm"
+                                               id="clf_hyp_man_depth_gbm">
+                                        <label class="form-check-label" for="clf_hyp_man_depth_gbm">Maximum Depth</label>
+                                    </div>
+                                    <div id="clf_hyp_man_depth_params_gbm" style="display:none" class="form-group">
+
+                                        <input type="number" id="clf_hyp_man_depth_oth_gbm"
+                                                   name="clf_hyp_man_depth_oth_gbm"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Max. Depth"
+                                                   title="Maximum Depth value"/>
+                                    </div>
+                                </div>
                             </div>
-
-
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" name="clf_rf_flg" id="clf_rf_flg"
                                 >
@@ -451,6 +764,141 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-row bagging-div">
+                                    <div class="col">
+                                        <div class="form-group form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_hyp_man_rf"
+                                                   id="clf_hyp_man_rf">
+                                            <label class="form-check-label" for="clf_hyp_man_rf">Manual
+                                                hyper-parameters</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="dv_rf_hyp_man" class="form-row hyper-div" style="display:none">
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_estimator_rf"
+                                               id="clf_hyp_man_estimator_rf">
+                                        <label class="form-check-label" for="clf_hyp_man_estimate_oth_rf">N Estimator</label>
+                                    </div>
+                                    <div id="clf_hyp_man_estimator_params_rf" style="display:none" class="form-group">
+                                        <input type="number" id="clf_hyp_man_estimate_oth_rf"
+                                                   name="clf_hyp_man_estimate_oth_rf"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Estimator value"
+                                                   title="Estimator value"/>
+                                    </div>
+
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_depth_rf"
+                                               id="clf_hyp_man_depth_rf">
+                                        <label class="form-check-label" for="clf_hyp_man_depth_rf">Maximum Depth</label>
+                                    </div>
+                                    <div id="clf_hyp_man_depth_params_rf" style="display:none" class="form-group">
+                                        <input type="number" id="clf_hyp_man_depth_oth_rf"
+                                                   name="clf_hyp_man_depth_oth_rf"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Max. Depth"
+                                                   title="Maximum Depth value"/>
+                                    </div>
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_features_rf"
+                                               id="clf_hyp_man_features_rf">
+                                        <label class="form-check-label" for="clf_hyp_man_features_rf">Maximum Features</label>
+                                    </div>
+                                    <div id="clf_hyp_man_features_params_rf" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_features_p2_rf"
+                                                   id="clf_hyp_man_features_p2_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_features_p2_rf">auto</label>
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_features_p1_rf"
+                                                   id="clf_hyp_man_features_p1_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_features_p1_rf">sqrt</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_sample_split_rf"
+                                               id="clf_hyp_man_sample_split_rf">
+                                        <label class="form-check-label" for="clf_hyp_man_sample_split_rf">Minimum
+                                            Samples Split</label>
+                                    </div>
+                                    <div id="clf_hyp_man_sample_split_params_rf" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_sample_split_p1_rf"
+                                                   id="clf_hyp_man_sample_split_p1_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_sample_split_p1_rf">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_sample_split_p2_rf"
+                                                   id="clf_hyp_man_sample_split_p2_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_sample_split_p2_rf">5</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_sample_split_p3_rf"
+                                                   id="clf_hyp_man_sample_split_p3_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_sample_split_p3_rf">10</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_sample_leaf_rf"
+                                               id="clf_hyp_man_sample_leaf_rf">
+                                        <label class="form-check-label" for="clf_hyp_man_sample_leaf_rf">Minimum
+                                            Samples Leaf</label>
+                                    </div>
+                                    <div id="clf_hyp_man_sample_leaf_params_rf" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_sample_leaf_p1_rf"
+                                                   id="clf_hyp_man_sample_leaf_p1_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_sample_leaf_p1_rf">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_sample_leaf_p2_rf"
+                                                   id="clf_hyp_man_sample_leaf_p2_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_sample_leaf_p2_rf">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_sample_leaf_p3_rf"
+                                                   id="clf_hyp_man_sample_leaf_p3_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_sample_leaf_p3_rf">4</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_bootstrap_rf"
+                                               id="clf_hyp_man_bootstrap_rf">
+                                        <label class="form-check-label" for="clf_hyp_man_bootstrap_rf">Bootstrap RF Parameter</label>
+                                    </div>
+                                    <div id="clf_hyp_man_bootstrap_params_rf" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_bootstrap_p1_rf"
+                                                   id="clf_hyp_man_bootstrap_p1_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_bootstrap_p1_rf">True</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_bootstrap_p2_rf"
+                                                   id="clf_hyp_man_bootstrap_p2_rf">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_bootstrap_p2_rf">False</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group form-check">
@@ -458,7 +906,6 @@
                                 >
                                 <label class="form-check-label" for="clf_mlp_flg">Multi-Layer Perceptron (MLP)</label>
                             </div>
-
                             <div id="mlp" style="display: none">
                                 <div class="form-row bagging-div">
                                     <div class="col-7">
@@ -480,11 +927,178 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="form-row bagging-div">
+                                    <div class="col">
+                                        <div class="form-group form-check">
+                                            <input class="form-check-input" type="checkbox" name="clf_hyp_man_mlp"
+                                                   id="clf_hyp_man_mlp">
+                                            <label class="form-check-label" for="clf_hyp_man_mlp">Manual
+                                                hyper-parameters</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="dv_mlp_hyp_man" class="form-row hyper-div" style="display:none">
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_activation_mlp"
+                                               id="clf_hyp_man_activation_mlp">
+                                        <label class="form-check-label" for="clf_hyp_man_activation_mlp">Activation Parameter</label>
+                                    </div>
+                                    <div id="clf_hyp_man_activation_params_mlp" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_activation_p1_mlp"
+                                                   id="clf_hyp_man_activation_p1_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_activation_p1_mlp">tanh</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_activation_p2_mlp"
+                                                   id="clf_hyp_man_activation_p2_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_activation_p2_mlp">relu</label>
+                                        </div>
+                                    </div>
 
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_solver_mlp"
+                                               id="clf_hyp_man_solver_mlp">
+                                        <label class="form-check-label" for="clf_hyp_man_solver_mlp">Solver Parameter</label>
+                                    </div>
+                                    <div id="clf_hyp_man_solver_params_mlp" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_solver_p1_mlp"
+                                                   id="clf_hyp_man_solver_p1_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_solver_p1_mlp">sgd</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_solver_p2_mlp"
+                                                   id="clf_hyp_man_solver_p2_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_solver_p2_mlp">adam</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_lr_rate_mlp"
+                                               id="clf_hyp_man_lr_rate_mlp">
+                                        <label class="form-check-label" for="clf_hyp_man_lr_rate_mlp">Learning Rate Parameter</label>
+                                    </div>
+                                    <div id="clf_hyp_man_learning_rate_params_mlp" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_lr_rate_p1_mlp"
+                                                   id="clf_hyp_man_lr_rate_p1_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_lr_rate_p1_mlp">Constant Rate</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_lr_rate_p2_mlp"
+                                                   id="clf_hyp_man_lr_rate_p2_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_lr_rate_p2_mlp">Adaptive Rate</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_layers_mlp"
+                                               id="clf_hyp_man_layers_mlp">
+                                        <label class="form-check-label" for="clf_hyp_man_layers_mlp">Hidden Layers</label>
+                                    </div>
+                                    <div id="clf_hyp_man_layers_params_mlp" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_layers_p1_mlp"
+                                                   id="clf_hyp_man_layers_p1_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_layers_p1_mlp">(5,5,5)</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_layers_p2_mlp"
+                                                   id="clf_hyp_man_layers_p2_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_layers_p2_mlp">(20,30,50)</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_layers_p3_mlp"
+                                                   id="clf_hyp_man_layers_p3_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_layers_p3_mlp">(50,50,50)</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_layers_p4_mlp"
+                                                   id="clf_hyp_man_layers_p4_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_layers_p4_mlp">(50,100,50)</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_layers_p5_mlp"
+                                                   id="clf_hyp_man_layers_p5_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_layers_p5_mlp">(100,100,100)</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_layers_p6_mlp"
+                                                   id="clf_hyp_man_layers_p6_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_layers_p6_mlp">(5,2)</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_layers_p7_mlp"
+                                                   id="clf_hyp_man_layers_p7_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_layers_p7_mlp">(100)</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="clf_hyp_man_alpha_mlp"
+                                               id="clf_hyp_man_alpha_mlp">
+                                        <label class="form-check-label" for="clf_hyp_man_lr_rate_mlp">Alpha Parameter</label>
+                                    </div>
+                                    <div id="clf_hyp_man_alpha_params_mlp" style="display:none" class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_alpha_p2_mlp"
+                                                   id="clf_hyp_man_alpha_p2_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_alpha_p2_mlp">10<sup>-4</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_alpha_p3_mlp"
+                                                   id="clf_hyp_man_alpha_p3_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_alpha_p3_mlp">10<sup>-3</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_alpha_p4_mlp"
+                                                   id="clf_hyp_man_alpha_p4_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_alpha_p4_mlp">10<sup>-2</sup></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="clf_hyp_man_alpha_p5_mlp"
+                                                   id="clf_hyp_man_alpha_p5_mlp">
+                                            <label class="form-check-label"
+                                                   for="clf_hyp_man_alpha_p5_mlp">0.05</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <div class="card card-cust border-primary mb-3">
                     <img src="{{ url_for('static',filename='images/data_validation.svg') }}"
                          class="card-img-top card-img-cust embed-responsive-item" alt="STEP 5: Validation">
@@ -518,7 +1132,6 @@
                                     <img class="info-class"
                                          src="{{ url_for('static', filename='images/info-16.png') }}"/></a>
                             </div>
-
 
                             <button type="button" class="btn btn-light btn-info-cust" title="Search Database">
                                 <h6><b>Classification Explanation</b></h6>

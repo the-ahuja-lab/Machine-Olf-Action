@@ -1,4 +1,5 @@
 class MLJobConfig:
+
     def empty(self):
         self.fg_padelpy_flg = None
         self.fg_mordered_flg = None
@@ -40,7 +41,7 @@ class MLJobConfig:
         self.clf_rf_flg = None
         self.clf_rf_auto = None
         self.clf_bagging_rf = None
-        self.clf_bag_rf_n = None
+        self.rf_sample_spit = None
 
         self.clf_lr_flg = None
         self.clf_lr_auto = None
@@ -81,6 +82,84 @@ class MLJobConfig:
         self.sim_euclidean_flg = None
         self.sim_manhattan_flg = None
         self.sim_soergel_flg = None
+
+        # Hyperparameters for SVM
+        self.clf_hyp_man_gamma_svm = None
+        self.clf_hyp_man_kernel_svm = None
+        self.clf_hyp_man_c_p1_svm = None
+        self.clf_hyp_man_c_p2_svm = None
+        self.clf_hyp_man_c_p3_svm = None
+        self.clf_hyp_man_c_p4_svm = None
+        self.clf_hyp_man_c_p5_svm = None
+        self.clf_hyp_man_c_p6_svm = None
+        self.clf_hyp_man_oth_svm = None
+        self.svm_C = None
+        self.clf_hyp_man_gamma_p1_svm = None
+        self.clf_hyp_man_gamma_p2_svm = None
+        self.clf_hyp_man_gamma_p3_svm = None
+        self.clf_hyp_man_gamma_p4_svm = None
+        self.clf_hyp_man_gamma_p5_svm = None
+        self.clf_hyp_man_gamma_p6_svm = None
+        self.clf_hyp_man_gamma_oth_svm = None
+        self.svm_gamma = None
+        self.clf_hyp_man_kernel_p1_svm = None
+        self.clf_hyp_man_kernel_p2_svm = None
+        self.clf_hyp_man_kernel_p3_svm = None
+        self.svm_kernels = None
+
+        # Hyperparameters for Extra Tree
+        self.clf_hyp_man_et = None
+        self.clf_hyp_man_estimator_et = None
+        self.clf_hyp_man_estimate_oth_et = None
+        self.clf_hyp_man_depth_params_et = None
+
+        # Hyperparameters for Random Forest
+        self.clf_hyp_man_estimator_rf = None
+        self.clf_hyp_man_depth_rf = None
+        self.clf_hyp_man_features_rf = None
+        self.clf_hyp_man_sample_split_rf = None
+        self.clf_hyp_man_sample_leaf_rf = None
+        self.clf_hyp_man_bootstrap_rf = None
+        self.rf_leaf = None
+        self.rf_bootstrap = None
+        self.clf_bagging_rf = None
+
+        # Hyperparameters for Gradient Boosting Machine
+        self.clf_hyp_man_depth_gbm = None
+        self.clf_hyp_man_estimate_oth_rf = None
+
+        # Hyperparameters for MLP
+        self.clf_hyp_man_activation_mlp = None
+        self.clf_hyp_man_alpha_mlp = None
+        self.clf_hyp_man_solver_mlp = None
+        self.clf_hyp_man_layers_mlp = None
+        self.clf_hyp_man_lr_rate_p1_mlp = None
+        self.clf_hyp_man_layers_p1_mlp = None
+        self.clf_hyp_man_alpha_p2_mlp = None
+        self.clf_hyp_man_activation_p1_mlp = None
+        self.clf_hyp_man_activation_p2_mlp = None
+        self.clf_hyp_man_solver_p1_mlp = None
+        self.clf_hyp_man_solver_p2_mlp = None
+        self.clf_hyp_man_lr_rate_p1_mlp = None
+        self.clf_hyp_man_lr_rate_p2_mlp = None
+        self.mlp_hidden_layers_list = None
+        self.clf_hyp_alphas = None
+        self.mlp_lr = None
+        self.mlp_solver = None
+        self.mlp_activation = None
+
+        #Hyperparameters for LR
+        self.clf_hyp_man_lr = None
+        self.clf_hyp_man_c_p1_lr = None
+        self.clf_hyp_man_c_p2_lr = None
+        self.clf_hyp_man_c_p3_lr =None
+        self.clf_hyp_man_c_p4_lr = None
+        self.clf_hyp_man_c_p2_lr = None
+        self.clf_hyp_man_oth_lr = None
+
+
+
+
 
     def __init__(self, config=None):
         if config is None:
@@ -164,8 +243,210 @@ class MLJobConfig:
             self.sim_manhattan_flg = config.sim_manhattan_flg
             self.sim_soergel_flg = config.sim_soergel_flg
 
+            # Hyperparameters for SVM
+            self.clf_hyp_man_c_svm = config.clf_hyp_man_c_svm
+            self.clf_hyp_man_gamma_svm = config.clf_hyp_man_gamma_svm
+            self.clf_hyp_man_kernel_svm = config.clf_hyp_man_kernel_svm
+            self.svm_C = []
+            if config.clf_hyp_man_c_p1_svm:
+                self.clf_hyp_man_c_p1_svm = 0.0001
+                self.svm_C.append(self.clf_hyp_man_c_p1_svm)
+            if config.clf_hyp_man_c_p2_svm:
+                self.clf_hyp_man_c_p2_svm = 0.001
+                self.svm_C.append(self.clf_hyp_man_c_p2_svm)
+            if config.clf_hyp_man_c_p3_svm:
+                self.clf_hyp_man_c_p3_svm = 0.01
+                self.svm_C.append(self.clf_hyp_man_c_p3_svm)
+            if config.clf_hyp_man_c_p4_svm:
+                self.clf_hyp_man_c_p4_svm = 0.1
+                self.svm_C.append(self.clf_hyp_man_c_p4_svm)
+            if config.clf_hyp_man_c_p5_svm:
+                self.clf_hyp_man_c_p5_svm = 1
+                self.svm_C.append(self.clf_hyp_man_c_p5_svm)
+            if config.clf_hyp_man_c_p6_svm:
+                self.clf_hyp_man_c_p6_svm = 10
+                self.svm_C.append(self.clf_hyp_man_c_p6_svm)
+            if config.clf_hyp_man_oth_svm is not "":
+                self.clf_hyp_man_oth_svm = config.clf_hyp_man_oth_svm
+                self.svm_C.append(self.clf_hyp_man_oth_svm)
+            self.svm_gamma = []
+            if config.clf_hyp_man_gamma_p1_svm:
+                self.clf_hyp_man_gamma_p1_svm = 0.0001
+                self.svm_gamma.append(self.clf_hyp_man_gamma_p1_svm)
+            if config.clf_hyp_man_gamma_p2_svm:
+                self.clf_hyp_man_gamma_p2_svm = 0.001
+                self.svm_gamma.append(self.clf_hyp_man_gamma_p2_svm)
+            if config.clf_hyp_man_gamma_p3_svm:
+                self.clf_hyp_man_gamma_p3_svm = 0.01
+                self.svm_gamma.append(self.clf_hyp_man_gamma_p3_svm)
+            if config.clf_hyp_man_gamma_p4_svm:
+                self.clf_hyp_man_gamma_p4_svm = 0.1
+                self.svm_gamma.append(self.clf_hyp_man_gamma_p4_svm)
+            if config.clf_hyp_man_gamma_p5_svm:
+                self.clf_hyp_man_gamma_p5_svm = 1
+                self.svm_gamma.append(self.clf_hyp_man_gamma_p5_svm)
+            if config.clf_hyp_man_gamma_p6_svm:
+                self.clf_hyp_man_gamma_p6_svm = 10
+                self.svm_gamma.append(self.clf_hyp_man_gamma_p6_svm)
+            if config.clf_hyp_man_gamma_oth_svm:
+                self.clf_hyp_man_gamma_oth_svm = config.clf_hyp_man_gamma_oth_svm
+                self.svm_gamma.append(self.clf_hyp_man_gamma_oth_svm)
+
+            self.svm_kernels = []
+            self.clf_hyp_man_kernel_svm = config.clf_hyp_man_kernel_svm
+            if config.clf_hyp_man_kernel_p1_svm:
+                self.clf_hyp_man_kernel_p1_svm = "rbf"
+                self.svm_kernels.append(self.clf_hyp_man_kernel_p1_svm)
+            if config.clf_hyp_man_kernel_p2_svm:
+                self.clf_hyp_man_kernel_p2_svm = "poly"
+                self.svm_kernels.append(self.clf_hyp_man_kernel_p2_svm)
+            if config.clf_hyp_man_kernel_p3_svm:
+                self.clf_hyp_man_kernel_p3_svm = "linear"
+                self.svm_kernels.append(self.clf_hyp_man_kernel_p3_svm)
+
+
+            # Hyperparameters for Extra Tree
+            self.clf_hyp_man_et = None
+            self.clf_hyp_man_estimator_et = None
+
+
+            #RF
+            self.clf_hyp_man_estimator_rf = config.clf_hyp_man_estimator_rf
+            self.clf_hyp_man_depth_rf = config.clf_hyp_man_depth_rf
+
+            # Hyperparameters for Random Forest
+            if config.clf_hyp_man_estimator_rf:
+                self.clf_hyp_man_estimate_oth_rf = config.clf_hyp_man_estimate_oth_rf
+            if config.clf_hyp_man_depth_rf:
+                self.clf_hyp_man_depth_oth_rf = config.clf_hyp_man_depth_oth_rf
+            if config.clf_hyp_man_features_rf:
+                self.clf_hyp_man_features_oth_rf = config.clf_hyp_man_features_oth_rf
+
+            self.clf_hyp_man_sample_split_rf = config.clf_hyp_man_sample_split_rf
+            self.clf_hyp_man_sample_leaf_rf = config.clf_hyp_man_sample_leaf_rf
+            self.rf_sample_spit = []
+            if config.clf_hyp_man_sample_split_rf:
+                self.clf_hyp_man_sample_split_p1_rf = 2
+                self.rf_sample_spit.append(2)
+            if config.clf_hyp_man_sample_leaf_rf:
+                self.clf_hyp_man_sample_split_p2_rf = 5
+                self.rf_sample_spit.append(5)
+            if config.clf_hyp_man_bootstrap_rf:
+                self.clf_hyp_man_sample_split_p3_rf = 10
+                self.rf_sample_spit.append(10)
+
+            self.rf_leaf = []
+            if config.clf_hyp_man_sample_leaf_p1_rf:
+                self.rf_leaf.append(1)
+            if config.clf_hyp_man_sample_leaf_p2_rf:
+                self.rf_leaf.append(2)
+            if config.clf_hyp_man_sample_leaf_p3_rf:
+                self.rf_leaf.append(4)
+
+            self.rf_bootstrap = []
+            if config.clf_hyp_man_bootstrap_p1_rf:
+                self.rf_bootstrap.append(True)
+            if config.clf_hyp_man_bootstrap_p2_rf:
+                self.rf_bootstrap.append(False)
+
+            # Hyperparameters for Gradient Boosting Machine
+            self.clf_hyp_man_depth_gbm = config.clf_hyp_man_depth_gbm
+            self.clf_hyp_man_estimate_oth_rf = config.clf_hyp_man_depth_gbm
+
+            # Hyperparameters for MLP
+            self.clf_hyp_man_activation_mlp = config.clf_hyp_man_activation_mlp
+            self.clf_hyp_man_lr_rate_mlp = config.clf_hyp_man_lr_rate_mlp
+            self.clf_hyp_man_solver_mlp = None
+            self.clf_hyp_man_lr_rate_p1_mlp = None
+            self.clf_hyp_man_layers_p1_mlp = None
+            self.clf_hyp_man_alpha_p2_mlp = None
+            self.clf_hyp_man_layers_mlp = config.clf_hyp_man_layers_mlp
+
+            self.mlp_activation = []
+            if config.clf_hyp_man_activation_p1_mlp:
+                self.clf_hyp_man_activation_p1_mlp = "tanh"
+                self.mlp_activation .append(self.clf_hyp_man_activation_p1_mlp)
+            if config.clf_hyp_man_activation_p2_mlp:
+                self.clf_hyp_man_activation_p2_mlp = "relu"
+                self.mlp_activation .append(self.clf_hyp_man_activation_p2_mlp)
+
+            self.mlp_solver = []
+            if config.clf_hyp_man_solver_p1_mlp:
+                self.clf_hyp_man_solver_p1_mlp = 'sgd'
+                self.mlp_solver.append(self.clf_hyp_man_solver_p1_mlp )
+
+            if config.clf_hyp_man_solver_p2_mlp:
+                self.clf_hyp_man_solver_p2_mlp = 'adam'
+                self.clf_hyp_man_solver_p2_mlp.append(self.clf_hyp_man_solver_p2_mlp)
+
+            self.mlp_lr = []
+            if config.clf_hyp_man_lr_rate_p1_mlp:
+                self.clf_hyp_man_lr_rate_p1_mlp = 'constant'
+                self.mlp_lr.append(self.clf_hyp_man_lr_rate_p1_mlp)
+            if config.clf_hyp_man_lr_rate_p2_mlp:
+                self.clf_hyp_man_lr_rate_p2_mlp = 'adaptive'
+                self.mlp_lr.append(self.clf_hyp_man_lr_rate_p2_mlp)
+
+            self.mlp_hidden_layers_list = []
+            if config.clf_hyp_man_layers_p1_mlp:
+                self.mlp_hidden_layers_list.append((5,5,5))
+            if config.clf_hyp_man_layers_p2_mlp:
+                self.mlp_hidden_layers_list.append((20,30,50))
+            if config.clf_hyp_man_layers_p3_mlp:
+                self.mlp_hidden_layers_list.append((50,50,50))
+            if config.clf_hyp_man_layers_p4_mlp:
+                self.mlp_hidden_layers_list.append((50,100,50))
+            if config.clf_hyp_man_layers_p5_mlp:
+                self.mlp_hidden_layers_list.append((100,100,100))
+            if config.clf_hyp_man_layers_p6_mlp:
+                self.mlp_hidden_layers_list.append((5,2))
+            if config.clf_hyp_man_layers_p7_mlp:
+                self.mlp_hidden_layers_list.append((100))
+
+            self.clf_hyp_man_alpha_mlp = config.clf_hyp_man_alpha_mlp
+            self.clf_hyp_alphas = []
+            if config.clf_hyp_man_alpha_p2_mlp:
+                self.clf_hyp_alphas.append(0.001)
+            if config.clf_hyp_man_alpha_p3_mlp:
+                self.clf_hyp_alphas.append(0.01)
+            if config.clf_hyp_man_alpha_p4_mlp:
+                self.clf_hyp_alphas.append(0.1)
+            if config.clf_hyp_man_alpha_p5_mlp:
+                self.clf_hyp_alphas.append(0.05)
+
+            #ET
+            self.clf_hyp_man_depth_et = config.clf_hyp_man_depth_et
+            self.clf_hyp_man_depth_et = config.clf_hyp_man_depth_et
+            if config.clf_hyp_man_estimator_et:
+                self.clf_hyp_man_estimate_oth_et = config.clf_hyp_man_estimate_oth_et
+            if config.clf_hyp_man_depth_et:
+                self.clf_hyp_man_depth_oth_et = config.clf_hyp_man_depth_oth_et
+
+            #GBM
+            if config.clf_hyp_man_estimator_gbm:
+                self.clf_hyp_man_estimate_oth_gbm = config.clf_hyp_man_estimator_gbm
+            if config.clf_hyp_man_depth_gbm:
+                self.clf_hyp_man_depth_oth_gbm = config.clf_hyp_man_depth_oth_gbm
+
+            #LR
+            self.clf_lr_list = []
+            self.clf_hyp_man_lr = config.clf_hyp_man_lr
+            if config.clf_hyp_man_c_p1_lr:
+                self.clf_lr_list.append(0.0001)
+            if config.clf_hyp_man_c_p2_lr:
+                self.clf_lr_list.append(0.001)
+            if config.clf_hyp_man_c_p3_lr:
+                self.clf_lr_list.append(0.01)
+            if config.clf_hyp_man_c_p4_lr:
+                self.clf_lr_list.append(0.1)
+            if config.clf_hyp_man_oth_lr is not "":
+                self.clf_lr_list.append(config.clf_hyp_man_oth_lr)
+
+
+
     # TODO comment this if need to disable debug logging of config
     def __repr__(self):
         attrs = vars(self)
         obj_str = ('\n '.join("%s: %s" % item for item in attrs.items()))
         return obj_str
+
