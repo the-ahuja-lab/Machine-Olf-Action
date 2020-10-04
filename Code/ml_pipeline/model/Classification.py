@@ -6,7 +6,7 @@ from numpy import std
 import random
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import KFold
+from sklearn.model_selection import StratifiedKFold
 
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
@@ -16,7 +16,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import KFold
+from sklearn.model_selection import StratifiedKFold
 import pickle
 import MLJobConfig as mlconfig
 
@@ -128,8 +128,8 @@ class Classification:
             if self.ml_pipeline.config.clf_gbm_auto:
                 x_train = self.ml_pipeline.x_train
                 y_train = self.ml_pipeline.y_train
-                cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
-                cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_inner = StratifiedKFold(n_splits=5, shuffle=True, random_state=43)
+                cv_outer = StratifiedKFold(n_splits=10, shuffle=True, random_state=43)
                 # clf = GradientBoostingClassifier(n_estimators=50, random_state=None, max_depth=2)
                 grid_search_model = self.gbm_grid_search()
                 grid_search_model.cv = cv_inner
@@ -137,7 +137,9 @@ class Classification:
                 chosen_model = grid_search_model.best_estimator_
                 scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
-                self.jlogger.info("MEAN F1 scores after nested CV ", mean(scores))
+                self.jlogger.info("MEAN F1 scores after nested CV {} ".format(mean(scores)))
+                self.jlogger.info("Standard Deviation for F1 scores after nested CV {} ".format(std(scores)))
+
             evalclf = Evaluation.Evaluation(self.ml_pipeline)
             evalclf.evaluate_and_save_results(chosen_model, "gbm")
 
@@ -152,8 +154,8 @@ class Classification:
             if self.ml_pipeline.config.clf_et_auto:
                 x_train = self.ml_pipeline.x_train
                 y_train = self.ml_pipeline.y_train
-                cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
-                cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_inner = StratifiedKFold(n_splits=5, shuffle=True, random_state=43)
+                cv_outer = StratifiedKFold(n_splits=10, shuffle=True, random_state=43)
                 # clf = ExtraTreesClassifier(n_estimators=200, random_state=42, max_depth=10, n_jobs=-1)
                 grid_search_model = self.et_grid_search()
                 grid_search_model.cv = cv_inner
@@ -161,7 +163,9 @@ class Classification:
                 chosen_model = grid_search_model.best_estimator_
                 scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
-                self.jlogger.info("MEAN F1 scores after nested CV ", mean(scores))
+                self.jlogger.info("MEAN F1 scores after nested CV {} ".format(mean(scores)))
+                self.jlogger.info("Standard Deviation for F1 scores after nested CV {} ".format(std(scores)))
+
             else:
                 manual_params = self.ml_pipeline.config.clf_gbm_manual
 
@@ -176,8 +180,8 @@ class Classification:
         if self.ml_pipeline.config.clf_svm_flg:
             x_train = self.ml_pipeline.x_train
             y_train = self.ml_pipeline.y_train
-            cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
-            cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
+            cv_inner = StratifiedKFold(n_splits=5, shuffle=True, random_state=43)
+            cv_outer = StratifiedKFold(n_splits=10, shuffle=True, random_state=43)
             if self.ml_pipeline.config.clf_svm_auto:
                 grid_search_model = self.SVM_GridSearch()
                 grid_search_model.cv = cv_inner
@@ -185,7 +189,9 @@ class Classification:
                 chosen_model = grid_search_model.best_estimator_
                 scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
-                self.jlogger.info("MEAN F1 scores after nested CV ",mean(scores))
+                self.jlogger.info("MEAN F1 scores after nested CV {} ".format(mean(scores)))
+                self.jlogger.info("Standard Deviation for F1 scores after nested CV {} ".format(std(scores)))
+
             evalclf = Evaluation.Evaluation(self.ml_pipeline)
             evalclf.evaluate_and_save_results(chosen_model, "svm")
             if self.ml_pipeline.config.clf_bagging_svm:
@@ -199,18 +205,16 @@ class Classification:
             y_train = self.ml_pipeline.y_train
 
             if self.ml_pipeline.config.clf_rf_auto:
-                cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
-                cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_inner = StratifiedKFold(n_splits=5, shuffle=True, random_state=43)
+                cv_outer = StratifiedKFold(n_splits=10, shuffle=True, random_state=43)
                 grid_search_model = self.RF_GridSearch()
                 grid_search_model.cv = cv_inner
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
                 scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
-                self.jlogger.info("MEAN F1 scores after nested CV ", mean(scores))
-            else:
-                manual_params = self.ml_pipeline.config.clf_svm_manual
-
+                self.jlogger.info("MEAN F1 scores after nested CV {} ".format(mean(scores)))
+                self.jlogger.info("Standard Deviation for F1 scores after nested CV {} ".format(std(scores)))
             evalclf = Evaluation.Evaluation(self.ml_pipeline)
             evalclf.evaluate_and_save_results(chosen_model, "rf")
 
@@ -221,14 +225,20 @@ class Classification:
     def apply_lr(self):
 
         if self.ml_pipeline.config.clf_lr_flg:
-
             x_train = self.ml_pipeline.x_train
             y_train = self.ml_pipeline.y_train
-
             if self.ml_pipeline.config.clf_lr_auto:
-                model = LogisticRegression(C=1.0, random_state=50, solver='liblinear')
-                chosen_model = model.fit(x_train, y_train)
+                cv_inner = StratifiedKFold(n_splits=5, shuffle=True, random_state=43)
+                cv_outer = StratifiedKFold(n_splits=10, shuffle=True, random_state=43)
+                grid_search_model = self.lr_grid_search()
+                grid_search_model.cv = cv_inner
+                grid_search_model.fit(x_train, y_train)
+                chosen_model = grid_search_model.best_estimator_
+                scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
+                self.jlogger.info("MEAN F1 scores after nested CV {} ".format(mean(scores)))
+                self.jlogger.info("Standard Deviation for F1 scores after nested CV {} ".format(std(scores)))
+
             else:
                 manual_params = self.ml_pipeline.config.clf_svm_manual
 
@@ -266,15 +276,17 @@ class Classification:
             y_train = self.ml_pipeline.y_train
 
             if self.ml_pipeline.config.clf_mlp_auto:
-                cv_inner = KFold(n_splits=10, shuffle=True, random_state=43)
-                cv_outer = KFold(n_splits=5, shuffle=True, random_state=43)
+                cv_inner = StratifiedKFold(n_splits=5, shuffle=True, random_state=43)
+                cv_outer = StratifiedKFold(n_splits=10, shuffle=True, random_state=43)
                 grid_search_model = self.MLP_GridSearch()
                 grid_search_model.cv = cv_inner
                 grid_search_model.fit(x_train, y_train)
                 chosen_model = grid_search_model.best_estimator_
                 scores = cross_val_score(grid_search_model, x_train, y_train, scoring='f1', cv=cv_outer, n_jobs=1)
                 self.jlogger.info(str(chosen_model))
-                self.jlogger.info("MEAN F1 scores after nested CV ", mean(scores))
+                self.jlogger.info("MEAN F1 scores after nested CV {} ".format(mean(scores)))
+                self.jlogger.info("Standard Deviation for F1 scores after nested CV {} ".format(std(scores)))
+
             else:
                 manual_params = self.ml_pipeline.config.clf_svm_manual
 
@@ -403,3 +415,17 @@ class Classification:
         et = ExtraTreesClassifier(random_state=42, n_jobs=-1)
         clf = GridSearchCV(et, param_grid, cv=5, scoring='f1', verbose=3)
         return clf
+
+    def lr_grid_search(self):
+        if self.ml_pipeline.config.clf_hyp_man_lr:
+            lr_cs = self.ml_pipeline.config.clf_lr_list
+        else:
+            lr_cs = [1, 0.1, 0.001, 0.0001, 0.00001]
+        penalty = ["l2"]
+        grid = {"C": lr_cs, "penalty": penalty} #l2 ridge
+        logistic_reg = LogisticRegression()
+        logistic_reg_cv = GridSearchCV(logistic_reg, grid)
+        return logistic_reg_cv
+
+
+

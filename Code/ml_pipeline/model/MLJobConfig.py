@@ -148,6 +148,18 @@ class MLJobConfig:
         self.mlp_solver = None
         self.mlp_activation = None
 
+        #Hyperparameters for LR
+        self.clf_hyp_man_lr = None
+        self.clf_hyp_man_c_p1_lr = None
+        self.clf_hyp_man_c_p2_lr = None
+        self.clf_hyp_man_c_p3_lr =None
+        self.clf_hyp_man_c_p4_lr = None
+        self.clf_hyp_man_c_p2_lr = None
+        self.clf_hyp_man_oth_lr = None
+
+
+
+
 
     def __init__(self, config=None):
         if config is None:
@@ -415,6 +427,22 @@ class MLJobConfig:
                 self.clf_hyp_man_estimate_oth_gbm = config.clf_hyp_man_estimator_gbm
             if config.clf_hyp_man_depth_gbm:
                 self.clf_hyp_man_depth_oth_gbm = config.clf_hyp_man_depth_oth_gbm
+
+            #LR
+            self.clf_lr_list = []
+            self.clf_hyp_man_lr = config.clf_hyp_man_lr
+            if config.clf_hyp_man_c_p1_lr:
+                self.clf_lr_list.append(0.0001)
+            if config.clf_hyp_man_c_p2_lr:
+                self.clf_lr_list.append(0.001)
+            if config.clf_hyp_man_c_p3_lr:
+                self.clf_lr_list.append(0.01)
+            if config.clf_hyp_man_c_p4_lr:
+                self.clf_lr_list.append(0.1)
+            if config.clf_hyp_man_oth_lr is not "":
+                self.clf_lr_list.append(config.clf_hyp_man_oth_lr)
+
+
 
     # TODO comment this if need to disable debug logging of config
     def __repr__(self):

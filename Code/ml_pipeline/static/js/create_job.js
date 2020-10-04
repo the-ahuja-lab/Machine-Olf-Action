@@ -188,6 +188,14 @@ $(function() {
             $("#LR").hide();
         }
     });
+    //clf_hyp_man_lr
+    $("#clf_hyp_man_lr").click(function() {
+        if ($(this).is(":checked")) {
+            $("#clf_hyp_man_c_params_lr").show();
+        } else {
+            $("#clf_hyp_man_c_params_lr").hide();
+        }
+    });
 });
 
 $(function() {
