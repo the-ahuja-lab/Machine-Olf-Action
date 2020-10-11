@@ -348,12 +348,16 @@ class Classification:
     def RF_GridSearch(self):
         if self.ml_pipeline.config.clf_hyp_man_depth_oth_rf:
             estimators = self.ml_pipeline.config.clf_hyp_man_estimate_oth_rf
+            n_estimators = [int(x) for x in np.linspace(start=2, stop=estimators, num=2)]
         else:
             estimators = 100
+            n_estimators = [int(x) for x in np.linspace(start=2, stop=estimators, num=10)]
         if self.ml_pipeline.config.clf_hyp_man_estimate_oth_rf:
             depth = self.ml_pipeline.config.clf_hyp_man_depth_oth_rf
+            max_depth = [int(x) for x in np.arange(start=1, stop=depth, step=1)]
         else:
             depth = 110
+            max_depth = [int(x) for x in np.linspace(10, depth, num=11)]
         if self.ml_pipeline.config.clf_hyp_man_sample_split_rf:
             sample_split_size = self.ml_pipeline.config.rf_sample_spit
         else:
@@ -370,8 +374,6 @@ class Classification:
             max_features = self.ml_pipeline.config.max_feat_rf
         else:
             max_features = ['auto', 'sqrt']
-        n_estimators = [int(x) for x in np.linspace(start=2, stop=estimators, num=10)]
-        max_depth = [int(x) for x in np.linspace(10, depth, num=11)]
         max_depth.append(None)
         min_samples_split = sample_split_size
         min_samples_leaf = min_sample_leaf
@@ -390,14 +392,18 @@ class Classification:
     def gbm_grid_search(self):
         if self.ml_pipeline.config.clf_hyp_man_estimate_oth_gbm:
             estimators = self.ml_pipeline.config.clf_hyp_man_estimate_oth_gbm
+            print(estimators)
+            n_estimators = [int(x) for x in np.arange(start=2, stop=estimators, step=1)]
         else:
             estimators = 510
+            n_estimators = [int(x) for x in np.arange(start=10, stop=estimators, step=10)]
         if self.ml_pipeline.config.clf_hyp_man_depth_oth_gbm:
             depth_param = self.ml_pipeline.config.clf_hyp_man_depth_oth_gbm
+            max_depth = [int(x) for x in np.arange(start=1, stop=depth_param, step=1)]
         else:
             depth_param = 20
-        n_estimators = [int(x) for x in np.arange(start=10, stop=estimators, step=10)]
-        max_depth = [int(x) for x in np.arange(start=2, stop=depth_param, step=2)]
+            max_depth = [int(x) for x in np.arange(start=5, stop=depth_param, step=5)]
+
         param_grid = {'n_estimators': n_estimators, 'max_depth': max_depth}
         gbm = GradientBoostingClassifier(random_state=50)
         clf = GridSearchCV(gbm, param_grid, cv=5, scoring='f1', verbose=3, n_jobs=-1)
