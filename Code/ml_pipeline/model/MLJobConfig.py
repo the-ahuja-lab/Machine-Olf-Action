@@ -429,6 +429,7 @@ class MLJobConfig:
             #ET
             self.clf_hyp_man_depth_et = config.clf_hyp_man_depth_et
             self.clf_hyp_man_depth_et = config.clf_hyp_man_depth_et
+            self.clf_hyp_man_estimator_et = config.clf_hyp_man_estimator_et
             if config.clf_hyp_man_estimator_et:
                 self.clf_hyp_man_estimate_oth_et = config.clf_hyp_man_estimate_oth_et
             if config.clf_hyp_man_depth_et:

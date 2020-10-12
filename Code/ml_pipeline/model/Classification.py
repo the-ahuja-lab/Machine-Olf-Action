@@ -410,16 +410,18 @@ class Classification:
         return clf
 
     def et_grid_search(self):
-        if self.ml_pipeline.config.clf_hyp_man_estimate_params_et:
-            estimators = self.ml_pipeline.config.config.clf_hyp_man_estimate_params_et
+        if self.ml_pipeline.config.clf_hyp_man_estimator_et:
+            estimators = self.ml_pipeline.config.clf_hyp_man_estimate_oth_et
+            n_estimators = [int(x) for x in np.arange(start=2, stop=estimators, step=1)]
         else:
             estimators = 510
+            n_estimators = [int(x) for x in np.arange(start=10, stop=estimators, step=10)]
         if self.ml_pipeline.config.clf_hyp_man_depth_et:
-            depth = self.ml_pipeline.config.clf_hyp_man_depth_et
+            depth = self.ml_pipeline.config.clf_hyp_man_depth_oth_et
+            max_depth = [int(x) for x in np.arange(start=1, stop=depth, step=1)]
         else:
             depth = 20
-        n_estimators = [int(x) for x in np.arange(start=10, stop=estimators, step=10)]
-        max_depth = [int(x) for x in np.arange(start=2, stop=depth, step=2)]
+            max_depth = [int(x) for x in np.arange(start=2, stop=depth, step=2)]
         param_grid = {'n_estimators': n_estimators, 'max_depth': max_depth}
         et = ExtraTreesClassifier(random_state=42, n_jobs=-1)
         clf = GridSearchCV(et, param_grid, cv=5, scoring='f1', verbose=3)
