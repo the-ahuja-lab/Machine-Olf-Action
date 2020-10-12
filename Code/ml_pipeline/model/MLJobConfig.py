@@ -130,6 +130,9 @@ class MLJobConfig:
         self.clf_hyp_man_depth_gbm = None
         self.clf_hyp_man_estimate_oth_rf = None
         self.clf_hyp_man_estimate_oth_et = None
+        self.clf_hyp_man_estimate_oth_gbm = None
+        self.clf_hyp_man_estimator_params_gbm = None
+        self.clf_hyp_man_depth_params_gb = None
 
         # Hyperparameters for MLP
         self.clf_hyp_man_activation_mlp = None
@@ -436,8 +439,12 @@ class MLJobConfig:
                 self.clf_hyp_man_depth_oth_et = config.clf_hyp_man_depth_oth_et
 
             #GBM
+            # self.clf_hyp_man_estimator_params_gbm = config.clf_hyp_man_estimator_params_gbm
+            # self.clf_hyp_man_depth_params_gb = config.clf_hyp_man_depth_params_gb
+            self.clf_hyp_man_estimate_oth_gbm = config.clf_hyp_man_estimate_oth_gbm
             if config.clf_hyp_man_estimator_gbm:
                 self.clf_hyp_man_estimate_oth_gbm = config.clf_hyp_man_estimate_oth_gbm
+            self.clf_hyp_man_depth_oth_gbm = config.clf_hyp_man_depth_oth_gbm
             if config.clf_hyp_man_depth_gbm:
                 self.clf_hyp_man_depth_oth_gbm = config.clf_hyp_man_depth_oth_gbm
 
