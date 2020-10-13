@@ -392,7 +392,7 @@ class MLJobConfig:
 
             if config.clf_hyp_man_solver_p2_mlp:
                 self.clf_hyp_man_solver_p2_mlp = 'adam'
-                self.clf_hyp_man_solver_p2_mlp.append(self.clf_hyp_man_solver_p2_mlp)
+                self.mlp_solver.append(self.clf_hyp_man_solver_p2_mlp)
 
             self.mlp_lr = []
             if config.clf_hyp_man_lr_rate_p1_mlp:
@@ -430,7 +430,6 @@ class MLJobConfig:
                 self.clf_hyp_alphas.append(0.05)
 
             #ET
-            self.clf_hyp_man_depth_et = config.clf_hyp_man_depth_et
             self.clf_hyp_man_depth_et = config.clf_hyp_man_depth_et
             self.clf_hyp_man_estimator_et = config.clf_hyp_man_estimator_et
             if config.clf_hyp_man_estimator_et:
