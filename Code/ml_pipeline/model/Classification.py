@@ -342,7 +342,7 @@ class Classification:
             'alpha': alphas,
             'learning_rate': learning_rates}
         mlp = MLPClassifier(max_iter=1000, random_state=50)
-        clf = GridSearchCV(mlp, parameter_space,  n_jobs=-1, cv=5, scoring='f1', verbose=2)
+        clf = GridSearchCV(mlp, parameter_space, cv=5, scoring='f1', verbose=2)
         return clf
 
     def RF_GridSearch(self):
