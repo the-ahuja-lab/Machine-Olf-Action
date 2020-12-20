@@ -21,5 +21,5 @@ Documentation related to the application
 ### Executables - executables of the application
 To directly run the application, go to Executables folder and download executable for the respective platform using the instructions provided in the "Download.md" file
 
-### Want to Report a Issue or Request a New Feature?
-To report any issues click on the Issues tab on git hub and submit a new issue. You know how to refer a issue browse to github/ISSUE_TEMPLATE/.
+### Want to Report an Issue or Request a New Feature?
+To report any issues click on the Issues tab on git hub and submit a new issue. You know how to refer a issue browse to github/ISSUE_TEMPLATE/
